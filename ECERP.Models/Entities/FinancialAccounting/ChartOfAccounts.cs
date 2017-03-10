@@ -1,10 +1,11 @@
-﻿namespace ECERP.Models.FinancialAccounting.ChartsOfAccounts
+﻿namespace ECERP.Models.Entities.FinancialAccounting
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using Companies;
-    using LedgerAccounts;
 
-    public class ChartOfAccounts
+    public class ChartOfAccounts : IEntity<int>
     {
         #region Constructor 
         public ChartOfAccounts()
@@ -13,7 +14,9 @@
         #endregion
 
         #region Properties
+        [Key]
         public int Id { get; set; }
+        [Required, ForeignKey("Company")]
         public int CompanyId { get; set; }
         #endregion
 

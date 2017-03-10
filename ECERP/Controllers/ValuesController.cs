@@ -1,4 +1,4 @@
-﻿namespace ECERP.Controllers
+﻿namespace ECERP.API.Controllers
 {
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
