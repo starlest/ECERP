@@ -1,7 +1,7 @@
 ﻿namespace ECERP.Models.Entities.Companies
 {
-    using Microsoft.EntityFrameworkCore.Metadata.Internal;
     using System.ComponentModel.DataAnnotations;
+    using FinancialAccounting;
 
     public class Company : IEntity<int>
     {
@@ -14,8 +14,13 @@
         #region Properties
         [Key]
         public int Id { get; set; }
+
         [Required, MaxLength(50)]
         public string Name { get; set; }
+        #endregion
+
+        #region Related Properties
+        public virtual ChartOfAccounts ChartOfAccounts { get; set; }
         #endregion
     }
 }

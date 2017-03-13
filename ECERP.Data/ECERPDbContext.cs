@@ -21,6 +21,7 @@
 
             modelBuilder.Entity<ApplicationUser>().ToTable("Users");
             modelBuilder.Entity<ChartOfAccounts>().ToTable("ChartsOfAccounts");
+            modelBuilder.Entity<ChartOfAccounts>().HasOne(coa => coa.Company).WithOne(c => c.ChartOfAccounts);
             modelBuilder.Entity<LedgerAccount>().HasIndex(la => la.AccountNumber).IsUnique();
             modelBuilder.Entity<LedgerAccount>().HasIndex(la => la.Name).IsUnique();
         }

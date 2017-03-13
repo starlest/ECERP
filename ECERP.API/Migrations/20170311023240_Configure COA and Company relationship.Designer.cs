@@ -9,9 +9,10 @@ using ECERP.Models.Entities;
 namespace ECERP.API.Migrations
 {
     [DbContext(typeof(ECERPDbContext))]
-    partial class ECERPDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170311023240_Configure COA and Company relationship")]
+    partial class ConfigureCOAandCompanyrelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -115,7 +116,8 @@ namespace ECERP.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("CompanyId")
+                        .IsUnique();
 
                     b.ToTable("ChartsOfAccounts");
                 });
@@ -345,8 +347,8 @@ namespace ECERP.API.Migrations
             modelBuilder.Entity("ECERP.Models.Entities.FinancialAccounting.ChartOfAccounts", b =>
                 {
                     b.HasOne("ECERP.Models.Entities.Companies.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
+                        .WithOne("ChartOfAccounts")
+                        .HasForeignKey("ECERP.Models.Entities.FinancialAccounting.ChartOfAccounts", "CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -9,7 +9,7 @@
     using Microsoft.EntityFrameworkCore;
     using Models;
 
-    public class Repository<TKey, TEntity> : IRepository<TKey, TEntity> where TEntity : class, IEntity<TKey>,  new()
+    public class Repository<TKey, TEntity> : IRepository<TKey, TEntity> where TEntity : class, IEntity<TKey>, new()
     {
         private readonly ECERPDbContext _dbContext;
 
@@ -38,9 +38,16 @@
             return query.AsEnumerable();
         }
 
-        public TEntity GetSingle(TKey Id)
+        public TEntity GetSingle(TKey id)
         {
-            return _dbContext.Set<TEntity>().SingleOrDefault(x => x.Id.Equals(Id));
+            return _dbContext.Set<TEntity>().SingleOrDefault(x => x.Id.Equals(id));
+        }
+
+        public TEntity GetSingle(TKey id, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            var query = _dbContext.Set<TEntity>() as IQueryable<TEntity>;
+            query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            return query.SingleOrDefault(x => x.Id.Equals(id));
         }
 
         public TEntity GetSingle(Expression<Func<TEntity, bool>> predicate)
@@ -48,7 +55,8 @@
             return _dbContext.Set<TEntity>().SingleOrDefault(predicate);
         }
 
-        public TEntity GetSingle(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
+        public TEntity GetSingle(Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties)
         {
             var query = _dbContext.Set<TEntity>() as IQueryable<TEntity>;
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));

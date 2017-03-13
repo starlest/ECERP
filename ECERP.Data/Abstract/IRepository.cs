@@ -12,6 +12,7 @@
         IEnumerable<TEntity> GetAll();
         int Count();
         TEntity GetSingle(TKey id);
+        TEntity GetSingle(TKey id, params Expression<Func<TEntity, object>>[] includeProperties);
         TEntity GetSingle(Expression<Func<TEntity, bool>> predicate);
 
         TEntity GetSingle(Expression<Func<TEntity, bool>> predicate,
