@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata;
     using Models.Entities;
     using Models.Entities.Companies;
     using Models.Entities.FinancialAccounting;
@@ -20,6 +21,9 @@
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ApplicationUser>().ToTable("Users");
+            modelBuilder.Entity<ApplicationUser>().HasOne(u => u.CreatedBy).WithMany().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ApplicationUser>().HasOne(u => u.ModifiedBy).WithMany().OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ChartOfAccounts>().ToTable("ChartsOfAccounts");
             modelBuilder.Entity<ChartOfAccounts>().HasOne(coa => coa.Company).WithOne(c => c.ChartOfAccounts);
             modelBuilder.Entity<LedgerAccount>().HasIndex(la => la.AccountNumber).IsUnique();

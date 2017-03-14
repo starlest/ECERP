@@ -8,31 +8,32 @@
     public class ChartOfAccountsService : IChartOfAccountsService
     {
         #region Private Fields
-        private readonly IChartOfAccountsRepository _chartOfAccountsRepository;
+        private readonly IRepository _repository;
         #endregion
 
         #region Constructor
-        public ChartOfAccountsService(IChartOfAccountsRepository chartOfAccountsRepository)
+        public ChartOfAccountsService(IRepository repository)
         {
-            _chartOfAccountsRepository = chartOfAccountsRepository;
+            _repository = repository;
         }
         #endregion
 
         #region Interface Methods
         public IEnumerable<ChartOfAccounts> GetAll()
         {
-            return _chartOfAccountsRepository.GetAll(c => c.Company, c => c.LedgerAccounts);
+            return _repository.GetAll<ChartOfAccounts>(null, null, null, c => c.Company,
+                c => c.LedgerAccounts);
         }
 
         public ChartOfAccounts GetSingleById(int id)
         {
-            return _chartOfAccountsRepository.GetSingle(id, coa => coa.LedgerAccounts, coa => coa.Company);
+            return _repository.GetById<ChartOfAccounts>(id);
         }
 
         public ChartOfAccounts GetSingleByCompanyName(string companyName)
         {
-            return _chartOfAccountsRepository.GetSingle(c => c.Company.Name.Equals(companyName), c => c.Company,
-                c => c.LedgerAccounts);
+            return _repository.GetOne<ChartOfAccounts>(c => c.Company.Name.Equals(companyName),
+                c => c.Company, c => c.LedgerAccounts);
         }
         #endregion
     }

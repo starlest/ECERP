@@ -3,7 +3,7 @@
     using System.ComponentModel.DataAnnotations;
     using FinancialAccounting;
 
-    public class Company : IEntity<int>
+    public class Company : Entity<int>
     {
         #region Constructor
         public Company()
@@ -12,9 +12,6 @@
         #endregion
 
         #region Properties
-        [Key]
-        public int Id { get; set; }
-
         [Required, MaxLength(50)]
         public string Name { get; set; }
         #endregion

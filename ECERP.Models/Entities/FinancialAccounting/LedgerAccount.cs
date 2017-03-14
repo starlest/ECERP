@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public class LedgerAccount : IEntity<int>, IEquatable<LedgerAccount>
+    public class LedgerAccount : Entity<int>, IEquatable<LedgerAccount>
     {
         #region Constructor
         public LedgerAccount()
@@ -13,9 +13,6 @@
         #endregion
 
         #region Properties
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         public int AccountNumber { get; set; }
 

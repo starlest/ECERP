@@ -7,7 +7,7 @@
     using System.Linq;
     using Companies;
 
-    public class ChartOfAccounts : IEntity<int>, IEquatable<ChartOfAccounts>
+    public class ChartOfAccounts : Entity<int>, IEquatable<ChartOfAccounts>
     {
         #region Constructor 
         public ChartOfAccounts()
@@ -16,9 +16,6 @@
         #endregion
 
         #region Properties
-        [Key]
-        public int Id { get; set; }
-
         [Required, ForeignKey("Company")]
         public int CompanyId { get; set; }
         #endregion

@@ -44,7 +44,7 @@
             var account_Test = _fixture.LedgerAccountService.GetSingleByName("test account");
             Assert.Null(account_Test);
             _fixture.LedgerAccountService.CreateLedgerAccount("test account", "test account", true,
-                LedgerAccountType.Liability, LedgerAccountGroup.AccountsPayable, coa.Id);
+                LedgerAccountType.Liability, LedgerAccountGroup.AccountsPayable, coa.Id, _fixture.Admin);
             account_Test = _fixture.LedgerAccountService.GetSingleByName("test account");
             Assert.NotNull(account_Test);
             Assert.Equal("test account", account_Test.Description);

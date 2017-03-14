@@ -4,54 +4,56 @@
     using System.Linq;
     using Abstract;
     using Data.Abstract;
+    using Models.Entities;
     using Models.Entities.FinancialAccounting;
 
     public class LedgerAccountService : ILedgerAccountService
     {
         #region Private Fields
-        private readonly ILedgerAccountRepository _ledgerAccountsRepository;
+        private readonly IRepository _repository;
         #endregion
 
         #region Constructor
-        public LedgerAccountService(ILedgerAccountRepository ledgerAccountsRepository)
+        public LedgerAccountService(IRepository repository)
         {
-            _ledgerAccountsRepository = ledgerAccountsRepository;
+            _repository = repository;
         }
         #endregion
 
         #region Interface Methods
         public IEnumerable<LedgerAccount> GetAll()
         {
-            return _ledgerAccountsRepository.GetAll();
+            return _repository.GetAll<LedgerAccount>();
         }
 
         public IEnumerable<LedgerAccount> GetAllByCompany(string company)
         {
-            return _ledgerAccountsRepository.FindBy(la => la.ChartOfAccounts.Company.Name.Equals(company));
+            return _repository.Get<LedgerAccount>(la => la.ChartOfAccounts.Company.Name.Equals(company));
         }
 
         public LedgerAccount GetSingleById(int id)
         {
-            return _ledgerAccountsRepository.GetSingle(id);
+            return _repository.GetById<LedgerAccount>(id);
         }
 
         public LedgerAccount GetSingleByName(string name)
         {
-            return _ledgerAccountsRepository.GetSingle(la => la.Name.Equals(name));
+            return _repository.GetOne<LedgerAccount>(la => la.Name.Equals(name));
         }
 
         public int GetNewAccountNumber(int chartOfAccountsId, LedgerAccountGroup group)
         {
             var accountNumber = (int) group * 10000 + 1;
-            var lastAccount = _ledgerAccountsRepository
-                .FindBy(la => la.ChartOfAccountsId.Equals(chartOfAccountsId) && la.Group.Equals(group))
-                .OrderByDescending(la => la.AccountNumber)
+            var lastAccount = _repository
+                .Get<LedgerAccount>(
+                    la => la.ChartOfAccountsId.Equals(chartOfAccountsId) && la.Group.Equals(group),
+                    accounts => accounts.OrderByDescending(account => account.AccountNumber))
                 .FirstOrDefault();
             return lastAccount?.AccountNumber + 1 ?? accountNumber;
         }
 
         public void CreateLedgerAccount(string name, string description, bool isActive, LedgerAccountType type,
-            LedgerAccountGroup group, int chartOfAccountsId)
+            LedgerAccountGroup group, int chartOfAccountsId, ApplicationUser createdBy)
         {
             var ledgerAccount = new LedgerAccount
             {
@@ -64,8 +66,8 @@
                 Group = group,
                 ChartOfAccountsId = chartOfAccountsId
             };
-            _ledgerAccountsRepository.Add(ledgerAccount);
-            _ledgerAccountsRepository.Commit();
+            _repository.Create(ledgerAccount, createdBy);
+            _repository.Save();
         }
         #endregion
     }

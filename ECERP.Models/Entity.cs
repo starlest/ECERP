@@ -1,26 +1,25 @@
-﻿namespace ECERP.Models.Entities
+﻿using System;
+
+namespace ECERP.Models
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Entities;
 
-    public class ApplicationUser : IdentityUser, IEntity<string>
+    public abstract class Entity<T> : IEntity<T>
     {
         private DateTime? createdDate;
 
         #region Properties
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public T Id { get; set; }
+
         object IEntity.Id
         {
             get { return Id; }
-            set { Id = (string) Convert.ChangeType(value, typeof(string)); }
+            set { Id = (T) Convert.ChangeType(value, typeof(T)); }
         }
-
-        [ForeignKey("CreatedBy"), Required]
-        public string CreatedById { get; set; }
-
-        [ForeignKey("ModifiedBy")]
-        public string ModifiedById { get; set; }
 
         [Required]
         public DateTime CreatedDate
@@ -31,7 +30,13 @@
 
         public DateTime? ModifiedDate { get; set; }
 
-        [Timestamp]
+        [ForeignKey("CreatedBy"), Required]
+        public string CreatedById { get; set; }
+
+        [ForeignKey("ModifiedBy")]
+        public string ModifiedById { get; set; }
+
+        [Timestamp, Required]
         public byte[] Version { get; set; }
         #endregion
 

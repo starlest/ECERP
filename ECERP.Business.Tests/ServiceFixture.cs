@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Abstract;
     using Business.Services;
     using Data;
@@ -22,9 +23,7 @@
         private RoleManager<IdentityRole> _roleManager;
         private UserManager<ApplicationUser> _userManager;
         private ECERPDbContext _dbContext;
-        private ICompanyRepository _companyRepository;
-        private IChartOfAccountsRepository _chartOfAccountsRepository;
-        private ILedgerAccountRepository _ledgerAccountRepository;
+        private IRepository _repository;
         #endregion
 
         #region Constructor
@@ -36,6 +35,7 @@
         #endregion
 
         #region Interface Properties
+        public ApplicationUser Admin { get; private set; }
         public IChartOfAccountsService ChartOfAccountsService { get; private set; }
 
         public ICompanyService CompanyService { get; private set; }
@@ -55,7 +55,6 @@
         {
             InitializeServiceProvider();
             InitializeServices();
-            InitializeRepositories();
             InitializeBusinessServices();
         }
 
@@ -74,26 +73,34 @@
             _dbContext = _serviceProvider.GetRequiredService<ECERPDbContext>();
             _userManager = _serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             _roleManager = _serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-        }
-
-        private void InitializeRepositories()
-        {
-            _companyRepository = new CompanyRepository(_dbContext);
-            _chartOfAccountsRepository = new ChartOfAccountsRepository(_dbContext);
-            _ledgerAccountRepository = new LedgerAccountRepository(_dbContext);
+            _repository = new EntityFrameworkRepository<ECERPDbContext>(_dbContext);
         }
 
         private void InitializeBusinessServices()
         {
-            ChartOfAccountsService = new ChartOfAccountsService(_chartOfAccountsRepository);
-            LedgerAccountService = new LedgerAccountService(_ledgerAccountRepository);
-            CompanyService = new CompanyService(_companyRepository, LedgerAccountService);
+            ChartOfAccountsService = new ChartOfAccountsService(_repository);
+            LedgerAccountService = new LedgerAccountService(_repository);
+            CompanyService = new CompanyService(_repository, LedgerAccountService);
         }
 
         private void PopulateMockData()
         {
+            Task.Run(PopulateUsers).Wait();
             PopulateCompanies();
             _dbContext.SaveChanges();
+        }
+
+        private async Task PopulateUsers()
+        {
+            var user_Admin = new ApplicationUser
+            {
+                UserName = "Admin"
+            };
+
+            await _userManager.CreateAsync(user_Admin, "Pass4Admin");
+            await _repository.SaveAsync();
+
+            Admin = user_Admin;
         }
 
         private void PopulateCompanies()

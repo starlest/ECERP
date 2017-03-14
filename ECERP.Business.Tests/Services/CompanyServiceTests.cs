@@ -49,7 +49,7 @@
         public void CreateCompanyTest()
         {
             Assert.Null(_fixture.CompanyService.GetSingleByName("test company"));
-            _fixture.CompanyService.CreateCompany("test company");
+            _fixture.CompanyService.CreateCompany("test company", _fixture.Admin);
             var company_Test = _fixture.CompanyService.GetSingleByName("test company");
             Assert.NotNull(company_Test);
             // Check if the default accounts are created

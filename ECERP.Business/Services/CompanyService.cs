@@ -4,20 +4,21 @@
     using System.Linq;
     using Abstract;
     using Data.Abstract;
+    using Models.Entities;
     using Models.Entities.Companies;
     using Models.Entities.FinancialAccounting;
 
     public class CompanyService : ICompanyService
     {
         #region Private Members
-        private readonly ICompanyRepository _companyRepository;
+        private readonly IRepository _repository;
         private readonly ILedgerAccountService _ledgerAccountService;
         #endregion
 
         #region Constructor
-        public CompanyService(ICompanyRepository companyRepository, ILedgerAccountService accountService)
+        public CompanyService(IRepository repository, ILedgerAccountService accountService)
         {
-            _companyRepository = companyRepository;
+            _repository = repository;
             _ledgerAccountService = accountService;
         }
         #endregion
@@ -25,30 +26,30 @@
         #region Interface Methods
         public virtual IEnumerable<Company> GetAll()
         {
-            return _companyRepository.GetAll();
+            return _repository.GetAll<Company>();
         }
 
-        public Company GetSingleById(int id)
+        public Company GetSingleById(object id)
         {
-            return _companyRepository.GetSingle(id);
+            return _repository.GetById<Company>(id);
         }
 
         public Company GetSingleByName(string name)
         {
-            return _companyRepository.GetSingle(c => c.Name.Equals(name));
+            return _repository.GetOne<Company>(c => c.Name.Equals(name));
         }
 
-        public void CreateCompany(string name)
+        public void CreateCompany(string name, ApplicationUser createdBy)
         {
             var company = new Company
             {
                 Name = name,
                 ChartOfAccounts = new ChartOfAccounts()
             };
-            _companyRepository.Add(company);
+            _repository.Create(company, createdBy);
             company.ChartOfAccounts.LedgerAccounts =
                 GetDefaultLedgerAccountsForDistributionBusiness(company.ChartOfAccounts.Id).ToList();
-            _companyRepository.Commit();
+            _repository.Save();
         }
         #endregion
 
