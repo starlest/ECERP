@@ -1,10 +1,11 @@
 ﻿namespace ECERP.Business.Tests
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Abstract;
+    using Abstract.FinancialAccounting;
     using Business.Services;
+    using Business.Services.FinancialAccounting;
     using Data;
     using Data.Abstract;
     using Data.Repositories;
@@ -13,8 +14,6 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Models.Entities;
-    using Models.Entities.Companies;
-    using Models.Entities.FinancialAccounting;
 
     public class ServiceFixture : IServiceFixture
     {
@@ -36,11 +35,11 @@
 
         #region Interface Properties
         public ApplicationUser Admin { get; private set; }
+        public ISystemParameterService SystemParameterService { get; private set; }
         public IChartOfAccountsService ChartOfAccountsService { get; private set; }
-
         public ICompanyService CompanyService { get; private set; }
-
         public ILedgerAccountService LedgerAccountService { get; private set; }
+        public ILedgerTransactionService LedgerTransactionService { get; private set; }
         #endregion
 
         #region Interface Methods
@@ -78,9 +77,11 @@
 
         private void InitializeBusinessServices()
         {
-            ChartOfAccountsService = new ChartOfAccountsService(_repository);
+            SystemParameterService = new SystemParameterService(_repository);
             LedgerAccountService = new LedgerAccountService(_repository);
             CompanyService = new CompanyService(_repository, LedgerAccountService);
+            ChartOfAccountsService = new ChartOfAccountsService(_repository, LedgerAccountService);
+            LedgerTransactionService = new LedgerTransactionService(_repository, SystemParameterService);
         }
 
         private void PopulateMockData()
@@ -105,25 +106,9 @@
 
         private void PopulateCompanies()
         {
-            var companies = new List<Company>
-            {
-                new Company
-                {
-                    Name = "Putra Jaya",
-                    ChartOfAccounts = new ChartOfAccounts()
-                },
-                new Company
-                {
-                    Name = "Puja Arta",
-                    ChartOfAccounts = new ChartOfAccounts()
-                },
-                new Company
-                {
-                    Name = "Puja Mandiri",
-                    ChartOfAccounts = new ChartOfAccounts()
-                }
-            };
-            _dbContext.Companies.AddRange(companies);
+            CompanyService.Create("Putra Jaya", "Admin");
+            CompanyService.Create("Puja Arta", "Admin");
+            CompanyService.Create("Puja Mandiri", "Admin");
         }
         #endregion
     }

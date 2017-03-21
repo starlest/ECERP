@@ -1,7 +1,7 @@
-﻿namespace ECERP.Business.Services
+﻿namespace ECERP.Business.Services.FinancialAccounting
 {
     using System.Collections.Generic;
-    using Abstract;
+    using Abstract.FinancialAccounting;
     using Data.Abstract;
     using Models.Entities.FinancialAccounting;
 
@@ -12,7 +12,7 @@
         #endregion
 
         #region Constructor
-        public ChartOfAccountsService(IRepository repository)
+        public ChartOfAccountsService(IRepository repository, ILedgerAccountService accountService)
         {
             _repository = repository;
         }

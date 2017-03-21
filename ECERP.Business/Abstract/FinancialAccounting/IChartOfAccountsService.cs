@@ -1,4 +1,4 @@
-﻿namespace ECERP.Business.Abstract
+﻿namespace ECERP.Business.Abstract.FinancialAccounting
 {
     using System.Collections.Generic;
     using Models.Entities.FinancialAccounting;

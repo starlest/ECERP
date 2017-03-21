@@ -1,11 +1,18 @@
 ﻿namespace ECERP.Models.Entities
 {
-    using System;
+    using System.Collections.Generic;
 
-    public class Transaction
+    public abstract class Transaction : Entity<int>
     {
-        public int Id { get; set; }
-        public string TransactionNumber { get; set; }
-        public DateTime CreatedDate { get; set; }
+        #region Constructor
+        protected Transaction()
+        {
+            TransactionLines = new List<TransactionLine>();
+        }
+        #endregion
+
+        #region Related Properties
+        public virtual List<TransactionLine> TransactionLines { get; set; }
+        #endregion
     }
 }

@@ -65,6 +65,6 @@
 
         // Operating Expenses
         SellingExpenses = 503,
-        AdministrativeExpenses = 504,
+        AdministrativeExpenses = 504
     }
 }

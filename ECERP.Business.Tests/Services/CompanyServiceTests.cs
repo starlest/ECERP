@@ -19,7 +19,6 @@
         [Fact]
         public void GetAllCompaniesTest()
         {
-      
             var companies = _fixture.CompanyService.GetAll();
             // Should be equal to the number of Charts of Accounts
             var coas = _fixture.ChartOfAccountsService.GetAll();
@@ -49,11 +48,33 @@
         public void CreateCompanyTest()
         {
             Assert.Null(_fixture.CompanyService.GetSingleByName("test company"));
-            _fixture.CompanyService.CreateCompany("test company", _fixture.Admin);
+            _fixture.CompanyService.Create("test company", _fixture.Admin.UserName);
             var company_Test = _fixture.CompanyService.GetSingleByName("test company");
             Assert.NotNull(company_Test);
             // Check if the default accounts are created
-            Assert.Equal(15, company_Test.ChartOfAccounts.LedgerAccounts.Count);
+            Assert.Equal(16, company_Test.ChartOfAccounts.LedgerAccounts.Count);
+            // Check if the default system parameters are created
+            Assert.Equal(1, company_Test.SystemParameters.Count);
+        }
+
+        [Fact]
+        public void OpenLastLedgerPeriodTest()
+        {
+            var company = _fixture.CompanyService.GetSingleByName("Puja Arta");
+            var ledgerCurrentPeriodStartDate = _fixture.SystemParameterService.GetLedgerCurrentPeriodStartDate(company.Id);
+            _fixture.CompanyService.OpenLastLedgerPeriod(company.Id, "Admin");
+            var ledgerPreviousPeriodStartDate = _fixture.SystemParameterService.GetLedgerCurrentPeriodStartDate(company.Id);
+            Assert.Equal(ledgerCurrentPeriodStartDate.AddMonths(-1), ledgerPreviousPeriodStartDate);
+        }
+
+        [Fact]
+        public void CloseCurrentPeriodLedgerTest()
+        {
+            var company = _fixture.CompanyService.GetSingleByName("Puja Arta");
+            var ledgerCurrentPeriodStartDate = _fixture.SystemParameterService.GetLedgerCurrentPeriodStartDate(company.Id);
+            _fixture.CompanyService.CloseCurrentLedgerPeriod(company.Id, "Admin");
+            var ledgerPreviousPeriodStartDate = _fixture.SystemParameterService.GetLedgerCurrentPeriodStartDate(company.Id);
+            Assert.Equal(ledgerCurrentPeriodStartDate.AddMonths(1), ledgerPreviousPeriodStartDate);
         }
         #endregion
     }

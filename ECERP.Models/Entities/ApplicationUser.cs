@@ -16,29 +16,22 @@
             set { Id = (string) Convert.ChangeType(value, typeof(string)); }
         }
 
-        [ForeignKey("CreatedBy"), Required]
-        public string CreatedById { get; set; }
-
-        [ForeignKey("ModifiedBy")]
-        public string ModifiedById { get; set; }
-
         [Required]
         public DateTime CreatedDate
         {
-            get { return createdDate ?? DateTime.UtcNow; }
+            get { return createdDate ?? DateTime.Now; }
             set { createdDate = value; }
         }
 
         public DateTime? ModifiedDate { get; set; }
 
+        [Required]
+        public string CreatedBy { get; set; }
+
+        public string ModifiedBy { get; set; }
+
         [Timestamp]
         public byte[] Version { get; set; }
-        #endregion
-
-        #region Related Properties
-        public ApplicationUser CreatedBy { get; set; }
-
-        public ApplicationUser ModifiedBy { get; set; }
         #endregion
     }
 }

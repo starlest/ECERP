@@ -1,5 +1,6 @@
 ﻿namespace ECERP.Business.Tests.Services
 {
+    using System;
     using System.Linq;
     using Models.Entities.FinancialAccounting;
     using Xunit;
@@ -28,6 +29,27 @@
         }
 
         [Fact]
+        public void GetLedgerAccountByNameTest()
+        {
+            var company = _fixture.CompanyService.GetAll().First();
+            var cashLedgerAccount = _fixture.LedgerAccountService.GetSingleByName(company.ChartOfAccounts.Id, "Cash");
+            Assert.NotNull(cashLedgerAccount);
+            var nonExistentAccount = _fixture.LedgerAccountService.GetSingleByName(company.ChartOfAccounts.Id,
+                "non-existent");
+            Assert.Null(nonExistentAccount);
+        }
+
+        [Fact]
+        public void GetLedgerAccountPeriodBalance()
+        {
+            var account = _fixture.LedgerAccountService.GetAll().First();
+            var year = DateTime.Now.Year;
+            var month = DateTime.Now.Month;
+            var balance = _fixture.LedgerAccountService.GetPeriodBalance(account, year, month - 1);
+            Assert.Null(balance);
+        }
+
+        [Fact]
         public void GetNewAccountNumberTest()
         {
             var coa = _fixture.ChartOfAccountsService.GetAll().First();
@@ -41,12 +63,13 @@
         public void CreateLedgerAccountTest()
         {
             var coa = _fixture.ChartOfAccountsService.GetAll().First();
-            var account_Test = _fixture.LedgerAccountService.GetSingleByName("test account");
+            var account_Test = _fixture.LedgerAccountService.GetSingleByName(coa.Id, "test account");
             Assert.Null(account_Test);
-            _fixture.LedgerAccountService.CreateLedgerAccount("test account", "test account", true,
-                LedgerAccountType.Liability, LedgerAccountGroup.AccountsPayable, coa.Id, _fixture.Admin);
-            account_Test = _fixture.LedgerAccountService.GetSingleByName("test account");
+            _fixture.LedgerAccountService.Create("test account", "test account", true,
+                LedgerAccountType.Liability, LedgerAccountGroup.AccountsPayable, coa.Id, _fixture.Admin.UserName);
+            account_Test = _fixture.LedgerAccountService.GetSingleByName(coa.Id, "test account");
             Assert.NotNull(account_Test);
+            Assert.Equal(coa.Company.Name, account_Test.ChartOfAccounts.Company.Name);
             Assert.Equal("test account", account_Test.Description);
             Assert.True(account_Test.IsActive);
             Assert.False(account_Test.IsDefault);

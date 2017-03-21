@@ -9,9 +9,10 @@ using ECERP.Models.Entities.FinancialAccounting;
 namespace ECERP.API.Migrations
 {
     [DbContext(typeof(ECERPDbContext))]
-    partial class ECERPDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170317090157_Add Ledger Account Balance")]
+    partial class AddLedgerAccountBalance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -222,8 +223,6 @@ namespace ECERP.API.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<int>("LedgerAccountId");
-
                     b.Property<string>("ModifiedBy");
 
                     b.Property<DateTime?>("ModifiedDate");
@@ -236,34 +235,7 @@ namespace ECERP.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LedgerAccountId");
-
                     b.ToTable("LedgerAccountBalances");
-                });
-
-            modelBuilder.Entity("ECERP.Models.Entities.SystemParameter", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired();
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("ModifiedBy");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Value");
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SystemParameters");
                 });
 
             modelBuilder.Entity("ECERP.Models.Entities.Transaction", b =>
@@ -514,6 +486,8 @@ namespace ECERP.API.Migrations
                 {
                     b.HasBaseType("ECERP.Models.Entities.Transaction");
 
+                    b.Property<int>("ChartOfAccountsId");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500);
@@ -523,6 +497,8 @@ namespace ECERP.API.Migrations
                         .HasMaxLength(50);
 
                     b.Property<DateTime>("PostingDate");
+
+                    b.HasIndex("ChartOfAccountsId");
 
                     b.ToTable("LedgerTransaction");
 
@@ -559,14 +535,6 @@ namespace ECERP.API.Migrations
                     b.HasOne("ECERP.Models.Entities.FinancialAccounting.ChartOfAccounts", "ChartOfAccounts")
                         .WithMany("LedgerAccounts")
                         .HasForeignKey("ChartOfAccountsId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ECERP.Models.Entities.FinancialAccounting.LedgerAccountBalance", b =>
-                {
-                    b.HasOne("ECERP.Models.Entities.FinancialAccounting.LedgerAccount", "LedgerAccount")
-                        .WithMany()
-                        .HasForeignKey("LedgerAccountId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -631,6 +599,14 @@ namespace ECERP.API.Migrations
                     b.HasOne("OpenIddict.Models.OpenIddictAuthorization", "Authorization")
                         .WithMany("Tokens")
                         .HasForeignKey("AuthorizationId");
+                });
+
+            modelBuilder.Entity("ECERP.Models.Entities.FinancialAccounting.LedgerTransaction", b =>
+                {
+                    b.HasOne("ECERP.Models.Entities.FinancialAccounting.ChartOfAccounts", "ChartOfAccounts")
+                        .WithMany()
+                        .HasForeignKey("ChartOfAccountsId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ECERP.Models.Entities.FinancialAccounting.LedgerTransactionLine", b =>

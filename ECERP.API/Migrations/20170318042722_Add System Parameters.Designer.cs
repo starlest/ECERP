@@ -9,9 +9,10 @@ using ECERP.Models.Entities.FinancialAccounting;
 namespace ECERP.API.Migrations
 {
     [DbContext(typeof(ECERPDbContext))]
-    partial class ECERPDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170318042722_Add System Parameters")]
+    partial class AddSystemParameters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")

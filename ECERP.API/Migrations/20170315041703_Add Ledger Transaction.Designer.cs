@@ -9,9 +9,10 @@ using ECERP.Models.Entities.FinancialAccounting;
 namespace ECERP.API.Migrations
 {
     [DbContext(typeof(ECERPDbContext))]
-    partial class ECERPDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170315041703_Add Ledger Transaction")]
+    partial class AddLedgerTransaction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -186,86 +187,6 @@ namespace ECERP.API.Migrations
                     b.ToTable("LedgerAccounts");
                 });
 
-            modelBuilder.Entity("ECERP.Models.Entities.FinancialAccounting.LedgerAccountBalance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("Balance1");
-
-                    b.Property<decimal>("Balance10");
-
-                    b.Property<decimal>("Balance11");
-
-                    b.Property<decimal>("Balance12");
-
-                    b.Property<decimal>("Balance2");
-
-                    b.Property<decimal>("Balance3");
-
-                    b.Property<decimal>("Balance4");
-
-                    b.Property<decimal>("Balance5");
-
-                    b.Property<decimal>("Balance6");
-
-                    b.Property<decimal>("Balance7");
-
-                    b.Property<decimal>("Balance8");
-
-                    b.Property<decimal>("Balance9");
-
-                    b.Property<decimal>("BeginningBalance");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired();
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<int>("LedgerAccountId");
-
-                    b.Property<string>("ModifiedBy");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.Property<int>("Year");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LedgerAccountId");
-
-                    b.ToTable("LedgerAccountBalances");
-                });
-
-            modelBuilder.Entity("ECERP.Models.Entities.SystemParameter", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired();
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("ModifiedBy");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Value");
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SystemParameters");
-                });
-
             modelBuilder.Entity("ECERP.Models.Entities.Transaction", b =>
                 {
                     b.Property<int>("Id")
@@ -282,6 +203,8 @@ namespace ECERP.API.Migrations
                     b.Property<string>("ModifiedBy");
 
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("TransactionNumber");
 
                     b.Property<byte[]>("Version")
                         .IsConcurrencyToken()
@@ -514,6 +437,8 @@ namespace ECERP.API.Migrations
                 {
                     b.HasBaseType("ECERP.Models.Entities.Transaction");
 
+                    b.Property<int>("ChartOfAccountsId");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500);
@@ -523,6 +448,8 @@ namespace ECERP.API.Migrations
                         .HasMaxLength(50);
 
                     b.Property<DateTime>("PostingDate");
+
+                    b.HasIndex("ChartOfAccountsId");
 
                     b.ToTable("LedgerTransaction");
 
@@ -559,14 +486,6 @@ namespace ECERP.API.Migrations
                     b.HasOne("ECERP.Models.Entities.FinancialAccounting.ChartOfAccounts", "ChartOfAccounts")
                         .WithMany("LedgerAccounts")
                         .HasForeignKey("ChartOfAccountsId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ECERP.Models.Entities.FinancialAccounting.LedgerAccountBalance", b =>
-                {
-                    b.HasOne("ECERP.Models.Entities.FinancialAccounting.LedgerAccount", "LedgerAccount")
-                        .WithMany()
-                        .HasForeignKey("LedgerAccountId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -631,6 +550,14 @@ namespace ECERP.API.Migrations
                     b.HasOne("OpenIddict.Models.OpenIddictAuthorization", "Authorization")
                         .WithMany("Tokens")
                         .HasForeignKey("AuthorizationId");
+                });
+
+            modelBuilder.Entity("ECERP.Models.Entities.FinancialAccounting.LedgerTransaction", b =>
+                {
+                    b.HasOne("ECERP.Models.Entities.FinancialAccounting.ChartOfAccounts", "ChartOfAccounts")
+                        .WithMany()
+                        .HasForeignKey("ChartOfAccountsId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ECERP.Models.Entities.FinancialAccounting.LedgerTransactionLine", b =>

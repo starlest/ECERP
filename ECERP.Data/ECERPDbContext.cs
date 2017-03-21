@@ -20,21 +20,34 @@
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<SystemParameter>().HasIndex(p => p.Key).IsUnique();
+
             modelBuilder.Entity<ApplicationUser>().ToTable("Users");
-            modelBuilder.Entity<ApplicationUser>().HasOne(u => u.CreatedBy).WithMany().OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<ApplicationUser>().HasOne(u => u.ModifiedBy).WithMany().OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ChartOfAccounts>().ToTable("ChartsOfAccounts");
             modelBuilder.Entity<ChartOfAccounts>().HasOne(coa => coa.Company).WithOne(c => c.ChartOfAccounts);
             modelBuilder.Entity<LedgerAccount>().HasIndex(la => la.AccountNumber).IsUnique();
             modelBuilder.Entity<LedgerAccount>().HasIndex(la => la.Name).IsUnique();
+
+            modelBuilder.Entity<LedgerTransactionLine>()
+                .HasOne(line => line.LedgerAccount)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
         }
         #endregion
 
         #region Properties
+        public DbSet<SystemParameter> SystemParameters { get; set; }
         public DbSet<Company> Companies { get; set; }
+//        public DbSet<Transaction> Transactions { get; set; }
+//        public DbSet<TransactionLine> TransactionLines { get; set; }
+
+        // Financial Accounting
         public DbSet<ChartOfAccounts> ChartsOfAccounts { get; set; }
         public DbSet<LedgerAccount> LedgerAccounts { get; set; }
+        public DbSet<LedgerTransaction> LedgerTransactions { get; set; }
+        public DbSet<LedgerTransactionLine> LedgerTransactionLines { get; set; }
+        public DbSet<LedgerAccountBalance> LedgerAccountBalances { get; set; }
         #endregion
     }
 }

@@ -1,8 +1,11 @@
 ﻿namespace ECERP.Business.Services
 {
+    using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using Abstract;
+    using Abstract.FinancialAccounting;
     using Data.Abstract;
     using Models.Entities;
     using Models.Entities.Companies;
@@ -16,10 +19,10 @@
         #endregion
 
         #region Constructor
-        public CompanyService(IRepository repository, ILedgerAccountService accountService)
+        public CompanyService(IRepository repository, ILedgerAccountService ledgerAccountService)
         {
             _repository = repository;
-            _ledgerAccountService = accountService;
+            _ledgerAccountService = ledgerAccountService;
         }
         #endregion
 
@@ -39,7 +42,7 @@
             return _repository.GetOne<Company>(c => c.Name.Equals(name));
         }
 
-        public void CreateCompany(string name, ApplicationUser createdBy)
+        public void Create(string name, string createdBy)
         {
             var company = new Company
             {
@@ -49,7 +52,134 @@
             _repository.Create(company, createdBy);
             company.ChartOfAccounts.LedgerAccounts =
                 GetDefaultLedgerAccountsForDistributionBusiness(company.ChartOfAccounts.Id).ToList();
+            var systemParameter = new SystemParameter
+            {
+                Key = Constants.LedgerCurrentPeriodStartDate,
+                Value = DateTime.Now.Date.AddDays(-DateTime.Now.Day + 1).ToString(CultureInfo.InvariantCulture),
+                CompanyId = company.Id
+            };
+            _repository.Create(systemParameter, createdBy);
             _repository.Save();
+        }
+
+        public void OpenLastLedgerPeriod(int companyId, string modifiedBy)
+        {
+            var currentPeriodStartDateParamater = _repository.GetOne<SystemParameter>(
+                p => p.CompanyId.Equals(companyId) && p.Key.Equals(Constants.LedgerCurrentPeriodStartDate));
+            var currentPeriodStartDate = DateTime.Parse(currentPeriodStartDateParamater.Value);
+            // Shift current period back by a month
+            currentPeriodStartDateParamater.Value =
+                currentPeriodStartDate.AddMonths(-1).ToString(CultureInfo.InvariantCulture);
+            _repository.Update(currentPeriodStartDateParamater, modifiedBy);
+        }
+
+        // TODO: Test Case
+        public void CloseCurrentLedgerPeriod(int companyId, string modifiedBy)
+        {
+            var currentPeriodStartDateParamater = _repository.GetOne<SystemParameter>(
+                p => p.CompanyId.Equals(companyId) && p.Key.Equals(Constants.LedgerCurrentPeriodStartDate));
+            var currentPeriodStartDate = DateTime.Parse(currentPeriodStartDateParamater.Value);
+
+            ClosePeriod(companyId, currentPeriodStartDate.Year, currentPeriodStartDate.Month, modifiedBy);
+
+            // Shift current period forward by a month
+            currentPeriodStartDateParamater.Value =
+                currentPeriodStartDate.AddMonths(1).ToString(CultureInfo.InvariantCulture);
+            _repository.Update(currentPeriodStartDateParamater, modifiedBy);
+
+            _repository.Save();
+        }
+
+        private void ClosePeriod(int companyId, int year, int month, string modifiedBy)
+        {
+            if (month < 1 || month > 12)
+                throw new Exception("Invalid closing period");
+
+            var coa = _repository.GetOne<ChartOfAccounts>(c => c.CompanyId.Equals(companyId), c => c.LedgerAccounts);
+            var closingPeriodLedgerAccounts = coa.LedgerAccounts.Where(
+                account => account.Type.Equals(LedgerAccountType.Asset) &&
+                           account.Type.Equals(LedgerAccountType.Liability) &&
+                           account.Type.Equals(LedgerAccountType.Equity) &&
+                           account.Type.Equals(LedgerAccountType.ContraAsset) &&
+                           account.Type.Equals(LedgerAccountType.ContraLiability) &&
+                           account.Type.Equals(LedgerAccountType.ContraEquity));
+
+            foreach (var account in closingPeriodLedgerAccounts)
+            {
+                var accountPeriodLedgerTransactionLines = _repository.Get<LedgerTransactionLine>(
+                        line =>
+                            line.LedgerAccountId.Equals(account.Id) &&
+                            (line.Transaction as LedgerTransaction).PostingDate.Year.Equals(year) &&
+                            (line.Transaction as LedgerTransaction).PostingDate.Month.Equals(month))
+                    .ToList();
+
+                // Get the starting balance of the account
+                var accountPeriodStartingBalance = month == 1
+                    ? _ledgerAccountService.GetPeriodBalance(account, year, 0)
+                    : _ledgerAccountService.GetPeriodBalance(account, year, month);
+                var accountPeriodEndingBalance = accountPeriodStartingBalance ?? 0;
+
+                // Calculate the ending balance
+                foreach (var line in accountPeriodLedgerTransactionLines)
+                {
+                    accountPeriodEndingBalance += _ledgerAccountService.IsIncrement(account.Type, line.IsDebit)
+                        ? line.Amount
+                        : -line.Amount;
+                }
+
+                // Create account balance if it does not exist in the database yet
+                var accountBalance =
+                    _repository.GetOne<LedgerAccountBalance>(b => b.LedgerAccountId == account.Id && b.Year == year) ??
+                    new LedgerAccountBalance { LedgerAccountId = account.Id };
+
+                SetAccountBalance(accountBalance, month, accountPeriodEndingBalance);
+                _repository.Update(accountBalance, modifiedBy);
+            }
+        }
+
+        private void SetAccountBalance(LedgerAccountBalance accountBalance, int month, decimal amount)
+        {
+            switch (month)
+            {
+                case 1:
+                    accountBalance.Balance1 = amount;
+                    break;
+                case 2:
+                    accountBalance.Balance2 = amount;
+                    break;
+                case 3:
+                    accountBalance.Balance3 = amount;
+                    break;
+                case 4:
+                    accountBalance.Balance4 = amount;
+                    break;
+                case 5:
+                    accountBalance.Balance5 = amount;
+                    break;
+                case 6:
+                    accountBalance.Balance6 = amount;
+                    break;
+                case 7:
+                    accountBalance.Balance7 = amount;
+                    break;
+                case 8:
+                    accountBalance.Balance8 = amount;
+                    break;
+                case 9:
+                    accountBalance.Balance9 = amount;
+                    break;
+                case 10:
+                    accountBalance.Balance10 = amount;
+                    break;
+                case 11:
+                    accountBalance.Balance11 = amount;
+                    break;
+                case 12:
+                    accountBalance.Balance12 = amount;
+                    break;
+                default:
+                    break;
+            }
         }
         #endregion
 
@@ -240,6 +370,18 @@
                         "Other administrative expense for the accounting period.",
                     Type = LedgerAccountType.Expense,
                     Group = LedgerAccountGroup.AdministrativeExpenses,
+                    IsActive = true,
+                    IsDefault = true
+                },
+                new LedgerAccount
+                {
+                    AccountNumber =
+                        _ledgerAccountService.GetNewAccountNumber(chartOfAccountsId, LedgerAccountGroup.CommonStock),
+                    Name = "Capital",
+                    Description =
+                        "Amount the owner invested in the company not withdrawn by the owner.",
+                    Type = LedgerAccountType.Equity,
+                    Group = LedgerAccountGroup.CommonStock,
                     IsActive = true,
                     IsDefault = true
                 }

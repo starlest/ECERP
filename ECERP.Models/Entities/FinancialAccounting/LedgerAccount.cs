@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public class LedgerAccount : Entity<int>, IEquatable<LedgerAccount>
+    public class LedgerAccount : Entity<int>
     {
         #region Constructor
         public LedgerAccount()
@@ -41,15 +41,6 @@
 
         #region Related Properties
         public virtual ChartOfAccounts ChartOfAccounts { get; set; }
-        #endregion
-
-        #region Equality
-        public bool Equals(LedgerAccount other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Id == other.Id;
-        }
         #endregion
     }
 }

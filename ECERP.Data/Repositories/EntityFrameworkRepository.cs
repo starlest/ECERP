@@ -5,7 +5,6 @@
     using Abstract;
     using Microsoft.EntityFrameworkCore;
     using Models;
-    using Models.Entities;
 
     public class EntityFrameworkRepository<TContext> : EntityFrameworkReadOnlyRepository<TContext>, IRepository
         where TContext : DbContext
@@ -15,18 +14,18 @@
         {
         }
 
-        public virtual void Create<TEntity>(TEntity entity, ApplicationUser createdBy)
+        public virtual void Create<TEntity>(TEntity entity, string createdBy)
             where TEntity : class, IEntity
         {
-            entity.CreatedDate = DateTime.UtcNow;
+            entity.CreatedDate = DateTime.Now;
             entity.CreatedBy = createdBy;
             context.Set<TEntity>().Add(entity);
         }
 
-        public virtual void Update<TEntity>(TEntity entity, ApplicationUser modifiedBy)
+        public virtual void Update<TEntity>(TEntity entity, string modifiedBy)
             where TEntity : class, IEntity
         {
-            entity.ModifiedDate = DateTime.UtcNow;
+            entity.ModifiedDate = DateTime.Now;
             entity.ModifiedBy = modifiedBy;
             context.Set<TEntity>().Attach(entity);
             context.Entry(entity).State = EntityState.Modified;
@@ -52,12 +51,26 @@
 
         public virtual void Save()
         {
-            context.SaveChanges();
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.InnerException.Message);
+            }
         }
 
         public virtual Task SaveAsync()
         {
-            return context.SaveChangesAsync();
+            try
+            {
+                return context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.InnerException.Message);
+            }
         }
     }
 }
