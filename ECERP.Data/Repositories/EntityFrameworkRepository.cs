@@ -3,8 +3,8 @@
     using System;
     using System.Threading.Tasks;
     using Abstract;
+    using Core;
     using Microsoft.EntityFrameworkCore;
-    using Models;
 
     public class EntityFrameworkRepository<TContext> : EntityFrameworkReadOnlyRepository<TContext>, IRepository
         where TContext : DbContext
@@ -14,19 +14,15 @@
         {
         }
 
-        public virtual void Create<TEntity>(TEntity entity, string createdBy)
+        public virtual void Create<TEntity>(TEntity entity)
             where TEntity : class, IEntity
         {
-            entity.CreatedDate = DateTime.Now;
-            entity.CreatedBy = createdBy;
             context.Set<TEntity>().Add(entity);
         }
 
-        public virtual void Update<TEntity>(TEntity entity, string modifiedBy)
+        public virtual void Update<TEntity>(TEntity entity)
             where TEntity : class, IEntity
         {
-            entity.ModifiedDate = DateTime.Now;
-            entity.ModifiedBy = modifiedBy;
             context.Set<TEntity>().Attach(entity);
             context.Entry(entity).State = EntityState.Modified;
         }

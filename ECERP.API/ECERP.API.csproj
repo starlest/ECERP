@@ -21,6 +21,7 @@
       <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0-msbuild3-final" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ECERP.Core\ECERP.Core.csproj" />
     <ProjectReference Include="..\ECERP.Data\ECERP.Data.csproj" />
   </ItemGroup>
 

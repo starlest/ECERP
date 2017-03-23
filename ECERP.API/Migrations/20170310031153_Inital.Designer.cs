@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using ECERP.Data;
-using ECERP.Models.Entities;
 
 namespace ECERP.API.Migrations
 {

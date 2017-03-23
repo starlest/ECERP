@@ -1,10 +1,12 @@
 ﻿namespace ECERP.Data
 {
+    using Core.Domain.Companies;
+    using Core.Domain.Configuration;
+    using Core.Domain.FinancialAccounting;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata;
     using Models.Entities;
-    using Models.Entities.Companies;
     using Models.Entities.FinancialAccounting;
 
     public class ECERPDbContext : IdentityDbContext<ApplicationUser>
@@ -20,7 +22,7 @@
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<SystemParameter>().HasIndex(p => p.Key).IsUnique();
+            modelBuilder.Entity<CompanySetting>().HasIndex(p => p.Key).IsUnique();
 
             modelBuilder.Entity<ApplicationUser>().ToTable("Users");
 
@@ -37,7 +39,7 @@
         #endregion
 
         #region Properties
-        public DbSet<SystemParameter> SystemParameters { get; set; }
+        public DbSet<CompanySetting> Settings { get; set; }
         public DbSet<Company> Companies { get; set; }
 //        public DbSet<Transaction> Transactions { get; set; }
 //        public DbSet<TransactionLine> TransactionLines { get; set; }
