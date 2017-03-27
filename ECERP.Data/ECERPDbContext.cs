@@ -7,7 +7,6 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata;
     using Models.Entities;
-    using Models.Entities.FinancialAccounting;
 
     public class ECERPDbContext : IdentityDbContext<ApplicationUser>
     {

@@ -15,8 +15,8 @@
                 Name = "test"
             };
             Assert.Equal("test", company.Name);
-            Assert.Equal(1, company.CompanySettings.Count);
             Assert.NotNull(company.ChartOfAccounts);
+            Assert.NotNull(company.CompanySettings);
         }
 
         [Fact]
@@ -26,10 +26,10 @@
             {
                 Name = "test"
             };
-            var companySetting = new CompanySetting { Id = 2 };
+            var companySetting = new CompanySetting { Id = 1 };
             company.CompanySettings.Add(companySetting);
-            Assert.Equal(2, company.CompanySettings.Count);
-            Assert.Equal(2, company.CompanySettings.Last().Id);
+            Assert.Equal(1, company.CompanySettings.Count);
+            Assert.Equal(1, company.CompanySettings.First().Id);
         }
     }
 }

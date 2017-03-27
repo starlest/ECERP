@@ -23,6 +23,7 @@
         public virtual void Update<TEntity>(TEntity entity)
             where TEntity : class, IEntity
         {
+            entity.ModifiedDate = DateTime.UtcNow;
             context.Set<TEntity>().Attach(entity);
             context.Entry(entity).State = EntityState.Modified;
         }
@@ -39,9 +40,7 @@
         {
             var dbSet = context.Set<TEntity>();
             if (context.Entry(entity).State == EntityState.Detached)
-            {
                 dbSet.Attach(entity);
-            }
             dbSet.Remove(entity);
         }
 

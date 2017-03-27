@@ -1,7 +1,7 @@
 ﻿namespace ECERP.Business.Abstract.FinancialAccounting
 {
     using System.Collections.Generic;
-    using Models.Entities.FinancialAccounting;
+    using Core.Domain.FinancialAccounting;
 
     public interface ILedgerAccountService
     {

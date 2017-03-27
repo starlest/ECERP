@@ -24,5 +24,11 @@
         /// <param name="name">Company name</param>
         /// <returns>A company</returns>
         Company GetCompanyByName(string name);
+
+        /// <summary>
+        /// Insert a company
+        /// </summary>
+        /// <param name="company">Company</param>
+        void InsertCompany(Company company);
     }
 }

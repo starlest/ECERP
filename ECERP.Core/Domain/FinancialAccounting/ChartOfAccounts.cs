@@ -1,32 +1,43 @@
 ﻿namespace ECERP.Core.Domain.FinancialAccounting
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using Companies;
     using Core;
-    using Models.Entities.FinancialAccounting;
 
     /// <summary>
     /// Represents a chart of accounts
     /// </summary>
     public class ChartOfAccounts : Entity<int>
     {
-        #region Constructor 
         public ChartOfAccounts()
         {
+            LedgerAccounts = new List<LedgerAccount>();
+            CurrentLedgerPeriodStartDate = DateTime.UtcNow.Date.AddDays(-DateTime.UtcNow.Day + 1);
         }
-        #endregion
 
-        #region Properties
+        /// <summary>
+        /// Gets or sets the associated company identifier
+        /// </summary>
         [Required, ForeignKey("Company")]
         public int CompanyId { get; set; }
-        #endregion
 
-        #region Navigational Properties
-        public virtual List<LedgerAccount> LedgerAccounts { get; set; }
+        /// <summary>
+        /// Gets or sets the current ledger period start date
+        /// </summary>
+        [Required]
+        public DateTime CurrentLedgerPeriodStartDate { get; set; }
 
-        public virtual Company Company { get; set; }
-        #endregion
+        /// <summary>
+        /// Gets or sets ledger accounts
+        /// </summary>
+        public IList<LedgerAccount> LedgerAccounts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the associated company
+        /// </summary>
+        public Company Company { get; set; }
     }
 }

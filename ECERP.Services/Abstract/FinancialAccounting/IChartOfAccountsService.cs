@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using Core.Domain.FinancialAccounting;
-    using Models.Entities.FinancialAccounting;
 
     public interface IChartOfAccountsService
     {

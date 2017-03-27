@@ -1,4 +1,4 @@
-﻿namespace ECERP.Core.Tests.Domain
+﻿namespace ECERP.Core.Tests.Domain.Configuration
 {
     using Core.Domain.Configuration;
     using Xunit;

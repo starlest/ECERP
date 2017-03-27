@@ -1,6 +1,6 @@
-﻿namespace ECERP.Business.Abstract.FinancialAccounting
+﻿namespace ECERP.Services.Abstract.FinancialAccounting
 {
-    using Models.Entities.FinancialAccounting;
+    using Core.Domain.FinancialAccounting;
 
     public interface ILedgerTransactionService
     {

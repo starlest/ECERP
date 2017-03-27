@@ -1,4 +1,4 @@
-﻿namespace ECERP.Business.Abstract
+﻿namespace ECERP.Services.Abstract
 {
     using System.Collections.Generic;
     using Core.Domain.Companies;

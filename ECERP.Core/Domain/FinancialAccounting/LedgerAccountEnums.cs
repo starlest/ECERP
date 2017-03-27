@@ -1,5 +1,8 @@
-﻿namespace ECERP.Models.Entities.FinancialAccounting
+﻿namespace ECERP.Core.Domain.FinancialAccounting
 {
+    /// <summary>
+    /// Ledger account types
+    /// </summary>
     public enum LedgerAccountType
     {
         Asset = 1,
@@ -14,6 +17,9 @@
         ContraExpense = -5
     }
 
+    /// <summary>
+    /// Ledger account groups
+    /// </summary>
     public enum LedgerAccountGroup
     {
         // Current Assets

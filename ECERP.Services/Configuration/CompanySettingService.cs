@@ -39,7 +39,6 @@
         /// <returns>Company Setting</returns>
         public virtual CompanySetting GetCompanySettingByKey(string key, int companyId)
         {
-            key = key.Trim().ToLowerInvariant();
             return _repository.GetOne<CompanySetting>(x => x.Key == key && x.CompanyId == companyId);
         }
 
@@ -51,10 +50,8 @@
         /// <returns>Company Setting value</returns>
         public virtual T GetCompanySettingValueByKey<T>(string key, int companyId)
         {
-            key = key.Trim().ToLowerInvariant();
             var companySetting = GetCompanySettingByKey(key, companyId);
-            if (companySetting == null) return default(T);
-            return CommonHelper.To<T>(companySetting.Value);
+            return companySetting == null ? default(T) : CommonHelper.To<T>(companySetting.Value);
         }
 
         /// <summary>
@@ -68,7 +65,7 @@
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
-            key = key.Trim().ToLowerInvariant();
+           
             var valueStr = CommonHelper.To<string>(value);
             var companySetting = GetCompanySettingByKey(key, companyId);
 
