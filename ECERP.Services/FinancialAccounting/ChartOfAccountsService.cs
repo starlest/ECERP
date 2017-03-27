@@ -12,14 +12,12 @@
     {
         #region Fields
         private readonly IRepository _repository;
-        private readonly ILedgerAccountService _ledgerAccountService;
         #endregion
 
         #region Constructor
-        public ChartOfAccountsService(IRepository repository, ILedgerAccountService ledgerAccountService)
+        public ChartOfAccountsService(IRepository repository)
         {
             _repository = repository;
-            _ledgerAccountService = ledgerAccountService;
         }
         #endregion
 
@@ -78,10 +76,32 @@
                             line.LedgerTransaction.PostingDate.Month.Equals(month))
                     .ToList();
 
+                LedgerAccountBalance accountBalance;
+
+                // Create new account balance for this year
+                if (month == 1)
+                {
+                    accountBalance = new LedgerAccountBalance { LedgerAccountId = account.Id, Year = year };
+
+                    var previousYearAccountBalance =
+                        _repository.GetOne<LedgerAccountBalance>(
+                            b => b.LedgerAccountId == account.Id && b.Year == year - 1);
+                    // Set the beginning balance to previous year's ending balance
+                    if (previousYearAccountBalance != null)
+                        accountBalance.SetMonthBalance(0, previousYearAccountBalance.Balance12);
+                }
+                else
+                {
+                    // Create account balance if it does not exist in the database yet
+                    accountBalance =
+                        _repository.GetOne<LedgerAccountBalance>(b => b.LedgerAccountId == account.Id && b.Year == year) ??
+                        new LedgerAccountBalance { LedgerAccountId = account.Id, Year = year };
+                }
+
                 // Get the starting balance of the account
                 var accountPeriodStartingBalance = month == 1
-                    ? _ledgerAccountService.GetPeriodLedgerAccountBalance(account, year, 0)
-                    : _ledgerAccountService.GetPeriodLedgerAccountBalance(account, year, month);
+                    ? accountBalance.GetMonthBalance(0)
+                    : accountBalance.GetMonthBalance(month);
 
                 // Calculate the ending balance
                 var accountPeriodEndingBalance = accountPeriodStartingBalance +
@@ -90,11 +110,6 @@
                                                          IsIncrement(account.Type, line.IsDebit)
                                                              ? line.Amount
                                                              : -line.Amount);
-
-                // Create account balance if it does not exist in the database yet
-                var accountBalance =
-                    _repository.GetOne<LedgerAccountBalance>(b => b.LedgerAccountId == account.Id && b.Year == year) ??
-                    new LedgerAccountBalance { LedgerAccountId = account.Id };
 
                 accountBalance.SetMonthBalance(month, accountPeriodEndingBalance);
                 _repository.Update(accountBalance);

@@ -15,10 +15,7 @@
         {
             _mockRepo = new Mock<IRepository>();
             _mockRepo.Setup(x => x.GetById<ChartOfAccounts>(It.IsAny<object>())).Returns(this.GetTestChartOfAccounts);
-
-            var mockLedgerAccountService = new Mock<ILedgerAccountService>();
-
-            _chartOfAccountsService = new ChartOfAccountsService(_mockRepo.Object, mockLedgerAccountService.Object);
+            _chartOfAccountsService = new ChartOfAccountsService(_mockRepo.Object);
         }
 
         [Fact]
