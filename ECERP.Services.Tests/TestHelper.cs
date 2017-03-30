@@ -279,6 +279,32 @@
                     IsActive = true,
                     IsDefault = true,
                     ChartOfAccountsId = 1
+                },
+                new LedgerAccount
+                {
+                    Id = 17,
+                    AccountNumber = 17,
+                    Name = "Sales Returns and Allowances",
+                    Description =
+                        "Amounts of merchandise returned by customers and allowances granted to customers during the period",
+                    Type = LedgerAccountType.ContraRevenue,
+                    Group = LedgerAccountGroup.SalesReturnsAndAllowances,
+                    IsActive = true,
+                    IsDefault = true,
+                    ChartOfAccountsId = 1
+                },
+                new LedgerAccount
+                {
+                    Id = 18,
+                    AccountNumber = 18,
+                    Name = "Purchase Returns and Allowances",
+                    Description =
+                        "Amounts of merchandise returned to suppliers and allowances granted by suppliers during the period",
+                    Type = LedgerAccountType.ContraExpense,
+                    Group = LedgerAccountGroup.PurchaseReturnsAndAllowances,
+                    IsActive = true,
+                    IsDefault = true,
+                    ChartOfAccountsId = 1
                 }
             };
         }

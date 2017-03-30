@@ -20,5 +20,24 @@
             Assert.Equal(2000, transactionLine.Amount);
             Assert.True(transactionLine.IsDebit);
         }
+
+        [Fact]
+        public void Can_determine_is_increment()
+        {
+            var transactionLine = new LedgerTransactionLine
+            {
+                LedgerTransactionId = 1,
+                LedgerAccount = new LedgerAccount
+                {
+                    Type = LedgerAccountType.Asset
+                },
+                Amount = 2000,
+                IsDebit = true
+            };
+            Assert.True(transactionLine.IsIncrement());
+            transactionLine.IsDebit = false;
+            Assert.False(transactionLine.IsIncrement());
+            transactionLine.LedgerAccount.Type = LedgerAccountType.Equity;
+        }
     }
 }

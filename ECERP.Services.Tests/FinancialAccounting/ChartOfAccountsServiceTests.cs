@@ -2,7 +2,7 @@
 {
     using Core.Domain.FinancialAccounting;
     using Data.Abstract;
-    using ECERP.Services.FinancialAccounting;
+    using Services.FinancialAccounting;
     using Moq;
     using Xunit;
 
@@ -31,6 +31,16 @@
         {
             var testCoa = this.GetTestChartOfAccounts();
             _chartOfAccountsService.RegressLedgerPeriod(testCoa.Id);
+            _mockRepo.Verify(x => x.Save(), Times.Once);
+        }
+
+        [Fact]
+        public void Can_close_ledger_period()
+        {
+            var testCoa = this.GetTestChartOfAccounts();
+            _chartOfAccountsService.CloseLedgerPeriod(testCoa.Id);
+            _mockRepo.Verify(x => x.Update(It.IsAny<LedgerAccountBalance>()), Times.Exactly(3));
+            _mockRepo.Verify(x => x.Update(It.IsAny<ChartOfAccounts>()), Times.Once);
             _mockRepo.Verify(x => x.Save(), Times.Once);
         }
     }

@@ -1,6 +1,7 @@
 ﻿namespace ECERP.Services.FinancialAccounting
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Core.Domain.FinancialAccounting;
     using Data.Abstract;
@@ -58,79 +59,75 @@
             var year = coa.CurrentLedgerPeriodStartDate.Year;
             var month = coa.CurrentLedgerPeriodStartDate.Month;
 
-            // filter out the accounts that are required for closing
-            var accounts = coa.LedgerAccounts.Where(
-                account => account.Type.Equals(LedgerAccountType.Asset) &&
-                           account.Type.Equals(LedgerAccountType.Liability) &&
-                           account.Type.Equals(LedgerAccountType.Equity) &&
-                           account.Type.Equals(LedgerAccountType.ContraAsset) &&
-                           account.Type.Equals(LedgerAccountType.ContraLiability) &&
-                           account.Type.Equals(LedgerAccountType.ContraEquity));
+            // Filter out only the accounts that are required for closing
+            var accounts = ExtractClosingLedgerAccounts(coa.LedgerAccounts);
 
             foreach (var account in accounts)
             {
-                var accountPeriodLedgerTransactionLines = _repository.Get<LedgerTransactionLine>(
-                        line =>
-                            line.LedgerAccountId.Equals(account.Id) &&
-                            line.LedgerTransaction.PostingDate.Year.Equals(year) &&
-                            line.LedgerTransaction.PostingDate.Month.Equals(month))
-                    .ToList();
+                var accountBalance = GetPeriodLedgerAccountBalance(account.Id, year, month);
 
-                LedgerAccountBalance accountBalance;
+                // Get the period starting balance
+                var accountPeriodStartingBalance = accountBalance.GetMonthBalance(month - 1);
 
-                // Create new account balance for this year
-                if (month == 1)
-                {
-                    accountBalance = new LedgerAccountBalance { LedgerAccountId = account.Id, Year = year };
-
-                    var previousYearAccountBalance =
-                        _repository.GetOne<LedgerAccountBalance>(
-                            b => b.LedgerAccountId == account.Id && b.Year == year - 1);
-                    // Set the beginning balance to previous year's ending balance
-                    if (previousYearAccountBalance != null)
-                        accountBalance.SetMonthBalance(0, previousYearAccountBalance.Balance12);
-                }
-                else
-                {
-                    // Create account balance if it does not exist in the database yet
-                    accountBalance =
-                        _repository.GetOne<LedgerAccountBalance>(b => b.LedgerAccountId == account.Id && b.Year == year) ??
-                        new LedgerAccountBalance { LedgerAccountId = account.Id, Year = year };
-                }
-
-                // Get the starting balance of the account
-                var accountPeriodStartingBalance = month == 1
-                    ? accountBalance.GetMonthBalance(0)
-                    : accountBalance.GetMonthBalance(month);
-
-                // Calculate the ending balance
+                // Calculate the period ending balance
                 var accountPeriodEndingBalance = accountPeriodStartingBalance +
-                                                 accountPeriodLedgerTransactionLines.Sum(
-                                                     line =>
-                                                         IsIncrement(account.Type, line.IsDebit)
-                                                             ? line.Amount
-                                                             : -line.Amount);
+                                                 CalculatePeriodLedgerAccountBalanceChange(account, year, month);
 
+                // Update the ending balance
                 accountBalance.SetMonthBalance(month, accountPeriodEndingBalance);
                 _repository.Update(accountBalance);
             }
 
+            // Advance and update the current ledger period
             coa.AdvanceLedgerPeriod();
+            _repository.Update(coa);
+
+            // Persist changes
             _repository.Save();
         }
         #endregion
 
         #region Utilities
-        private static bool IsIncrement(LedgerAccountType type, bool isDebit)
+        private static IEnumerable<LedgerAccount> ExtractClosingLedgerAccounts(IEnumerable<LedgerAccount> ledgerAccounts)
         {
-            return isDebit &&
-                   (type == LedgerAccountType.Asset || type == LedgerAccountType.Expense ||
-                    type == LedgerAccountType.ContraLiability || type == LedgerAccountType.ContraEquity ||
-                    type == LedgerAccountType.ContraRevenue) ||
-                   !isDebit &&
-                   (type == LedgerAccountType.Liability || type == LedgerAccountType.Equity ||
-                    type == LedgerAccountType.Revenue || type == LedgerAccountType.ContraAsset ||
-                    type == LedgerAccountType.ContraExpense);
+            return ledgerAccounts.Where(account => account.Type.Equals(LedgerAccountType.Asset) ||
+                                                   account.Type.Equals(LedgerAccountType.Liability) ||
+                                                   account.Type.Equals(LedgerAccountType.Equity) ||
+                                                   account.Type.Equals(LedgerAccountType.ContraAsset) ||
+                                                   account.Type.Equals(LedgerAccountType.ContraLiability) ||
+                                                   account.Type.Equals(LedgerAccountType.ContraEquity));
+        }
+
+        private decimal CalculatePeriodLedgerAccountBalanceChange(LedgerAccount ledgerAccount, int year, int month)
+        {
+            var periodLedgerTransactionLines = _repository.Get<LedgerTransactionLine>(line =>
+                line.LedgerAccountId.Equals(ledgerAccount.Id) &&
+                line.LedgerTransaction.PostingDate.Year.Equals(year) &&
+                line.LedgerTransaction.PostingDate.Month.Equals(month));
+            return LedgerAccountBalanceExtensions.CalculateLedgerTransactionLinesTotal(periodLedgerTransactionLines);
+        }
+
+        private LedgerAccountBalance GetPeriodLedgerAccountBalance(int ledgerAccountId, int year, int month)
+        {
+            // If closing month is January, create a new account balance for this year
+            if (month == 1)
+            {
+                var accountBalance = new LedgerAccountBalance { LedgerAccountId = ledgerAccountId, Year = year };
+
+                var previousYearAccountBalance =
+                    _repository.GetOne<LedgerAccountBalance>(
+                        b => b.LedgerAccountId == ledgerAccountId && b.Year == year - 1);
+                // Set the beginning balance to previous year's ending balance
+                if (previousYearAccountBalance != null)
+                    accountBalance.SetMonthBalance(0, previousYearAccountBalance.Balance12);
+
+                return accountBalance;
+            }
+
+            // Create account balance if it does not exist in the database yet
+            return
+                _repository.GetOne<LedgerAccountBalance>(b => b.LedgerAccountId == ledgerAccountId && b.Year == year) ??
+                new LedgerAccountBalance { LedgerAccountId = ledgerAccountId, Year = year };
         }
         #endregion
     }

@@ -35,7 +35,7 @@
         {
             var testCOA = this.GetTestChartOfAccounts();
             var results = _ledgerAccountService.GetAllLedgerAccountsByCOAId(testCOA.Id);
-            Assert.Equal(16, results.Count);
+            Assert.Equal(18, results.Count);
             Assert.True(CommonHelper.ListsEqual(testCOA.LedgerAccounts, results));
         }
 

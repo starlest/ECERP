@@ -1,5 +1,6 @@
 ﻿namespace ECERP.Core.Tests.Domain.FinancialAccounting
 {
+    using System.Collections.Generic;
     using Core.Domain.FinancialAccounting;
     using Xunit;
 
@@ -43,6 +44,56 @@
             };
             ledgerAccountBalance.SetMonthBalance(0, 3000);
             Assert.Equal(3000, ledgerAccountBalance.GetMonthBalance(0));
+        }
+
+        [Fact]
+        public void Can_calculate_ledger_transaction_lines_total()
+        {
+            var transactionLines = new List<LedgerTransactionLine>
+            {
+                new LedgerTransactionLine
+                {
+                    LedgerTransactionId = 1,
+                    LedgerAccount = new LedgerAccount
+                    {
+                        Type = LedgerAccountType.Asset
+                    },
+                    Amount = 2000,
+                    IsDebit = true
+                },
+                new LedgerTransactionLine
+                {
+                    LedgerTransactionId = 1,
+                    LedgerAccount = new LedgerAccount
+                    {
+                        Type = LedgerAccountType.Asset
+                    },
+                    Amount = 2000,
+                    IsDebit = false
+                },
+                new LedgerTransactionLine
+                {
+                    LedgerTransactionId = 1,
+                    LedgerAccount = new LedgerAccount
+                    {
+                        Type = LedgerAccountType.Liability
+                    },
+                    Amount = 2000,
+                    IsDebit = true
+                },
+                new LedgerTransactionLine
+                {
+                    LedgerTransactionId = 1,
+                    LedgerAccount = new LedgerAccount
+                    {
+                        Type = LedgerAccountType.Equity
+                    },
+                    Amount = 2000,
+                    IsDebit = false
+                },
+            };
+            var total = LedgerAccountBalanceExtensions.CalculateLedgerTransactionLinesTotal(transactionLines);
+            Assert.Equal(0, total);
         }
     }
 }

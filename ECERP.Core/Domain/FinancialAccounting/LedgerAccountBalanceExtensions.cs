@@ -1,5 +1,9 @@
 ﻿namespace ECERP.Core.Domain.FinancialAccounting
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public static class LedgerAccountBalanceExtensions
     {
         /// <summary>
@@ -10,6 +14,9 @@
         /// <returns>Period Balance</returns>
         public static decimal GetMonthBalance(this LedgerAccountBalance ledgerAccountBalance, int month)
         {
+            if (month < 0 || month > 12)
+                throw new ArgumentOutOfRangeException(nameof(month), "Month is out of range");
+
             switch (month)
             {
                 case 0:
@@ -94,6 +101,16 @@
                     ledgerAccountBalance.Balance12 = amount;
                     break;
             }
+        }
+
+        /// <summary>
+        /// Calculates the given ledger transaction lines total amount
+        /// </summary>
+        /// <param name="ledgerTransactionLines">Ledger Transaction Lines</param>
+        /// <returns>Ledger transaction lines total</returns>
+        public static decimal CalculateLedgerTransactionLinesTotal(IEnumerable<LedgerTransactionLine> ledgerTransactionLines)
+        {
+            return ledgerTransactionLines.Sum(line => line.IsIncrement() ? line.Amount : -line.Amount);
         }
     }
 }

@@ -71,6 +71,12 @@
 
         // Operating Expenses
         SellingExpenses = 503,
-        AdministrativeExpenses = 504
+        AdministrativeExpenses = 504,
+
+        // Contra Revenues
+        SalesReturnsAndAllowances = 601,
+
+        // Contra Expenses
+        PurchaseReturnsAndAllowances = 701,
     }
 }

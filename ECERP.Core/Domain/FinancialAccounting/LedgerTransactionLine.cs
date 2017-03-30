@@ -36,11 +36,11 @@
         /// <summary>
         /// Gets or sets the associated ledger account
         /// </summary>
-        public virtual LedgerAccount LedgerAccount { get; set; }
+        public LedgerAccount LedgerAccount { get; set; }
 
         /// <summary>
         /// Gets or sets the associated ledger transaction
         /// </summary>
-        public virtual LedgerTransaction LedgerTransaction { get; set; }
+        public LedgerTransaction LedgerTransaction { get; set; }
     }
 }

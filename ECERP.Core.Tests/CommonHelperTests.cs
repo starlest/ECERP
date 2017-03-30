@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace ECERP.Core.Tests
+﻿namespace ECERP.Core.Tests
 {
+    using System;
     using System.Globalization;
     using Xunit;
 
