@@ -31,27 +31,21 @@
             IQueryable<TEntity> query = context.Set<TEntity>();
 
             if (filter != null)
-            {
                 query = query.Where(filter);
-            }
-
+            
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
 
             if (orderBy != null)
-            {
                 query = orderBy(query);
-            }
-
+            
+        
             if (skip.HasValue)
-            {
                 query = query.Skip(skip.Value);
-            }
+            
 
             if (take.HasValue)
-            {
                 query = query.Take(take.Value);
-            }
-
+           
             return query;
         }
 

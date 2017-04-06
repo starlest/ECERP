@@ -1,6 +1,9 @@
 ﻿namespace ECERP.Services.FinancialAccounting
 {
-    using System.Collections.Generic;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using Core;
     using Core.Domain.FinancialAccounting;
 
     /// <summary>
@@ -9,11 +12,25 @@
     public interface ILedgerAccountService
     {
         /// <summary>
-        /// Gets all chart of accounts ledger accounts
+        /// Gets ledger accounts
         /// </summary>
-        /// <param name="coaId">Chart of accounts identifier</param>
+        /// <param name="filter">Filter</param>
+        /// <param name="sortOrder">Sort Order</param>
+        /// <param name="pageIndex">Page Index</param>
+        /// <param name="pageSize">Page Size</param>
         /// <returns>Ledger accounts</returns>
-        IList<LedgerAccount> GetAllLedgerAccountsByCOAId(int coaId);
+        IPagedList<LedgerAccount> GetLedgerAccounts(
+            Expression<Func<LedgerAccount, bool>> filter = null,
+            Func<IQueryable<LedgerAccount>, IOrderedQueryable<LedgerAccount>> sortOrder = null,
+            int pageIndex = 0,
+            int pageSize = int.MaxValue);
+
+//        /// <summary>
+//        /// Gets all chart of accounts ledger accounts
+//        /// </summary>
+//        /// <param name="coaId">Chart of accounts identifier</param>
+//        /// <returns>Ledger accounts</returns>
+//        IList<LedgerAccount> GetAllLedgerAccountsByCOAId(int coaId);
 
         /// <summary>
         /// Gets a ledger account
@@ -45,9 +62,11 @@
         /// <returns>Account balance</returns>
         decimal GetPeriodLedgerAccountBalance(LedgerAccount ledgerAccount, int year, int month);
 
-//        decimal GetCurrentBalance(LedgerAccount ledgerAccount);
-//        int GetNewAccountNumber(int chartOfAccountsId, LedgerAccountGroup group);
-//
-//        bool IsIncrement(LedgerAccountType type, bool isDebit);
+        /// <summary>
+        /// Generates a new account number
+        /// </summary>
+        /// <param name="group">Ledger Account Group</param>
+        /// <returns>Account Number</returns>
+        int GetNewAccountNumber(LedgerAccountGroup group);
     }
 }

@@ -17,6 +17,11 @@
         public LedgerAccountServiceTests()
         {
             _mockRepo = new Mock<IRepository>();
+            _mockRepo.Setup(
+                    x =>
+                        x.Get(It.IsAny<Expression<Func<LedgerAccount, bool>>>(), null, null, null,
+                            It.IsAny<Expression<Func<LedgerAccount, object>>[]>()))
+                .Returns(this.GetTestLedgerAccounts);
             _mockRepo.Setup(x => x.GetById<ChartOfAccounts>(It.IsAny<object>()))
                 .Returns(this.GetTestChartOfAccounts);
             _mockRepo.Setup(x => x.GetById<LedgerAccount>(It.IsAny<object>()))
@@ -31,13 +36,28 @@
         }
 
         [Fact]
-        public void Can_get_all_ledgerAccounts_by_COAId()
+        public void Can_get_ledgerAccounts()
         {
-            var testCOA = this.GetTestChartOfAccounts();
-            var results = _ledgerAccountService.GetAllLedgerAccountsByCOAId(testCOA.Id);
-            Assert.Equal(18, results.Count);
-            Assert.True(CommonHelper.ListsEqual(testCOA.LedgerAccounts, results));
+            var testLedgerAccounts = this.GetTestLedgerAccounts();
+            var results = _ledgerAccountService.GetLedgerAccounts();
+            Assert.True(CommonHelper.ListsEqual(testLedgerAccounts, results));
         }
+
+        [Fact]
+        public void Can_get_paged_ledgerAccounts()
+        {
+            var results = _ledgerAccountService.GetLedgerAccounts(pageIndex: 1, pageSize: 5);
+            Assert.Equal(5, results.Count);
+        }
+
+//        [Fact]
+//        public void Can_get_all_ledgerAccounts_by_COAId()
+//        {
+//            var testCOA = this.GetTestChartOfAccounts();
+//            var results = _ledgerAccountService.GetAllLedgerAccountsByCOAId(testCOA.Id);
+//            Assert.Equal(18, results.Count);
+//            Assert.True(CommonHelper.ListsEqual(testCOA.LedgerAccounts, results));
+//        }
 
         [Fact]
         public void Can_get_ledgerAccount_by_id()

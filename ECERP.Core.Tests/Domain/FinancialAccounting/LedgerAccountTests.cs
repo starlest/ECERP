@@ -16,7 +16,8 @@
                 Type = LedgerAccountType.Asset,
                 Group = LedgerAccountGroup.CashAndBank,
                 IsActive = true,
-                IsDefault = true
+                IsDefault = true,
+                IsHidden = false
             };
             Assert.Equal(00000, ledgerAccount.AccountNumber);
             Assert.Equal("Test", ledgerAccount.Name);
@@ -25,6 +26,7 @@
             Assert.Equal(LedgerAccountGroup.CashAndBank, ledgerAccount.Group);
             Assert.True(ledgerAccount.IsActive);
             Assert.True(ledgerAccount.IsDefault);
+            Assert.False(ledgerAccount.IsHidden);
         }
     }
 }

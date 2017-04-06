@@ -9,7 +9,7 @@
     public class PagedList<T> : List<T>, IPagedList<T>
     {
         /// <summary>
-        /// Ctor
+        /// Constructor
         /// </summary>
         /// <param name="source">source</param>
         /// <param name="pageIndex">Page index</param>
@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        /// Ctor
+        /// Constructor
         /// </summary>
         /// <param name="source">source</param>
         /// <param name="pageIndex">Page index</param>

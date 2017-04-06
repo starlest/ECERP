@@ -6,7 +6,6 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Core;
-    using Models;
 
     public interface IReadOnlyRepository
     {

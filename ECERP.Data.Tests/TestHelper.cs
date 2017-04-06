@@ -44,6 +44,7 @@
                 Group = LedgerAccountGroup.CashAndBank,
                 IsActive = true,
                 IsDefault = true,
+                IsHidden = true,
                 ChartOfAccountsId = test.GetTestChartOfAccounts().Id
             };
         }

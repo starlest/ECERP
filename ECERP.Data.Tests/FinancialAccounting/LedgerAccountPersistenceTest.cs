@@ -18,6 +18,7 @@
             Assert.Equal(ledgerAccount.Group, fromDb.Group);
             Assert.Equal(ledgerAccount.IsActive, fromDb.IsActive);
             Assert.Equal(ledgerAccount.IsDefault, fromDb.IsDefault);
+            Assert.Equal(ledgerAccount.IsHidden, fromDb.IsHidden);
             Assert.Equal(ledgerAccount.ChartOfAccountsId, fromDb.ChartOfAccountsId);
         }
     }

@@ -1,7 +1,9 @@
 ﻿namespace ECERP.Services.FinancialAccounting
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using Core;
     using Core.Domain.FinancialAccounting;
     using Data.Abstract;
 
@@ -23,14 +25,35 @@
 
         #region Methods
         /// <summary>
-        /// Gets all chart of accounts ledger accounts
+        /// Gets ledger accounts
         /// </summary>
-        /// <param name="coaId">Chart of accounts identifier</param>
+        /// <param name="filter">Filter</param>
+        /// <param name="sortOrder">Sort Order</param>
+        /// <param name="pageIndex">Page Index</param>
+        /// <param name="pageSize">Page Size</param>
         /// <returns>Ledger accounts</returns>
-        public virtual IList<LedgerAccount> GetAllLedgerAccountsByCOAId(int coaId)
+        public virtual IPagedList<LedgerAccount> GetLedgerAccounts(
+            Expression<Func<LedgerAccount, bool>> filter = null,
+            Func<IQueryable<LedgerAccount>, IOrderedQueryable<LedgerAccount>> sortOrder = null,
+            int pageIndex = 0,
+            int pageSize = int.MaxValue)
         {
-            return _repository.GetById<ChartOfAccounts>(coaId).LedgerAccounts;
+            var skip = (pageIndex - 1) * pageSize;
+            var customers =
+                _repository.Get(filter, sortOrder, null, null, la => la.ChartOfAccounts.Company).ToList();
+            var pagedCustomers = customers.Skip(skip).Take(pageSize);
+            return new PagedList<LedgerAccount>(pagedCustomers, pageIndex, pageSize, customers.Count);
         }
+
+//        /// <summary>
+//        /// Gets all chart of accounts ledger accounts
+//        /// </summary>
+//        /// <param name="coaId">Chart of accounts identifier</param>
+//        /// <returns>Ledger accounts</returns>
+//        public virtual IList<LedgerAccount> GetAllLedgerAccountsByCOAId(int coaId)
+//        {
+//            return _repository.GetById<ChartOfAccounts>(coaId).LedgerAccounts;
+//        }
 
         /// <summary>
         /// Gets a ledger account
@@ -75,6 +98,23 @@
             var ledgerAccountBalance =
                 _repository.GetOne<LedgerAccountBalance>(x => x.LedgerAccountId == ledgerAccount.Id && x.Year == year);
             return ledgerAccountBalance == null ? 0 : ledgerAccountBalance.GetMonthBalance(month);
+        }
+
+        /// <summary>
+        /// Generates a new account number
+        /// </summary>
+        /// <param name="group">Ledger Account Group</param>
+        /// <returns>Account Number</returns>
+        public int GetNewAccountNumber(LedgerAccountGroup group)
+        {
+            var defaultAccountNumber = (int) group * 10000 + 1;
+
+            var lastGroupLedgerAccount =
+                _repository.Get<LedgerAccount>(la => la.Group.Equals(group))
+                    .OrderByDescending(la => la.AccountNumber)
+                    .FirstOrDefault();
+
+            return lastGroupLedgerAccount == null ? defaultAccountNumber : lastGroupLedgerAccount.AccountNumber + 1;
         }
         #endregion
     }

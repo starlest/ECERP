@@ -89,6 +89,7 @@
                     Group = LedgerAccountGroup.CashAndBank,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -102,6 +103,7 @@
                     Group = LedgerAccountGroup.Inventory,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = true,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -115,6 +117,7 @@
                     Group = LedgerAccountGroup.SalesRevenue,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = true,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -128,6 +131,7 @@
                     Group = LedgerAccountGroup.CostOfGoodsSold,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = true,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -140,6 +144,7 @@
                     Group = LedgerAccountGroup.SellingExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -152,6 +157,7 @@
                     Group = LedgerAccountGroup.SellingExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -164,6 +170,7 @@
                     Group = LedgerAccountGroup.SellingExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -176,6 +183,7 @@
                     Group = LedgerAccountGroup.SellingExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -188,6 +196,7 @@
                     Group = LedgerAccountGroup.SellingExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -201,6 +210,7 @@
                     Group = LedgerAccountGroup.AdministrativeExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -213,6 +223,7 @@
                     Group = LedgerAccountGroup.AdministrativeExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -226,6 +237,7 @@
                     Group = LedgerAccountGroup.AdministrativeExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -239,6 +251,7 @@
                     Group = LedgerAccountGroup.AdministrativeExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -252,6 +265,7 @@
                     Group = LedgerAccountGroup.AdministrativeExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -265,6 +279,7 @@
                     Group = LedgerAccountGroup.AdministrativeExpenses,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = false,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -278,6 +293,7 @@
                     Group = LedgerAccountGroup.CommonStock,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = true,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -291,6 +307,7 @@
                     Group = LedgerAccountGroup.SalesReturnsAndAllowances,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = true,
                     ChartOfAccountsId = 1
                 },
                 new LedgerAccount
@@ -304,6 +321,7 @@
                     Group = LedgerAccountGroup.PurchaseReturnsAndAllowances,
                     IsActive = true,
                     IsDefault = true,
+                    IsHidden = true,
                     ChartOfAccountsId = 1
                 }
             };

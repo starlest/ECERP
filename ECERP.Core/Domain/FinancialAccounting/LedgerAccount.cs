@@ -11,6 +11,7 @@
     {
         public LedgerAccount()
         {
+            IsActive = true;
         }
 
         /// <summary>
@@ -30,6 +31,12 @@
         /// </summary>
         [Required, MaxLength(500)]
         public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets hidden from users
+        /// </summary>
+        [Required]
+        public bool IsHidden { get; set; }
 
         /// <summary>
         /// Gets or sets if account is active

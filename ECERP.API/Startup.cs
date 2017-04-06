@@ -1,7 +1,12 @@
 ﻿namespace ECERP.API
 {
+    using System;
     using AspNet.Security.OpenIdConnect.Primitives;
+    using AutoMapper;
+    using Core.Domain;
     using Data;
+    using Data.Abstract;
+    using Data.Repositories;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,7 +16,8 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
-    using Models.Entities;
+    using Services.Companies;
+    using Services.FinancialAccounting;
 
     public class Startup
     {
@@ -19,8 +25,8 @@
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -60,6 +66,13 @@
                 });
 
 
+            // Add Repository
+            services.AddScoped<IRepository, EntityFrameworkRepository<ECERPDbContext>>();
+
+            // Add Services
+            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<ILedgerAccountService, LedgerAccountService>();
+
             // Register the OpenIddict services.
             services.AddOpenIddict()
                 // Register the Entity Framework stores.
@@ -81,6 +94,8 @@
                 .AllowImplicitFlow()
                 // Allow the client to refresh tokens.
                 .AllowRefreshTokenFlow()
+                // Set the refresh tokens lifetime
+                .SetRefreshTokenLifetime(TimeSpan.FromDays(1))
                 // Disable the HTTPS requirement (not recommended in production)
                 .DisableHttpsRequirement()
                 // Register a new ephemeral key for development.
@@ -93,13 +108,28 @@
                 options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
                 options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
             });
+
+            // Add ApplicationDbContext's DbSeeder
+            services.AddSingleton<DbSeeder>();
+
+            // Add AutoMapper for DI
+            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+            DbSeeder dbSeeder)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            // Enable CORS for middleware
+            app.UseCors(builder =>
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+            );
 
             // Add the AspNetCore.Identity middleware (required for external auth providers)
             // IMPORTANT: This must be placed *BEFORE* OpenIddict and any external provider's middleware
@@ -125,6 +155,16 @@
 
             // Add MVC to the pipeline
             app.UseMvc();
+
+            // Seed the database (if needed)
+            try
+            {
+                dbSeeder.SeedAsync().Wait();
+            }
+            catch (AggregateException e)
+            {
+                throw new Exception(e.ToString());
+            }
         }
     }
 }

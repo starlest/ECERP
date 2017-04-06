@@ -5,8 +5,9 @@
     using Core;
     using Core.Domain.Companies;
     using Data.Abstract;
-    using ECERP.Services.Companies;
+    using Services.Companies;
     using Moq;
+    using Services.FinancialAccounting;
     using Xunit;
 
     public class CompanyServiceTests : ServiceTests
@@ -22,7 +23,10 @@
                 .Returns(this.GetTestCompanies);
             _mockRepo.Setup(x => x.GetById<Company>(It.IsAny<object>())).Returns(this.GetTestCompany);
             _mockRepo.Setup(x => x.GetOne(It.IsAny<Expression<Func<Company, bool>>>())).Returns(this.GetTestCompany);
-            _companyService = new CompanyService(_mockRepo.Object);
+
+            var mockLedgerAccountService = new Mock<ILedgerAccountService>();
+
+            _companyService = new CompanyService(_mockRepo.Object, mockLedgerAccountService.Object);
         }
 
         [Fact]

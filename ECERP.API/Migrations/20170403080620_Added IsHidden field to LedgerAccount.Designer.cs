@@ -9,9 +9,10 @@ using ECERP.Core.Domain.FinancialAccounting;
 namespace ECERP.API.Migrations
 {
     [DbContext(typeof(ECERPDbContext))]
-    partial class ECERPDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170403080620_Added IsHidden field to LedgerAccount")]
+    partial class AddedIsHiddenfieldtoLedgerAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -253,6 +254,9 @@ namespace ECERP.API.Migrations
                     b.HasIndex("ChartOfAccountsId");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("LedgerAccounts");
                 });

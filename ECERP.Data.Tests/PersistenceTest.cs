@@ -3,6 +3,7 @@
     using System;
     using Abstract;
     using Core;
+    using Core.Domain;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
