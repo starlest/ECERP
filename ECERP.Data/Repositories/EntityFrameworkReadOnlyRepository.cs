@@ -32,20 +32,20 @@
 
             if (filter != null)
                 query = query.Where(filter);
-            
+
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
 
             if (orderBy != null)
                 query = orderBy(query);
-            
-        
+
+
             if (skip.HasValue)
                 query = query.Skip(skip.Value);
-            
+
 
             if (take.HasValue)
                 query = query.Take(take.Value);
-           
+
             return query;
         }
 
@@ -129,6 +129,12 @@
             where TEntity : class, IEntity
         {
             return context.Set<TEntity>().Find(id);
+        }
+
+        public virtual TEntity GetById<TEntity>(object id, params Expression<Func<TEntity, object>>[] includeProperties)
+            where TEntity : class, IEntity
+        {
+            return GetQueryable(x => x.Id.Equals(id), null, null, null, includeProperties).SingleOrDefault();
         }
 
         public virtual Task<TEntity> GetByIdAsync<TEntity>(object id)

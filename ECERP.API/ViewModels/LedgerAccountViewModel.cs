@@ -8,9 +8,9 @@
         public string Description { get; set; }
         public string Type { get; set; }
         public string Group { get; set; }
-        public string IsActive { get; set; }
-        public string IsHidden { get; set; }
-        public string IsDefault { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsHidden { get; set; }
+        public bool IsDefault { get; set; }
         public string CreatedDate { get; set; }
         public string Company { get; set; }
         public int ChartOfAccountsId { get; set; }

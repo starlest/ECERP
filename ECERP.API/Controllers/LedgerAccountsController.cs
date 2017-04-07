@@ -59,17 +59,30 @@
         }
 
         /// <summary>
+        ///     GET: ledgeraccounts/{id}
+        /// </summary>
+        /// <param name="id">Ledger account identifier</param>
+        /// <returns>A Json-serialized object representing a single ledger account.</returns>
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var ledgerAccount = _ledgerAccountService.GetLedgerAccountById(id);
+            if (ledgerAccount == null) return NotFound(new { Error = "not found" });
+            return new JsonResult(Mapper.Map<LedgerAccount, LedgerAccountViewModel>(ledgerAccount), DefaultJsonSettings);
+        }
+
+        /// <summary>
         /// POST: ledgeraccounts
         /// </summary>
         /// <returns>Creates a new Ledger Account and return it accordingly.</returns>
         [HttpPost]
-        public IActionResult Add([FromBody] CompanyViewModel cvm)
+        public IActionResult Add([FromBody] LedgerAccountViewModel lavm)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try
             {
-                // TODO: get the admin creating the student
+                // TODO: get the user creating the ledger account
                 // get the admin creating the student
                 //                var adminId = GetCurrentUserId();
                 //                if (adminId == null) return NotFound(new { error = "User is not authenticated." });
@@ -77,9 +90,15 @@
                 //                if (admin == null) return NotFound(new { error = $"User ID {adminId} has not been found" });
 
                 // create a new ledger account with the client-sent json data
+
                 var ledgerAccount = new LedgerAccount
                 {
-                    Name = cvm.Name
+                    Name = lavm.Name,
+                    Description = lavm.Description,
+                    IsHidden = lavm.IsHidden,
+                    Type = (LedgerAccountType) Enum.Parse(typeof(LedgerAccountType), lavm.Type),
+                    Group = (LedgerAccountGroup) Enum.Parse(typeof(LedgerAccountGroup), lavm.Group),
+                    ChartOfAccountsId = lavm.ChartOfAccountsId
                 };
 
                 _ledgerAccountService.InsertLedgerAccount(ledgerAccount);
@@ -153,7 +172,7 @@
             switch (sortOrder)
             {
                 case "name_asc":
-                    return  x => x.OrderBy(la => la.Name);
+                    return x => x.OrderBy(la => la.Name);
                 case "name_desc":
                     return x => x.OrderByDescending(la => la.Name);
                 case "accountnumber_asc":

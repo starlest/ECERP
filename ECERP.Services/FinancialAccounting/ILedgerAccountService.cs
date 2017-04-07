@@ -25,13 +25,6 @@
             int pageIndex = 0,
             int pageSize = int.MaxValue);
 
-//        /// <summary>
-//        /// Gets all chart of accounts ledger accounts
-//        /// </summary>
-//        /// <param name="coaId">Chart of accounts identifier</param>
-//        /// <returns>Ledger accounts</returns>
-//        IList<LedgerAccount> GetAllLedgerAccountsByCOAId(int coaId);
-
         /// <summary>
         /// Gets a ledger account
         /// </summary>

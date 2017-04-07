@@ -63,6 +63,8 @@
 
         TEntity GetById<TEntity>(object id) where TEntity : class, IEntity;
 
+        TEntity GetById<TEntity>(object id, params Expression<Func<TEntity, object>>[] includeProperties) where TEntity : class, IEntity;
+
         Task<TEntity> GetByIdAsync<TEntity>(object id) where TEntity : class, IEntity;
 
         int GetCount<TEntity>(Expression<Func<TEntity, bool>> filter = null) where TEntity : class, IEntity;

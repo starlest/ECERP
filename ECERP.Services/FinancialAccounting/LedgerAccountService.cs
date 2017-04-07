@@ -45,16 +45,6 @@
             return new PagedList<LedgerAccount>(pagedCustomers, pageIndex, pageSize, customers.Count);
         }
 
-//        /// <summary>
-//        /// Gets all chart of accounts ledger accounts
-//        /// </summary>
-//        /// <param name="coaId">Chart of accounts identifier</param>
-//        /// <returns>Ledger accounts</returns>
-//        public virtual IList<LedgerAccount> GetAllLedgerAccountsByCOAId(int coaId)
-//        {
-//            return _repository.GetById<ChartOfAccounts>(coaId).LedgerAccounts;
-//        }
-
         /// <summary>
         /// Gets a ledger account
         /// </summary>
@@ -62,7 +52,7 @@
         /// <returns>Ledger account</returns>
         public virtual LedgerAccount GetLedgerAccountById(int id)
         {
-            return _repository.GetById<LedgerAccount>(id);
+            return _repository.GetById<LedgerAccount>(id, la => la.ChartOfAccounts.Company);
         }
 
         /// <summary>
