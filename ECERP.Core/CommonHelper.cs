@@ -97,5 +97,19 @@
             //return (T)Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
             return (T) To(value, typeof(T));
         }
+
+        /// <summary>
+        /// Gets the first digit of a number
+        /// </summary>
+        /// <param name="number">Number</param>
+        /// <returns>First digit</returns>
+        public static int GetFirstDigit(int number)
+        {
+            while (number >= 10)
+            {
+                number = (number - (number % 10)) / 10;
+            }
+            return number;
+        }
     }
 }

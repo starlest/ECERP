@@ -74,9 +74,9 @@
         AdministrativeExpenses = 504,
 
         // Contra Revenues
-        SalesReturnsAndAllowances = 601,
+        SalesReturnsAndAllowances = -401,
 
         // Contra Expenses
-        PurchaseReturnsAndAllowances = 701,
+        PurchaseReturnsAndAllowances = -501,
     }
 }

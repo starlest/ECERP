@@ -1,7 +1,6 @@
 ﻿namespace ECERP.API.Controllers
 {
     using System;
-    using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
     using AutoMapper;
@@ -89,15 +88,15 @@
                 //                var admin = _dbContext.Admins.SingleOrDefault(i => i.Id == adminId);
                 //                if (admin == null) return NotFound(new { error = $"User ID {adminId} has not been found" });
 
-                // create a new ledger account with the client-sent json data
+                var group = (LedgerAccountGroup) Enum.Parse(typeof(LedgerAccountGroup), lavm.Group);
+                var type = (LedgerAccountType) CommonHelper.GetFirstDigit((int) group);
 
                 var ledgerAccount = new LedgerAccount
                 {
                     Name = lavm.Name,
                     Description = lavm.Description,
-                    IsHidden = lavm.IsHidden,
-                    Type = (LedgerAccountType) Enum.Parse(typeof(LedgerAccountType), lavm.Type),
-                    Group = (LedgerAccountGroup) Enum.Parse(typeof(LedgerAccountGroup), lavm.Group),
+                    Type = type,
+                    Group = group,
                     ChartOfAccountsId = lavm.ChartOfAccountsId
                 };
 
@@ -116,7 +115,7 @@
         #endregion
 
         #region Utilities
-        private Expression<Func<LedgerAccount, bool>> GenerateFilter(
+        private static Expression<Func<LedgerAccount, bool>> GenerateFilter(
             string accountNumberFilter,
             string nameFilter,
             string typeFilter,
@@ -167,7 +166,8 @@
             return filter;
         }
 
-        private Func<IQueryable<LedgerAccount>, IOrderedQueryable<LedgerAccount>> GenerateSortOrder(string sortOrder)
+        private static Func<IQueryable<LedgerAccount>, IOrderedQueryable<LedgerAccount>> GenerateSortOrder(
+            string sortOrder)
         {
             switch (sortOrder)
             {

@@ -60,6 +60,6 @@
         /// </summary>
         /// <param name="group">Ledger Account Group</param>
         /// <returns>Account Number</returns>
-        int GetNewAccountNumber(LedgerAccountGroup group);
+        int GenerateNewAccountNumber(LedgerAccountGroup group);
     }
 }

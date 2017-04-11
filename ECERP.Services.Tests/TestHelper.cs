@@ -81,7 +81,7 @@
                 new LedgerAccount
                 {
                     Id = 1,
-                    AccountNumber = 1,
+                    AccountNumber = 1010001,
                     Name = "Cash",
                     Description =
                         "Checking account balance, currency, coins, checks received from customers but not yet deposited.",
@@ -313,7 +313,7 @@
                 new LedgerAccount
                 {
                     Id = 18,
-                    AccountNumber = 18,
+                    AccountNumber = -5010001,
                     Name = "Purchase Returns and Allowances",
                     Description =
                         "Amounts of merchandise returned to suppliers and allowances granted by suppliers during the period",
@@ -330,6 +330,24 @@
         public static LedgerAccount GetTestLedgerAccount(this ServiceTests tests)
         {
             return tests.GetTestLedgerAccounts().First();
+        }
+
+        public static LedgerAccount GetIncompatibleGroupTypeTestLedgerAccount(this ServiceTests tests)
+        {
+            return new LedgerAccount
+            {
+                Id = 18,
+                AccountNumber = 18,
+                Name = "Purchase Returns and Allowances",
+                Description =
+                    "Amounts of merchandise returned to suppliers and allowances granted by suppliers during the period",
+                Type = LedgerAccountType.Asset,
+                Group = LedgerAccountGroup.PurchaseReturnsAndAllowances,
+                IsActive = true,
+                IsDefault = true,
+                IsHidden = true,
+                ChartOfAccountsId = 1
+            };
         }
 
         public static LedgerAccountBalance GetTestLedgerAccountBalance(this ServiceTests tests)

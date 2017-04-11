@@ -18,7 +18,7 @@
         public CompanyServiceTests()
         {
             _mockRepo = new Mock<IRepository>();
-            _mockRepo.Setup(x => x.GetAll<Company>(null, null, null)).Returns(this.GetTestCompanies);
+            _mockRepo.Setup(x => x.GetAll(null, null, null, It.IsAny<Expression<Func<Company, object>>[]>())).Returns(this.GetTestCompanies);
             _mockRepo.Setup(x => x.Get(It.IsAny<Expression<Func<Company, bool>>>(), null, null, null))
                 .Returns(this.GetTestCompanies);
             _mockRepo.Setup(x => x.GetById<Company>(It.IsAny<object>())).Returns(this.GetTestCompany);

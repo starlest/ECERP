@@ -1,6 +1,7 @@
 ﻿namespace ECERP.Services.Tests.FinancialAccounting
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq.Expressions;
     using Core;
     using Core.Domain.FinancialAccounting;
@@ -17,21 +18,25 @@
         public LedgerAccountServiceTests()
         {
             _mockRepo = new Mock<IRepository>();
-            _mockRepo.Setup(
+
+            _mockRepo.SetupSequence(
                     x =>
                         x.Get(It.IsAny<Expression<Func<LedgerAccount, bool>>>(), null, null, null,
                             It.IsAny<Expression<Func<LedgerAccount, object>>[]>()))
-                .Returns(this.GetTestLedgerAccounts);
-            _mockRepo.Setup(x => x.GetById<ChartOfAccounts>(It.IsAny<object>()))
-                .Returns(this.GetTestChartOfAccounts);
-            _mockRepo.Setup(x => x.GetById<LedgerAccount>(It.IsAny<object>()))
+                .Returns(this.GetTestLedgerAccounts())
+                .Returns(new List<LedgerAccount>());
+
+            _mockRepo.Setup(x => x.GetById(It.IsAny<object>(), It.IsAny<Expression<Func<LedgerAccount, object>>[]>()))
                 .Returns(this.GetTestLedgerAccount);
+
             _mockRepo.Setup(x => x.GetOne(It.IsAny<Expression<Func<LedgerAccount, bool>>>()))
                 .Returns(this.GetTestLedgerAccount());
+
             _mockRepo.SetupSequence(x => x.GetOne(It.IsAny<Expression<Func<LedgerAccountBalance, bool>>>()))
                 .Returns(null)
                 .Returns(this.GetTestLedgerAccountBalance())
                 .Returns(this.GetTestLedgerAccountBalance());
+
             _ledgerAccountService = new LedgerAccountService(_mockRepo.Object);
         }
 
@@ -49,15 +54,6 @@
             var results = _ledgerAccountService.GetLedgerAccounts(pageIndex: 1, pageSize: 5);
             Assert.Equal(5, results.Count);
         }
-
-//        [Fact]
-//        public void Can_get_all_ledgerAccounts_by_COAId()
-//        {
-//            var testCOA = this.GetTestChartOfAccounts();
-//            var results = _ledgerAccountService.GetAllLedgerAccountsByCOAId(testCOA.Id);
-//            Assert.Equal(18, results.Count);
-//            Assert.True(CommonHelper.ListsEqual(testCOA.LedgerAccounts, results));
-//        }
 
         [Fact]
         public void Can_get_ledgerAccount_by_id()
@@ -83,6 +79,9 @@
             _ledgerAccountService.InsertLedgerAccount(testLedgerAccount);
             _mockRepo.Verify(x => x.Create(testLedgerAccount), Times.Once);
             _mockRepo.Verify(x => x.Save(), Times.Once);
+
+            var incompatibleGroupTypeTestLedgerAccount = this.GetIncompatibleGroupTypeTestLedgerAccount();
+            Assert.Throws<ArgumentException>(() => _ledgerAccountService.InsertLedgerAccount(incompatibleGroupTypeTestLedgerAccount));
         }
 
         [Fact]
@@ -95,6 +94,15 @@
             Assert.Equal(1000, balance);
             balance = _ledgerAccountService.GetPeriodLedgerAccountBalance(testLedgerAccount, 2017, 2);
             Assert.Equal(2000, balance);
+        }
+
+        [Fact]
+        public void Can_generate_new_account_number()
+        {
+            var accountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.CashAndBank);
+            Assert.Equal(1010002, accountNumber);
+            accountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.TreasuryStock);
+            Assert.Equal(3040001, accountNumber);
         }
     }
 }

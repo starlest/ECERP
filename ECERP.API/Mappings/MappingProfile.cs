@@ -12,7 +12,8 @@
         public MappingProfile()
         {
             CreateMap<Company, CompanyViewModel>()
-                .ForMember(cm => cm.CreatedDate, conf => conf.MapFrom(c => c.CreatedDate.ToString("dd-MM-yyyy")));
+                .ForMember(cm => cm.CreatedDate, conf => conf.MapFrom(c => c.CreatedDate.ToString("dd-MM-yyyy")))
+                .ForMember(cm => cm.ChartOfAccountsId, conf => conf.MapFrom(c => c.ChartOfAccounts.Id));
 
             CreateMap<LedgerAccount, LedgerAccountViewModel>()
                 .ForMember(lavm => lavm.CreatedDate, conf => conf.MapFrom(la => la.CreatedDate.ToString("dd-MM-yyyy")))

@@ -8,6 +8,7 @@
         public CompanyViewModelValidator()
         {
             RuleFor(company => company.Name).NotEmpty().WithMessage("Name cannot be empty");
+            RuleFor(company => company.Name).Must(x => x.Length <= 50).WithMessage("Length of name must be less than 50.");
         }
     }
 }

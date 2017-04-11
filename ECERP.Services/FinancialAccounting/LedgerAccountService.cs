@@ -72,6 +72,9 @@
         /// <param name="ledgerAccount">Ledger account</param>
         public virtual void InsertLedgerAccount(LedgerAccount ledgerAccount)
         {
+            if (!CommonHelper.GetFirstDigit((int) ledgerAccount.Group).Equals((int) ledgerAccount.Type))
+                throw new ArgumentException("Ledger account group is not compatible with type");
+            ledgerAccount.AccountNumber = GenerateNewAccountNumber(ledgerAccount.Group);
             _repository.Create(ledgerAccount);
             _repository.Save();
         }
@@ -95,16 +98,21 @@
         /// </summary>
         /// <param name="group">Ledger Account Group</param>
         /// <returns>Account Number</returns>
-        public int GetNewAccountNumber(LedgerAccountGroup group)
+        public int GenerateNewAccountNumber(LedgerAccountGroup group)
         {
-            var defaultAccountNumber = (int) group * 10000 + 1;
+            var defaultAccountNumber = group > 0 ? (int) group * 10000 + 1 : (int) group * 10000 - 1;
 
-            var lastGroupLedgerAccount =
-                _repository.Get<LedgerAccount>(la => la.Group.Equals(group))
+            var lastGroupLedgerAccount = group > 0
+                ? _repository.Get<LedgerAccount>(la => la.Group.Equals(group))
                     .OrderByDescending(la => la.AccountNumber)
+                    .FirstOrDefault()
+                : _repository.Get<LedgerAccount>(la => la.Group.Equals(group))
+                    .OrderBy(la => la.AccountNumber)
                     .FirstOrDefault();
 
-            return lastGroupLedgerAccount == null ? defaultAccountNumber : lastGroupLedgerAccount.AccountNumber + 1;
+            return lastGroupLedgerAccount == null
+                ? defaultAccountNumber
+                : group > 0 ? lastGroupLedgerAccount.AccountNumber + 1 : lastGroupLedgerAccount.AccountNumber - 1;
         }
         #endregion
     }

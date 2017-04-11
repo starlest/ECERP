@@ -29,7 +29,7 @@
         /// <returns>Companies</returns>
         public virtual IList<Company> GetAllCompanies()
         {
-            return _repository.GetAll<Company>().ToList();
+            return _repository.GetAll<Company>(null, null, null, c => c.ChartOfAccounts).ToList();
         }
 
         /// <summary>
@@ -72,7 +72,7 @@
             {
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.CashAndBank),
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.CashAndBank),
                     Name = "Cash",
                     Description =
                         "Checking account balance, currency, coins, checks received from customers but not yet deposited.",
@@ -83,7 +83,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.Inventory),
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.Inventory),
                     Name = "Inventory",
                     Description =
                         "Cost of inventory purchased but has not yet been sold.",
@@ -95,7 +95,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.SalesRevenue),
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.SalesRevenue),
                     Name = "Sales Revenue",
                     Description =
                         "Amounts earned from providing goods to clients, either for cash or on credit during the accounting period.",
@@ -107,7 +107,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.CostOfGoodsSold),
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.CostOfGoodsSold),
                     Name = "Cost Of Goods Sold",
                     Description =
                         "The cost of the goods sold by the company to clients, either for cash or on credit during the accounting period.",
@@ -119,7 +119,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.SellingExpenses),
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.SellingExpenses),
                     Name = "Comissions Expense",
                     Description = "The amount of commissions paid to salesmen during the accounting period.",
                     Type = LedgerAccountType.Expense,
@@ -129,7 +129,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.SellingExpenses) + 1,
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.SellingExpenses) + 1,
                     Name = "Freight Expense",
                     Description = "Cost for delivering goods to customers during the accounting period.",
                     Type = LedgerAccountType.Expense,
@@ -139,7 +139,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.SellingExpenses) + 2,
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.SellingExpenses) + 2,
                     Name = "Cost of Sales-Freight",
                     Description = "Cost of bringing in goods from suppliers.",
                     Type = LedgerAccountType.Expense,
@@ -149,7 +149,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.SellingExpenses) + 3,
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.SellingExpenses) + 3,
                     Name = "Salaries Expense (Selling)",
                     Description = "The amount of salaries paid to sales employees during the accounting period.",
                     Type = LedgerAccountType.Expense,
@@ -159,7 +159,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.SellingExpenses) + 4,
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.SellingExpenses) + 4,
                     Name = "Other Expense (Selling)",
                     Description = "Other selling expenses for the accounting period.",
                     Type = LedgerAccountType.Expense,
@@ -169,7 +169,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses),
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses),
                     Name = "Salaries Expense (Administrative)",
                     Description =
                         "The amount of salaries paid to administrative employees during the accounting period.",
@@ -180,7 +180,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses) + 1,
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses) + 1,
                     Name = "Office Supplies Expense",
                     Description = "The cost of supplies purchased for usage in the office during the accounting period.",
                     Type = LedgerAccountType.Expense,
@@ -190,7 +190,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses) + 2,
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses) + 2,
                     Name = "Office Equipment Expense",
                     Description =
                         "The cost of equipment purchased for usage in the office during the accounting period.",
@@ -201,7 +201,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses) + 3,
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses) + 3,
                     Name = "Utilities Expense",
                     Description =
                         "Costs for electricity, heat, water, and sewer that were used during the accounting period.",
@@ -212,7 +212,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses) + 4,
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses) + 4,
                     Name = "Telephone Expense",
                     Description =
                         "Cost of telephone used during the current accounting period.",
@@ -223,7 +223,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses) + 5,
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.AdministrativeExpenses) + 5,
                     Name = "Other Expense (Administrative)",
                     Description =
                         "Other administrative expense for the accounting period.",
@@ -234,7 +234,7 @@
                 },
                 new LedgerAccount
                 {
-                    AccountNumber = _ledgerAccountService.GetNewAccountNumber(LedgerAccountGroup.CommonStock),
+                    AccountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.CommonStock),
                     Name = "Capital",
                     Description =
                         "Amount the owner invested in the company not withdrawn by the owner.",

@@ -7,6 +7,7 @@
     using Data;
     using Data.Abstract;
     using Data.Repositories;
+    using FluentValidation.AspNetCore;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -18,7 +19,7 @@
     using Microsoft.IdentityModel.Tokens;
     using Services.Companies;
     using Services.FinancialAccounting;
-
+    
     public class Startup
     {
         public Startup(IHostingEnvironment env)
@@ -39,7 +40,7 @@
             // Add a reference to the Configuration object for DI
             services.AddSingleton<IConfiguration>(c => Configuration);
 
-            services.AddMvc();
+            services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             // Add EntityFramework's Identity support.
             services.AddEntityFramework();
