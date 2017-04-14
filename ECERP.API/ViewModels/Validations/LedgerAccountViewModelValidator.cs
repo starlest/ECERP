@@ -18,8 +18,8 @@
                 .Must(x => Enum.IsDefined(typeof(LedgerAccountGroup), x))
                 .WithMessage("Group is invalid");
             RuleFor(lavm => lavm.ChartOfAccountsId)
-                .NotEmpty()
-                .WithMessage("Chart of accounts identifier cannot be empty");
+                .NotNull()
+                .WithMessage("Chart of accounts identifier cannot be null");
         }
     }
 }

@@ -8,7 +8,6 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata;
-    using Models.Entities;
 
     public class ECERPDbContext : IdentityDbContext<ApplicationUser>
     {

@@ -1,5 +1,7 @@
 ﻿namespace ECERP.API.Mappings
 {
+    using System;
+    using System.Globalization;
     using System.Linq;
     using AutoMapper;
     using Core;
@@ -21,6 +23,16 @@
 
             CreateMap<IPagedList<LedgerAccount>, PagedListViewModel<LedgerAccountViewModel>>()
                 .ForMember(lvm => lvm.Source, conf => conf.MapFrom(l => l.ToList()));
+
+            CreateMap<LedgerTransactionLine, LedgerTransactionLineViewModel>();
+            CreateMap<LedgerTransactionLineViewModel, LedgerTransactionLine>();
+
+            CreateMap<LedgerTransaction, LedgerTransactionViewModel>()
+                .ForMember(ltvm => ltvm.CreatedDate, conf => conf.MapFrom(lt => lt.CreatedDate.ToString("dd-MM-yyyy")))
+                .ForMember(ltvm => ltvm.PostingDate, conf => conf.MapFrom(lt => lt.PostingDate.ToString("dd-MM-yyyy")));
+
+            CreateMap<LedgerTransactionViewModel, LedgerTransaction>()
+                .ForMember(lt => lt.PostingDate, conf => conf.MapFrom(ltvm => DateTime.ParseExact(ltvm.PostingDate, "dd-MM-yyyy", CultureInfo.InvariantCulture)));
         }
     }
 }

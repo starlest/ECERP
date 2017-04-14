@@ -42,13 +42,14 @@
             [FromQuery] string groupFilter,
             [FromQuery] string companyFilter,
             [FromQuery] string isActiveFilter,
+            [FromQuery] string isHiddenFilter,
             [FromQuery] string sortOrder,
             [FromQuery] int pageIndex,
             [FromQuery] int pageSize)
         {
             pageSize = pageSize == 0 ? int.MaxValue : pageSize;
             var filter = GenerateFilter(accountNumberFilter, nameFilter, typeFilter, groupFilter, companyFilter,
-                isActiveFilter);
+                isActiveFilter, isHiddenFilter);
             var orderBy = GenerateSortOrder(sortOrder);
             var ledgerAccounts = _ledgerAccountService.GetLedgerAccounts(filter, orderBy, pageIndex, pageSize);
             return
@@ -121,7 +122,8 @@
             string typeFilter,
             string groupFilter,
             string companyFilter,
-            string isActiveFilter)
+            string isActiveFilter,
+            string isHiddenFilter)
         {
             var filter = PredicateBuilder.True<LedgerAccount>();
 
@@ -161,6 +163,13 @@
                     filter.And(
                         x =>
                             x.IsActive.ToString().IndexOf(isActiveFilter, 0, StringComparison.CurrentCultureIgnoreCase) !=
+                            -1);
+
+            if (!string.IsNullOrEmpty(isHiddenFilter))
+                filter =
+                    filter.And(
+                        x =>
+                            x.IsHidden.ToString().IndexOf(isHiddenFilter, 0, StringComparison.CurrentCultureIgnoreCase) !=
                             -1);
 
             return filter;

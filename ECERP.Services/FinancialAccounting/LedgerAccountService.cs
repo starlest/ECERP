@@ -1,6 +1,7 @@
 ﻿namespace ECERP.Services.FinancialAccounting
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using Core;
@@ -39,10 +40,10 @@
             int pageSize = int.MaxValue)
         {
             var skip = (pageIndex - 1) * pageSize;
-            var customers =
+            var ledgerAccounts =
                 _repository.Get(filter, sortOrder, null, null, la => la.ChartOfAccounts.Company).ToList();
-            var pagedCustomers = customers.Skip(skip).Take(pageSize);
-            return new PagedList<LedgerAccount>(pagedCustomers, pageIndex, pageSize, customers.Count);
+            var pagedLedgerAccounts = ledgerAccounts.Skip(skip).Take(pageSize);
+            return new PagedList<LedgerAccount>(pagedLedgerAccounts, pageIndex, pageSize, ledgerAccounts.Count);
         }
 
         /// <summary>
