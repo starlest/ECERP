@@ -600,7 +600,7 @@ namespace ECERP.API.Migrations
             modelBuilder.Entity("ECERP.Core.Domain.FinancialAccounting.LedgerTransactionLine", b =>
                 {
                     b.HasOne("ECERP.Core.Domain.FinancialAccounting.LedgerAccount", "LedgerAccount")
-                        .WithMany()
+                        .WithMany("LedgerTransactionLines")
                         .HasForeignKey("LedgerAccountId");
 
                     b.HasOne("ECERP.Core.Domain.FinancialAccounting.LedgerTransaction", "LedgerTransaction")

@@ -1,5 +1,6 @@
 ﻿namespace ECERP.Core.Domain.FinancialAccounting
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using Core;
@@ -72,5 +73,7 @@
         /// Gets or sets related chart of accounts
         /// </summary>
         public virtual ChartOfAccounts ChartOfAccounts { get; set; }
+
+        public virtual IList<LedgerTransactionLine> LedgerTransactionLines { get; set; }
     }
 }

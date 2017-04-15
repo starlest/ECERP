@@ -1,8 +1,6 @@
 ﻿namespace ECERP.Services.FinancialAccounting
 {
     using System;
-    using Configuration;
-    using Core;
     using Core.Domain.FinancialAccounting;
     using Data.Abstract;
 
@@ -27,7 +25,7 @@
         /// <returns>Ledger transaction</returns>
         public LedgerTransaction GetLedgerTransactionById(int id)
         {
-            return _repository.GetById<LedgerTransaction>(id);
+            return _repository.GetById<LedgerTransaction>(id, lt => lt.LedgerTransactionLines);
         }
 
         /// <summary>
@@ -36,11 +34,18 @@
         /// <param name="ledgerTransaction">Ledger transaction</param>
         public void InsertLedgerTransaction(LedgerTransaction ledgerTransaction)
         {
+            // Attach properties
+            ledgerTransaction.ChartOfAccounts = _repository.GetById<ChartOfAccounts>(ledgerTransaction.ChartOfAccountsId);
+
+            foreach (var line in ledgerTransaction.LedgerTransactionLines)
+                line.LedgerAccount = _repository.GetById<LedgerAccount>(line.LedgerAccountId);
+            
             if (ledgerTransaction.LedgerTransactionLines.Count <= 1)
                 throw new ArgumentException("There are no ledger transaction lines.");
 
             if (ledgerTransaction.AreThereAccountsFromDifferentCOAs())
-                throw new ArgumentException("Ledger transaction lines contains ledger accounts from different chart of accounts.");
+                throw new ArgumentException(
+                    "Ledger transaction lines contains ledger accounts from different chart of accounts.");
 
             var currentLedgerPeriodStartingDate = ledgerTransaction.ChartOfAccounts.CurrentLedgerPeriodStartDate;
 
@@ -55,6 +60,7 @@
                 throw new ArgumentException("Ledger transaction lines contain duplicate ledger accounts.");
 
             _repository.Create(ledgerTransaction);
+
             _repository.Save();
         }
         #endregion

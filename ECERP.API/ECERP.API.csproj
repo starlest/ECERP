@@ -29,5 +29,8 @@
     <ProjectReference Include="..\ECERP.Data\ECERP.Data.csproj" />
     <ProjectReference Include="..\ECERP.Services\ECERP.Services.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
 
 </Project>

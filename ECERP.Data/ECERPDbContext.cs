@@ -32,10 +32,14 @@
             modelBuilder.Entity<ChartOfAccounts>().HasOne(coa => coa.Company).WithOne(c => c.ChartOfAccounts);
 
             modelBuilder.Entity<LedgerAccount>().HasIndex(la => la.AccountNumber).IsUnique();
-            
+
+            modelBuilder.Entity<LedgerTransaction>()
+                .HasMany(lt => lt.LedgerTransactionLines)
+                .WithOne(l => l.LedgerTransaction);
+
             modelBuilder.Entity<LedgerTransactionLine>()
                 .HasOne(line => line.LedgerAccount)
-                .WithMany()
+                .WithMany(account => account.LedgerTransactionLines)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Customer>().HasIndex(c => c.CustomerId).IsUnique();

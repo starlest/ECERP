@@ -12,13 +12,13 @@
         /// <summary>
         /// Gets or sets the associated ledger transaction identifier
         /// </summary>
-        [Required, ForeignKey("LedgerTransaction")]
+        [ForeignKey("LedgerTransaction")]
         public int LedgerTransactionId { get; set; }
 
         /// <summary>
         /// Gets or sets the associated ledger account identifier
         /// </summary>
-        [Required, ForeignKey("LedgerAccount")]
+        [ForeignKey("LedgerAccount")]
         public int LedgerAccountId { get; set; }
 
         /// <summary>
@@ -36,11 +36,11 @@
         /// <summary>
         /// Gets or sets the associated ledger account
         /// </summary>
-        public LedgerAccount LedgerAccount { get; set; }
+        public virtual LedgerAccount LedgerAccount { get; set; }
 
         /// <summary>
         /// Gets or sets the associated ledger transaction
         /// </summary>
-        public LedgerTransaction LedgerTransaction { get; set; }
+        public virtual LedgerTransaction LedgerTransaction { get; set; }
     }
 }

@@ -9,8 +9,8 @@ using ECERP.Core.Domain.FinancialAccounting;
 namespace ECERP.API.Migrations
 {
     [DbContext(typeof(ECERPDbContext))]
-    [Migration("20170331090107_Add fields to ApplicationUser")]
-    partial class AddfieldstoApplicationUser
+    [Migration("20170415040058_fix")]
+    partial class fix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -232,6 +232,8 @@ namespace ECERP.API.Migrations
 
                     b.Property<bool>("IsDefault");
 
+                    b.Property<bool>("IsHidden");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("Name")
@@ -252,9 +254,6 @@ namespace ECERP.API.Migrations
                     b.HasIndex("ChartOfAccountsId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("LedgerAccounts");
                 });
@@ -602,7 +601,7 @@ namespace ECERP.API.Migrations
             modelBuilder.Entity("ECERP.Core.Domain.FinancialAccounting.LedgerTransactionLine", b =>
                 {
                     b.HasOne("ECERP.Core.Domain.FinancialAccounting.LedgerAccount", "LedgerAccount")
-                        .WithMany()
+                        .WithMany("LedgerTransactionLines")
                         .HasForeignKey("LedgerAccountId");
 
                     b.HasOne("ECERP.Core.Domain.FinancialAccounting.LedgerTransaction", "LedgerTransaction")

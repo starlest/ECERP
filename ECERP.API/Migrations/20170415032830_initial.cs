@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ECERP.API.Migrations
 {
-    public partial class Inital : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,18 +16,14 @@ namespace ECERP.API.Migrations
                     Id = table.Column<string>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
-                    CreatedBy = table.Column<string>(maxLength: 50, nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: false),
-                    DisplayName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
                     FirstName = table.Column<string>(maxLength: 50, nullable: false),
                     LastName = table.Column<string>(maxLength: 50, nullable: false),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    MiddleName = table.Column<string>(maxLength: 50, nullable: true),
-                    ModifiedBy = table.Column<string>(maxLength: 50, nullable: false),
-                    ModifiedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     PasswordHash = table.Column<string>(nullable: true),
@@ -35,7 +31,8 @@ namespace ECERP.API.Migrations
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
                     SecurityStamp = table.Column<string>(nullable: true),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true)
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -48,11 +45,34 @@ namespace ECERP.API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 50, nullable: false)
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Companies", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Address = table.Column<string>(maxLength: 500, nullable: false),
+                    ContactNumber = table.Column<string>(maxLength: 50, nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    CustomerId = table.Column<string>(maxLength: 50, nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -154,12 +174,40 @@ namespace ECERP.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Settings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CompanyId = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    Key = table.Column<string>(maxLength: 200, nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Value = table.Column<string>(maxLength: 2000, nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Settings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Settings_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ChartsOfAccounts",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CompanyId = table.Column<int>(nullable: false)
+                    CompanyId = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    CurrentLedgerPeriodStartDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -245,18 +293,54 @@ namespace ECERP.API.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AccountNumber = table.Column<int>(nullable: false),
                     ChartOfAccountsId = table.Column<int>(nullable: false),
-                    Description = table.Column<string>(maxLength: 150, nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    CustomerId = table.Column<int>(nullable: true),
+                    Description = table.Column<string>(maxLength: 500, nullable: false),
                     Group = table.Column<int>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
-                    IsDebitNormal = table.Column<bool>(nullable: false),
+                    IsDefault = table.Column<bool>(nullable: false),
+                    IsHidden = table.Column<bool>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
-                    Type = table.Column<int>(nullable: false)
+                    Type = table.Column<int>(nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LedgerAccounts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_LedgerAccounts_ChartsOfAccounts_ChartOfAccountsId",
+                        column: x => x.ChartOfAccountsId,
+                        principalTable: "ChartsOfAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LedgerAccounts_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LedgerTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ChartOfAccountsId = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    Description = table.Column<string>(maxLength: 500, nullable: false),
+                    Documentation = table.Column<string>(maxLength: 50, nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    PostingDate = table.Column<DateTime>(nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LedgerTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LedgerTransactions_ChartsOfAccounts_ChartOfAccountsId",
                         column: x => x.ChartOfAccountsId,
                         principalTable: "ChartsOfAccounts",
                         principalColumn: "Id",
@@ -290,6 +374,73 @@ namespace ECERP.API.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "LedgerAccountBalances",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Balance1 = table.Column<decimal>(nullable: false),
+                    Balance10 = table.Column<decimal>(nullable: false),
+                    Balance11 = table.Column<decimal>(nullable: false),
+                    Balance12 = table.Column<decimal>(nullable: false),
+                    Balance2 = table.Column<decimal>(nullable: false),
+                    Balance3 = table.Column<decimal>(nullable: false),
+                    Balance4 = table.Column<decimal>(nullable: false),
+                    Balance5 = table.Column<decimal>(nullable: false),
+                    Balance6 = table.Column<decimal>(nullable: false),
+                    Balance7 = table.Column<decimal>(nullable: false),
+                    Balance8 = table.Column<decimal>(nullable: false),
+                    Balance9 = table.Column<decimal>(nullable: false),
+                    BeginningBalance = table.Column<decimal>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    LedgerAccountId = table.Column<int>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Year = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LedgerAccountBalances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LedgerAccountBalances_LedgerAccounts_LedgerAccountId",
+                        column: x => x.LedgerAccountId,
+                        principalTable: "LedgerAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LedgerTransactionLines",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Amount = table.Column<decimal>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    IsDebit = table.Column<bool>(nullable: false),
+                    LedgerAccountId = table.Column<int>(nullable: false),
+                    LedgerTransactionId = table.Column<int>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LedgerTransactionLines", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LedgerTransactionLines_LedgerAccounts_LedgerAccountId",
+                        column: x => x.LedgerAccountId,
+                        principalTable: "LedgerAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LedgerTransactionLines_LedgerTransactions_LedgerTransactionId",
+                        column: x => x.LedgerTransactionId,
+                        principalTable: "LedgerTransactions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "Users",
@@ -302,9 +453,39 @@ namespace ECERP.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Companies_Name",
+                table: "Companies",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Settings_CompanyId",
+                table: "Settings",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Settings_Key",
+                table: "Settings",
+                column: "Key",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_CustomerId",
+                table: "Customers",
+                column: "CustomerId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_Name",
+                table: "Customers",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ChartsOfAccounts_CompanyId",
                 table: "ChartsOfAccounts",
-                column: "CompanyId");
+                column: "CompanyId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_LedgerAccounts_AccountNumber",
@@ -318,10 +499,29 @@ namespace ECERP.API.Migrations
                 column: "ChartOfAccountsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LedgerAccounts_Name",
+                name: "IX_LedgerAccounts_CustomerId",
                 table: "LedgerAccounts",
-                column: "Name",
-                unique: true);
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LedgerAccountBalances_LedgerAccountId",
+                table: "LedgerAccountBalances",
+                column: "LedgerAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LedgerTransactions_ChartOfAccountsId",
+                table: "LedgerTransactions",
+                column: "ChartOfAccountsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LedgerTransactionLines_LedgerAccountId",
+                table: "LedgerTransactionLines",
+                column: "LedgerAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LedgerTransactionLines_LedgerTransactionId",
+                table: "LedgerTransactionLines",
+                column: "LedgerTransactionId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -374,7 +574,13 @@ namespace ECERP.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "LedgerAccounts");
+                name: "Settings");
+
+            migrationBuilder.DropTable(
+                name: "LedgerAccountBalances");
+
+            migrationBuilder.DropTable(
+                name: "LedgerTransactionLines");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -398,7 +604,10 @@ namespace ECERP.API.Migrations
                 name: "OpenIddictTokens");
 
             migrationBuilder.DropTable(
-                name: "ChartsOfAccounts");
+                name: "LedgerAccounts");
+
+            migrationBuilder.DropTable(
+                name: "LedgerTransactions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -410,10 +619,16 @@ namespace ECERP.API.Migrations
                 name: "OpenIddictAuthorizations");
 
             migrationBuilder.DropTable(
-                name: "Companies");
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "ChartsOfAccounts");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictApplications");
+
+            migrationBuilder.DropTable(
+                name: "Companies");
         }
     }
 }

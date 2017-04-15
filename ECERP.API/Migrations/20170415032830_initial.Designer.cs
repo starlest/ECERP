@@ -9,8 +9,8 @@ using ECERP.Core.Domain.FinancialAccounting;
 namespace ECERP.API.Migrations
 {
     [DbContext(typeof(ECERPDbContext))]
-    [Migration("20170404030637_Remove unique ledger account name constraint")]
-    partial class Removeuniqueledgeraccountnameconstraint
+    [Migration("20170415032830_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

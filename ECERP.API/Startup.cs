@@ -72,7 +72,9 @@
 
             // Add Services
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
             services.AddScoped<ILedgerAccountService, LedgerAccountService>();
+            services.AddScoped<ILedgerTransactionService, LedgerTransactionService>();
 
             // Register the OpenIddict services.
             services.AddOpenIddict()
