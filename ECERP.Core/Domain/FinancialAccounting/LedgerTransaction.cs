@@ -37,6 +37,12 @@
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or sets editable
+        /// </summary>
+        [Required]
+        public bool IsEditable { get; set; }
+
+        /// <summary>
         /// Gets or sets posting date
         /// </summary>
         [Required]

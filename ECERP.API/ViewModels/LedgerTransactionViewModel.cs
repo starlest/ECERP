@@ -9,6 +9,7 @@
         public string Description { get; set; }
         public string PostingDate { get; set; }
         public string CreatedDate { get; set; }
+        public bool IsEditable { get; set; }
         public int ChartOfAccountsId { get; set; }
         public IList<LedgerTransactionLineViewModel> LedgerTransactionLines { get; set; }
     }

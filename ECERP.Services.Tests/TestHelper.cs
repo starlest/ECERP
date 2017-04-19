@@ -64,11 +64,11 @@
             return tests.GetTestCompanySettings().First();
         }
 
-        public static ChartOfAccounts GetTestChartOfAccounts(this ServiceTests tests)
+        public static ChartOfAccounts GetTestChartOfAccounts(this ServiceTests tests, int id)
         {
             return new ChartOfAccounts
             {
-                Id = 1,
+                Id = id,
                 CompanyId = tests.GetTestCompany().Id,
                 LedgerAccounts = tests.GetTestLedgerAccounts()
             };
@@ -372,8 +372,7 @@
                 Description = "Test",
                 PostingDate = DateTime.UtcNow,
                 LedgerTransactionLines = tests.GetTestLedgerTransactionLines(),
-                ChartOfAccountsId = 1,
-                ChartOfAccounts = tests.GetTestChartOfAccounts()
+                ChartOfAccountsId = 1
             };
         }
 
@@ -419,8 +418,7 @@
                 Documentation = "Test",
                 Description = "Test",
                 PostingDate = DateTime.UtcNow,
-                ChartOfAccountsId = 1,
-                ChartOfAccounts = tests.GetTestChartOfAccounts()
+                ChartOfAccountsId = 1
             };
         }
 
@@ -433,17 +431,7 @@
                 Description = "Test",
                 PostingDate = DateTime.UtcNow,
                 LedgerTransactionLines = tests.GetTestLedgerTransactionLines(),
-                ChartOfAccountsId = 2,
-                ChartOfAccounts = new ChartOfAccounts
-                {
-                    Id = 2,
-                    CompanyId = 2,
-                    Company = new Company
-                    {
-                        Id = 2,
-                        Name = "Test company 2"
-                    }
-                }
+                ChartOfAccountsId = 2
             };
         }
 
@@ -468,8 +456,7 @@
                 Description = "Test",
                 PostingDate = DateTime.UtcNow,
                 LedgerTransactionLines = transactionLines,
-                ChartOfAccountsId = 1,
-                ChartOfAccounts = tests.GetTestChartOfAccounts()
+                ChartOfAccountsId = 1
             };
         }
 
@@ -482,8 +469,7 @@
                 Description = "Test",
                 PostingDate = DateTime.UtcNow.AddMonths(-1),
                 LedgerTransactionLines = tests.GetTestLedgerTransactionLines(),
-                ChartOfAccountsId = 1,
-                ChartOfAccounts = tests.GetTestChartOfAccounts()
+                ChartOfAccountsId = 1
             };
         }
 
@@ -507,8 +493,7 @@
                 Description = "Test",
                 PostingDate = DateTime.UtcNow,
                 LedgerTransactionLines = transactionLines,
-                ChartOfAccountsId = 1,
-                ChartOfAccounts = tests.GetTestChartOfAccounts()
+                ChartOfAccountsId = 1
             };
         }
     }

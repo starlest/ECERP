@@ -19,6 +19,8 @@
 
             RuleFor(ltvm => ltvm.PostingDate).NotEmpty().WithMessage("Posting date cannot be empty");
 
+            RuleFor(ltvm => ltvm.IsEditable).NotNull().WithMessage("IsEditable cannot be null");
+
             RuleFor(ltvm => ltvm.ChartOfAccountsId)
                 .NotNull()
                 .WithMessage("Chart of accounts identifier cannot be null");
@@ -26,27 +28,6 @@
             RuleFor(ltvm => ltvm.LedgerTransactionLines)
                 .NotNull()
                 .WithMessage("Ledger transaction lines cannot be null");
-//            RuleFor(ltvm => ltvm.LedgerTransactionLines)
-//                .Must(lines =>
-//                {
-//                    var totalDebit = 0m;
-//                    var totalCredit = 0m;
-//                    foreach (var line in lines)
-//                    {
-//                        if (line.IsDebit) totalDebit += line.Amount;
-//                        else totalCredit += line.Amount;
-//                    }
-//                    return totalDebit == totalCredit;
-//                })
-//                .WithMessage("Ledger transaction must have equal total debit and total credit amounts.");
-//            RuleFor(ltvm => ltvm.LedgerTransactionLines)
-//                .Must(lines =>
-//                {
-//                    return
-//                        lines.Any(
-//                            line => lines.Count(l => l.LedgerAccountId.Equals(line.LedgerAccountId)) > 1);
-//                })
-//                .WithMessage("Ledger transaction lines cannot contain duplicate ledger accounts.");
         }
     }
 }

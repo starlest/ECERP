@@ -1,6 +1,7 @@
 ﻿namespace ECERP.API.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using AutoMapper;
@@ -50,6 +51,36 @@
         }
 
         /// <summary>
+        /// GET: ledgertransactions/ledgeraccount/{ledgerAccountId}
+        /// </summary>
+        /// <param name="ledgerAccountId">Ledger Account identifier</param>
+        /// <param name="from">From Date</param>
+        /// <param name="to">To Date</param>
+        /// <returns>A Json-serialized object representing a single ledger transactions.</returns>
+        [HttpGet("ledgeraccount/{ledgerAccountId}")]
+        public IActionResult GetLedgerAccountTransactions(int ledgerAccountId, [FromQuery] string from,
+            [FromQuery] string to)
+        {
+            DateTime fromDate;
+            DateTime toDate;
+
+            if (!DateTime.TryParseExact(from, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None,
+                    out fromDate) ||
+                !DateTime.TryParseExact(to, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None,
+                    out toDate))
+            {
+                return new BadRequestObjectResult(new { Error = "Invalid date parameters." });
+            }
+
+            var ledgerTransactions = _ledgerTransactionService.GetLedgerAccountTransactions(ledgerAccountId, fromDate,
+                toDate);
+            return
+                new JsonResult(
+                    Mapper.Map<IList<LedgerTransaction>, IList<LedgerTransactionViewModel>>(ledgerTransactions),
+                    DefaultJsonSettings);
+        }
+
+        /// <summary>
         /// POST: ledgertransactions
         /// </summary>
         /// <returns>Creates a new Ledger Transaction and return it accordingly.</returns>
@@ -72,6 +103,7 @@
                     Documentation = ltvm.Documentation,
                     Description = ltvm.Description,
                     PostingDate = DateTime.ParseExact(ltvm.PostingDate, "dd-MM-yyyy", CultureInfo.InvariantCulture),
+                    IsEditable = true,
                     ChartOfAccountsId = ltvm.ChartOfAccountsId,
                     LedgerTransactionLines = ltvm.LedgerTransactionLines.Select(line => new LedgerTransactionLine
                     {
