@@ -370,7 +370,7 @@
                 Id = 1,
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow,
+                PostingDate = DateTime.Now.Date,
                 LedgerTransactionLines = tests.GetTestLedgerTransactionLines(),
                 ChartOfAccountsId = 1
             };
@@ -417,7 +417,7 @@
                 Id = 1,
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow,
+                PostingDate = DateTime.Now,
                 ChartOfAccountsId = 1
             };
         }
@@ -429,7 +429,7 @@
                 Id = 1,
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow,
+                PostingDate = DateTime.Now,
                 LedgerTransactionLines = tests.GetTestLedgerTransactionLines(),
                 ChartOfAccountsId = 2
             };
@@ -454,7 +454,7 @@
                 Id = 1,
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow,
+                PostingDate = DateTime.Now,
                 LedgerTransactionLines = transactionLines,
                 ChartOfAccountsId = 1
             };
@@ -467,7 +467,7 @@
                 Id = 1,
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow.AddMonths(-1),
+                PostingDate = DateTime.Now.AddMonths(-1),
                 LedgerTransactionLines = tests.GetTestLedgerTransactionLines(),
                 ChartOfAccountsId = 1
             };
@@ -491,7 +491,7 @@
                 Id = 1,
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow,
+                PostingDate = DateTime.Now,
                 LedgerTransactionLines = transactionLines,
                 ChartOfAccountsId = 1
             };

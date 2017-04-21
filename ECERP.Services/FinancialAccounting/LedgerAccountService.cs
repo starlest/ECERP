@@ -39,11 +39,12 @@
             int pageIndex = 0,
             int pageSize = int.MaxValue)
         {
-            var skip = (pageIndex - 1) * pageSize;
-            var ledgerAccounts =
-                _repository.Get(filter, sortOrder, null, null, la => la.ChartOfAccounts.Company).ToList();
-            var pagedLedgerAccounts = ledgerAccounts.Skip(skip).Take(pageSize);
-            return new PagedList<LedgerAccount>(pagedLedgerAccounts, pageIndex, pageSize, ledgerAccounts.Count);
+            var skip = pageIndex * pageSize;
+            var pagedLedgerAccounts =
+                _repository
+                    .Get(filter, sortOrder, skip, pageSize, la => la.ChartOfAccounts.Company);
+            var totalCount = _repository.GetCount(filter);
+            return new PagedList<LedgerAccount>(pagedLedgerAccounts, pageIndex, pageSize, totalCount);
         }
 
         /// <summary>

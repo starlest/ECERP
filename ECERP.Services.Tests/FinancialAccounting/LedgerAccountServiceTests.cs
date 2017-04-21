@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using Core;
     using Core.Domain.FinancialAccounting;
@@ -19,12 +20,23 @@
         {
             _mockRepo = new Mock<IRepository>();
 
-            _mockRepo.SetupSequence(
+            _mockRepo.Setup(
                     x =>
                         x.Get(It.IsAny<Expression<Func<LedgerAccount, bool>>>(), null, null, null,
                             It.IsAny<Expression<Func<LedgerAccount, object>>[]>()))
-                .Returns(this.GetTestLedgerAccounts())
                 .Returns(new List<LedgerAccount>());
+
+            _mockRepo.Setup(
+                    x =>
+                        x.Get(It.IsAny<Expression<Func<LedgerAccount, bool>>>(), null, 0, int.MaxValue,
+                            It.IsAny<Expression<Func<LedgerAccount, object>>[]>()))
+                .Returns(this.GetTestLedgerAccounts());
+
+            _mockRepo.Setup(
+                    x =>
+                        x.Get(It.IsAny<Expression<Func<LedgerAccount, bool>>>(), null, 0, 5,
+                            It.IsAny<Expression<Func<LedgerAccount, object>>[]>()))
+                .Returns(this.GetTestLedgerAccounts().Take(5));
 
             _mockRepo.Setup(x => x.GetById(It.IsAny<object>(), It.IsAny<Expression<Func<LedgerAccount, object>>[]>()))
                 .Returns(this.GetTestLedgerAccount);
@@ -51,7 +63,7 @@
         [Fact]
         public void Can_get_paged_ledgerAccounts()
         {
-            var results = _ledgerAccountService.GetLedgerAccounts(pageIndex: 1, pageSize: 5);
+            var results = _ledgerAccountService.GetLedgerAccounts(pageIndex: 0, pageSize: 5);
             Assert.Equal(5, results.Count);
         }
 
@@ -81,7 +93,8 @@
             _mockRepo.Verify(x => x.Save(), Times.Once);
 
             var incompatibleGroupTypeTestLedgerAccount = this.GetIncompatibleGroupTypeTestLedgerAccount();
-            Assert.Throws<ArgumentException>(() => _ledgerAccountService.InsertLedgerAccount(incompatibleGroupTypeTestLedgerAccount));
+            Assert.Throws<ArgumentException>(
+                () => _ledgerAccountService.InsertLedgerAccount(incompatibleGroupTypeTestLedgerAccount));
         }
 
         [Fact]
@@ -100,7 +113,7 @@
         public void Can_generate_new_account_number()
         {
             var accountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.CashAndBank);
-            Assert.Equal(1010002, accountNumber);
+            Assert.Equal(1010001, accountNumber);
             accountNumber = _ledgerAccountService.GenerateNewAccountNumber(LedgerAccountGroup.TreasuryStock);
             Assert.Equal(3040001, accountNumber);
         }

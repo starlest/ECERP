@@ -12,8 +12,8 @@
         {
             var coa = new ChartOfAccounts { CompanyId = 1 };
             Assert.Equal(1, coa.CompanyId);
-            Assert.Equal(DateTime.UtcNow.Year, coa.CurrentLedgerPeriodStartDate.Year);
-            Assert.Equal(DateTime.UtcNow.Month, coa.CurrentLedgerPeriodStartDate.Month);
+            Assert.Equal(DateTime.Now.Year, coa.CurrentLedgerPeriodStartDate.Year);
+            Assert.Equal(DateTime.Now.Month, coa.CurrentLedgerPeriodStartDate.Month);
             Assert.NotNull(coa.LedgerAccounts);
         }
 
@@ -32,8 +32,8 @@
         {
             var coa = new ChartOfAccounts { CompanyId = 1 };
             coa.AdvanceLedgerPeriod();
-            Assert.Equal(DateTime.UtcNow.Year, coa.CurrentLedgerPeriodStartDate.Year);
-            Assert.Equal(DateTime.UtcNow.Month + 1, coa.CurrentLedgerPeriodStartDate.Month);
+            Assert.Equal(DateTime.Now.Year, coa.CurrentLedgerPeriodStartDate.Year);
+            Assert.Equal(DateTime.Now.Month + 1, coa.CurrentLedgerPeriodStartDate.Month);
         }
 
         [Fact]
@@ -41,8 +41,8 @@
         {
             var coa = new ChartOfAccounts { CompanyId = 1 };
             coa.RegressLedgerPeriod();
-            Assert.Equal(DateTime.UtcNow.Year, coa.CurrentLedgerPeriodStartDate.Year);
-            Assert.Equal(DateTime.UtcNow.Month - 1, coa.CurrentLedgerPeriodStartDate.Month);
+            Assert.Equal(DateTime.Now.Year, coa.CurrentLedgerPeriodStartDate.Year);
+            Assert.Equal(DateTime.Now.Month - 1, coa.CurrentLedgerPeriodStartDate.Month);
         }
     }
 }

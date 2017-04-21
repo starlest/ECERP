@@ -22,6 +22,9 @@
             CreateMap<IPagedList<LedgerAccount>, PagedListViewModel<LedgerAccountViewModel>>()
                 .ForMember(lvm => lvm.Source, conf => conf.MapFrom(l => l.ToList()));
 
+            CreateMap<IPagedList<LedgerTransaction>, PagedListViewModel<LedgerTransactionViewModel>>()
+                .ForMember(lvm => lvm.Source, conf => conf.MapFrom(l => l.ToList()));
+
             CreateMap<LedgerTransactionLine, LedgerTransactionLineViewModel>();
 
             CreateMap<LedgerTransaction, LedgerTransactionViewModel>()

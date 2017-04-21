@@ -15,7 +15,7 @@
         public ChartOfAccounts()
         {
             LedgerAccounts = new List<LedgerAccount>();
-            CurrentLedgerPeriodStartDate = DateTime.UtcNow.Date.AddDays(-DateTime.UtcNow.Day + 1);
+            CurrentLedgerPeriodStartDate = DateTime.Now.Date.AddDays(-DateTime.Now.Day + 1);
         }
 
         /// <summary>

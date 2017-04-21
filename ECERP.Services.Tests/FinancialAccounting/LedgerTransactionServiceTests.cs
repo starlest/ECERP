@@ -19,6 +19,9 @@
         {
             _mockRepo = new Mock<IRepository>();
             _mockRepo.Setup(
+                    x => x.GetById<LedgerTransaction>(It.IsAny<object>()))
+                .Returns(this.GetTestLedgerTransaction);
+            _mockRepo.Setup(
                     x => x.GetById(It.IsAny<object>(), It.IsAny<Expression<Func<LedgerTransaction, object>>[]>()))
                 .Returns(this.GetTestLedgerTransaction);
             _mockRepo.Setup(x => x.GetById<ChartOfAccounts>(1))
@@ -103,6 +106,15 @@
             var testTransaction = this.GetTestLedgerTransaction();
             _ledgerTransactionService.InsertLedgerTransaction(testTransaction);
             _mockRepo.Verify(x => x.Create(testTransaction), Times.Once);
+            _mockRepo.Verify(x => x.Save(), Times.Once);
+        }
+
+        [Fact]
+        public void Can_delete_ledgerTransaction()
+        {
+            var testTransaction = this.GetTestLedgerTransaction();
+            _ledgerTransactionService.DeleteLedgerTransaction(testTransaction.Id);
+            _mockRepo.Verify(x => x.Delete(testTransaction), Times.Once);
             _mockRepo.Verify(x => x.Save(), Times.Once);
         }
     }

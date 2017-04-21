@@ -23,7 +23,7 @@
         public virtual void Update<TEntity>(TEntity entity)
             where TEntity : class, IEntity
         {
-            entity.ModifiedDate = DateTime.UtcNow;
+            entity.ModifiedDate = DateTime.Now;
             context.Set<TEntity>().Attach(entity);
             context.Entry(entity).State = EntityState.Modified;
         }

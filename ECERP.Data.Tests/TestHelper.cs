@@ -66,7 +66,7 @@
                 Id = 1,
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow
+                PostingDate = DateTime.Now
             };
         }
 

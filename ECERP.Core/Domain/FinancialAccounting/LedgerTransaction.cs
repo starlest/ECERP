@@ -48,7 +48,7 @@
         [Required]
         public DateTime PostingDate
         {
-            get { return postingDate ?? DateTime.UtcNow; }
+            get { return postingDate ?? DateTime.Now; }
             set { postingDate = value; }
         }
 

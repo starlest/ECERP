@@ -21,7 +21,7 @@
             Assert.Equal(1000, intConvertedValue);
 
             // datetime conversion
-            var date = DateTime.UtcNow.Date;
+            var date = DateTime.Now.Date;
             var dateStr = date.ToString(CultureInfo.InvariantCulture);
             var dateConvertedValue = CommonHelper.To<DateTime>(dateStr);
             Assert.Equal(typeof(DateTime), dateConvertedValue.GetType());

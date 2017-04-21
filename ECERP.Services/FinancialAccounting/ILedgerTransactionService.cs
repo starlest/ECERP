@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core;
     using Core.Domain.FinancialAccounting;
 
     /// <summary>
@@ -22,13 +23,25 @@
         /// <param name="ledgerAccountId">Ledger Account Identifier</param>
         /// <param name="from">From Date</param>
         /// <param name="to">To Date</param>
+        /// <param name="pageIndex">Page Index</param>
+        /// <param name="pageSize">Page Size</param>
         /// <returns>Ledger Transactions</returns>
-        IList<LedgerTransaction> GetLedgerAccountTransactions(int ledgerAccountId, DateTime from, DateTime to);
+        IPagedList<LedgerTransaction> GetLedgerAccountTransactions(
+            int ledgerAccountId,
+            DateTime from, DateTime to,
+            int pageIndex = 0,
+            int pageSize = int.MaxValue);
 
         /// <summary>
         /// Insert a ledger transaction
         /// </summary>
         /// <param name="ledgerTransaction">Ledger transaction</param>
         void InsertLedgerTransaction(LedgerTransaction ledgerTransaction);
+
+        /// <summary>
+        /// Delete a ledger transaction
+        /// </summary>
+        /// <param name="ledgerTransactionId">Ledger Transaction Identifier</param>
+        void DeleteLedgerTransaction(int ledgerTransactionId);
     }
 }

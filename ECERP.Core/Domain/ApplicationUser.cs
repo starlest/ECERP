@@ -26,7 +26,7 @@
         [Required]
         public DateTime CreatedDate
         {
-            get { return createdDate ?? DateTime.UtcNow; }
+            get { return createdDate ?? DateTime.Now; }
             set { createdDate = value; }
         }
 

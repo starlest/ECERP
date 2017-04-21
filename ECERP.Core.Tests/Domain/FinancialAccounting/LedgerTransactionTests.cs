@@ -10,7 +10,7 @@
         [Fact]
         public void Can_create_ledgerTransaction()
         {
-            var postingDate = DateTime.UtcNow;
+            var postingDate = DateTime.Now;
             var transaction = new LedgerTransaction
             {
                 Documentation = "Test",
@@ -30,7 +30,7 @@
             {
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow
+                PostingDate = DateTime.Now
             };
             var transactionLine1 = new LedgerTransactionLine { Id = 1 };
             transaction.LedgerTransactionLines.Add(transactionLine1);
@@ -45,7 +45,7 @@
             {
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow
+                PostingDate = DateTime.Now
             };
             var transactionLine1 = new LedgerTransactionLine { Id = 1, Amount = 2000, IsDebit = true };
             var transactionLine2 = new LedgerTransactionLine { Id = 2, Amount = 2000, IsDebit = false };
@@ -64,7 +64,7 @@
             {
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow
+                PostingDate = DateTime.Now
             };
             var transactionLine1 = new LedgerTransactionLine { Id = 1, Amount = 2000, IsDebit = true };
             var transactionLine2 = new LedgerTransactionLine { Id = 2, Amount = 2000, IsDebit = false };
@@ -83,7 +83,7 @@
             {
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.UtcNow
+                PostingDate = DateTime.Now
             };
             var transactionLine1 = new LedgerTransactionLine
             {

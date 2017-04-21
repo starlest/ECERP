@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using AutoMapper;
+    using Core;
     using Core.Domain;
     using Core.Domain.FinancialAccounting;
     using Data;
@@ -56,10 +57,16 @@
         /// <param name="ledgerAccountId">Ledger Account identifier</param>
         /// <param name="from">From Date</param>
         /// <param name="to">To Date</param>
+        /// <param name="pageIndex">Page Index</param>
+        /// <param name="pageSize">Page Size</param>
         /// <returns>A Json-serialized object representing a single ledger transactions.</returns>
         [HttpGet("ledgeraccount/{ledgerAccountId}")]
-        public IActionResult GetLedgerAccountTransactions(int ledgerAccountId, [FromQuery] string from,
-            [FromQuery] string to)
+        public IActionResult GetLedgerAccountTransactions(
+            int ledgerAccountId,
+            [FromQuery] string from,
+            [FromQuery] string to,
+            [FromQuery] int pageIndex,
+            [FromQuery] int pageSize)
         {
             DateTime fromDate;
             DateTime toDate;
@@ -72,11 +79,13 @@
                 return new BadRequestObjectResult(new { Error = "Invalid date parameters." });
             }
 
+            pageSize = pageSize == 0 ? int.MaxValue : pageSize;
             var ledgerTransactions = _ledgerTransactionService.GetLedgerAccountTransactions(ledgerAccountId, fromDate,
-                toDate);
+                toDate, pageIndex, pageSize);
             return
                 new JsonResult(
-                    Mapper.Map<IList<LedgerTransaction>, IList<LedgerTransactionViewModel>>(ledgerTransactions),
+                    Mapper.Map<IPagedList<LedgerTransaction>, PagedListViewModel<LedgerTransactionViewModel>>(
+                        ledgerTransactions),
                     DefaultJsonSettings);
         }
 
@@ -103,7 +112,7 @@
                     Documentation = ltvm.Documentation,
                     Description = ltvm.Description,
                     PostingDate = DateTime.ParseExact(ltvm.PostingDate, "dd-MM-yyyy", CultureInfo.InvariantCulture),
-                    IsEditable = true,
+                    IsEditable = ltvm.IsEditable,
                     ChartOfAccountsId = ltvm.ChartOfAccountsId,
                     LedgerTransactionLines = ltvm.LedgerTransactionLines.Select(line => new LedgerTransactionLine
                     {
@@ -118,6 +127,30 @@
                 // return the newly-created ledger transaction to the client.
                 return new JsonResult(Mapper.Map<LedgerTransaction, LedgerTransactionViewModel>(ledgerTransaction),
                     DefaultJsonSettings);
+            }
+            catch (Exception e)
+            {
+                // return the error.
+                return BadRequest(new { Error = e.Message });
+            }
+        }
+
+        /// <summary>
+        /// Delete: ledgertransactions/{Id}
+        /// </summary>
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                // TODO: get the user creating the ledger account
+                // get the admin creating the student
+                //                var adminId = GetCurrentUserId();
+                //                if (adminId == null) return NotFound(new { error = "User is not authenticated." });
+                //                var admin = _dbContext.Admins.SingleOrDefault(i => i.Id == adminId);
+                //                if (admin == null) return NotFound(new { error = $"User ID {adminId} has not been found" });
+                _ledgerTransactionService.DeleteLedgerTransaction(id);
+                return new OkResult();
             }
             catch (Exception e)
             {
