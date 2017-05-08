@@ -1,5 +1,7 @@
 ﻿namespace ECERP.Services.Tests.FinancialAccounting
 {
+    using System;
+    using System.Linq.Expressions;
     using Core.Domain.FinancialAccounting;
     using Data.Abstract;
     using Services.FinancialAccounting;
@@ -14,7 +16,8 @@
         public ChartOfAccountsServiceTests()
         {
             _mockRepo = new Mock<IRepository>();
-            _mockRepo.Setup(x => x.GetById<ChartOfAccounts>(It.IsAny<object>())).Returns(this.GetTestChartOfAccounts(1));
+            _mockRepo.Setup(x => x.GetById(It.IsAny<object>(), It.IsAny<Expression<Func<ChartOfAccounts, object>>[]>()))
+                .Returns(this.GetTestChartOfAccounts(1));
             _chartOfAccountsService = new ChartOfAccountsService(_mockRepo.Object);
         }
 
@@ -39,9 +42,15 @@
         {
             var testCoa = this.GetTestChartOfAccounts(1);
             _chartOfAccountsService.CloseLedgerPeriod(testCoa.Id);
-            _mockRepo.Verify(x => x.Update(It.IsAny<LedgerAccountBalance>()), Times.Exactly(3));
-            _mockRepo.Verify(x => x.Update(It.IsAny<ChartOfAccounts>()), Times.Once);
+            _mockRepo.Verify(x => x.Create(It.IsAny<LedgerAccountBalance>()), Times.Exactly(3));
             _mockRepo.Verify(x => x.Save(), Times.Once);
+        }
+
+        [Fact]
+        public void Can_get_balance_sheet()
+        {
+            var balanceSheet = _chartOfAccountsService.GetBalanceSheet(1, DateTime.Now.Year, DateTime.Now.Month);
+            Assert.NotNull(balanceSheet);
         }
     }
 }

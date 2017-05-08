@@ -49,11 +49,20 @@
         /// <summary>
         /// Gets account balance for a given period
         /// </summary>
-        /// <param name="ledgerAccount">Ledger account</param>
-        /// <param name="year">Period year</param>
-        /// <param name="month">Period month</param>
+        /// <param name="ledgerAccountId">Ledger Account Identifier</param>
+        /// <param name="year">Period Year</param>
+        /// <param name="month">Period Month</param>
         /// <returns>Account balance</returns>
-        decimal GetPeriodLedgerAccountBalance(LedgerAccount ledgerAccount, int year, int month);
+        decimal GetPeriodLedgerAccountBalance(int ledgerAccountId, int year, int month);
+
+
+        /// <summary>
+        /// Gets account balance on a given date
+        /// </summary>
+        /// <param name="ledgerAccountId">Ledger Account Identifier</param>
+        /// <param name="date">Date</param>
+        /// <returns>Account balance</returns>
+        decimal GetLedgerAccountBalance(int ledgerAccountId, DateTime date);
 
         /// <summary>
         /// Generates a new account number

@@ -7,7 +7,6 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-    using Models.Entities;
     using Repositories;
 
     public class PersistenceTest : IDisposable

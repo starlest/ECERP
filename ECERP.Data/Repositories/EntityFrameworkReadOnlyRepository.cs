@@ -8,7 +8,6 @@
     using Abstract;
     using Core;
     using Microsoft.EntityFrameworkCore;
-    using Models;
 
     public class EntityFrameworkReadOnlyRepository<TContext> : IReadOnlyRepository
         where TContext : DbContext

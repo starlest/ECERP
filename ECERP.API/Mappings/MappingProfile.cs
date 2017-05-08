@@ -3,6 +3,7 @@
     using System.Linq;
     using AutoMapper;
     using Core;
+    using Core.Domain;
     using Core.Domain.Companies;
     using Core.Domain.FinancialAccounting;
     using ViewModels;
@@ -11,6 +12,8 @@
     {
         public MappingProfile()
         {
+            CreateMap<LedgerBalanceSheetItem, LedgerBalanceSheetItemViewModel>();
+
             CreateMap<Company, CompanyViewModel>()
                 .ForMember(cm => cm.CreatedDate, conf => conf.MapFrom(c => c.CreatedDate.ToString("dd-MM-yyyy")))
                 .ForMember(cm => cm.ChartOfAccountsId, conf => conf.MapFrom(c => c.ChartOfAccounts.Id));

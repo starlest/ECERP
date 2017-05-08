@@ -32,6 +32,7 @@
             modelBuilder.Entity<ChartOfAccounts>().HasOne(coa => coa.Company).WithOne(c => c.ChartOfAccounts);
 
             modelBuilder.Entity<LedgerAccount>().HasIndex(la => la.AccountNumber).IsUnique();
+            modelBuilder.Entity<LedgerAccount>().HasIndex("Name", "ChartOfAccountsId").IsUnique();
 
             modelBuilder.Entity<LedgerTransaction>()
                 .HasMany(lt => lt.LedgerTransactionLines)

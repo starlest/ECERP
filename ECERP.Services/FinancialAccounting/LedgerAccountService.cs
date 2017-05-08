@@ -84,15 +84,39 @@
         /// <summary>
         /// Gets the account balance for a given period
         /// </summary>
-        /// <param name="ledgerAccount">Ledger account</param>
-        /// <param name="year">Period year</param>
-        /// <param name="month">Period month</param>
+        /// <param name="ledgerAccountId">Ledger Account Identifier</param>
+        /// <param name="year">Period Year</param>
+        /// <param name="month">Period Month</param>
         /// <returns>Account balance</returns>
-        public virtual decimal GetPeriodLedgerAccountBalance(LedgerAccount ledgerAccount, int year, int month)
+        public virtual decimal GetPeriodLedgerAccountBalance(int ledgerAccountId, int year, int month)
         {
             var ledgerAccountBalance =
-                _repository.GetOne<LedgerAccountBalance>(x => x.LedgerAccountId == ledgerAccount.Id && x.Year == year);
+                _repository.GetOne<LedgerAccountBalance>(x => x.LedgerAccountId == ledgerAccountId && x.Year == year);
             return ledgerAccountBalance == null ? 0 : ledgerAccountBalance.GetMonthBalance(month);
+        }
+
+        /// <summary>
+        /// Gets account balance prior to a given date
+        /// </summary>
+        /// <param name="ledgerAccountId">Ledger Account Identifier</param>
+        /// <param name="date">Date</param>
+        /// <returns>Account balance</returns>
+        public virtual decimal GetLedgerAccountBalance(int ledgerAccountId, DateTime date)
+        {
+            var previousPeriodYear = date.Month == 1 ? date.Year - 1 : date.Year;
+            var previousPeriodMonth = date.Month == 12 ? 1 : date.Month - 1;
+            var periodBeginningBalance = GetPeriodLedgerAccountBalance(ledgerAccountId, previousPeriodYear,
+                previousPeriodMonth);
+            var periodLedgerTransactionLinesPriorToDate =
+                _repository.Get<LedgerTransactionLine>(line => line.LedgerAccountId.Equals(ledgerAccountId) &&
+                                                               line.LedgerTransaction.PostingDate.Year.Equals(date.Year) &&
+                                                               line.LedgerTransaction.PostingDate.Month.Equals(
+                                                                   date.Month) &&
+                                                               line.LedgerTransaction.PostingDate.Date < date.Date,
+                    null, null, null, line => line.LedgerAccount).ToList();
+            if (!periodLedgerTransactionLinesPriorToDate.Any()) return periodBeginningBalance;
+            return periodBeginningBalance +
+                   periodLedgerTransactionLinesPriorToDate.Sum(line => line.IsIncrement() ? line.Amount : -line.Amount);
         }
 
         /// <summary>

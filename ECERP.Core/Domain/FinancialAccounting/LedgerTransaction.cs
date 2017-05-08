@@ -43,6 +43,12 @@
         public bool IsEditable { get; set; }
 
         /// <summary>
+        /// Gets or sets is closing entry
+        /// </summary>
+        [Required]
+        public bool IsClosing { get; set; }
+
+        /// <summary>
         /// Gets or sets posting date
         /// </summary>
         [Required]

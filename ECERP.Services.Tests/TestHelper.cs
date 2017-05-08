@@ -410,6 +410,40 @@
             };
         }
 
+        public static IList<LedgerTransactionLine> GetTestAccountLedgerTransactionLines(this ServiceTests tests)
+        {
+            return new List<LedgerTransactionLine>
+            {
+                new LedgerTransactionLine
+                {
+                    Id = 1,
+                    LedgerTransactionId = 1,
+                    LedgerAccountId = tests.GetTestLedgerAccounts()[0].Id,
+                    LedgerAccount = tests.GetTestLedgerAccounts()[0],
+                    Amount = 2000,
+                    IsDebit = true
+                },
+                new LedgerTransactionLine
+                {
+                    Id = 2,
+                    LedgerTransactionId = 1,
+                    LedgerAccountId = tests.GetTestLedgerAccounts()[0].Id,
+                    LedgerAccount = tests.GetTestLedgerAccounts()[0],
+                    Amount = 2000,
+                    IsDebit = true
+                },
+                new LedgerTransactionLine
+                {
+                    Id = 3,
+                    LedgerTransactionId = 1,
+                    LedgerAccountId = tests.GetTestLedgerAccounts()[0].Id,
+                    LedgerAccount = tests.GetTestLedgerAccounts()[0],
+                    Amount = 6000,
+                    IsDebit = false
+                }
+            };
+        }
+
         public static LedgerTransaction GetTestLedgerTransactionWithNoLines(this ServiceTests tests)
         {
             return new LedgerTransaction

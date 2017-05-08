@@ -1,6 +1,7 @@
 ﻿namespace ECERP.API.Controllers
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using AutoMapper;
@@ -69,6 +70,22 @@
             var ledgerAccount = _ledgerAccountService.GetLedgerAccountById(id);
             if (ledgerAccount == null) return NotFound(new { Error = "not found" });
             return new JsonResult(Mapper.Map<LedgerAccount, LedgerAccountViewModel>(ledgerAccount), DefaultJsonSettings);
+        }
+
+        /// <summary>
+        /// GET: ledgeraccounts/{id}/balance
+        /// </summary>
+        /// <param name="id">Ledger Account Identifier</param>
+        /// <param name="date">Date</param>
+        /// <returns>A Json-serialized object representing ledger account balance on a given date.</returns>
+        [HttpGet("{id}/balance")]
+        public IActionResult GetLedgerAccountBalance(int id, [FromQuery] string date)
+        {
+            DateTime d;
+            if (!DateTime.TryParseExact(date, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out d))
+                return new BadRequestObjectResult(new { Error = "Invalid date parameter." });
+            var balance = _ledgerAccountService.GetLedgerAccountBalance(id, d);
+            return new JsonResult(balance, DefaultJsonSettings);
         }
 
         /// <summary>

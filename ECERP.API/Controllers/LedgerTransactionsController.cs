@@ -138,7 +138,7 @@
         /// <summary>
         /// Delete: ledgertransactions/{Id}
         /// </summary>
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             try

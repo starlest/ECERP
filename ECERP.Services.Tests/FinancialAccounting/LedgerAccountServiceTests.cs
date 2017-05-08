@@ -49,6 +49,11 @@
                 .Returns(this.GetTestLedgerAccountBalance())
                 .Returns(this.GetTestLedgerAccountBalance());
 
+            _mockRepo.Setup(
+                    x =>
+                        x.Get(It.IsAny<Expression<Func<LedgerTransactionLine, bool>>>(), null, null, null,
+                            It.IsAny<Expression<Func<LedgerTransactionLine, object>>[]>()))
+                .Returns(this.GetTestAccountLedgerTransactionLines);
             _ledgerAccountService = new LedgerAccountService(_mockRepo.Object);
         }
 
@@ -101,12 +106,21 @@
         public void Can_get_period_ledgerAccount_balance()
         {
             var testLedgerAccount = this.GetTestLedgerAccount();
-            var balance = _ledgerAccountService.GetPeriodLedgerAccountBalance(testLedgerAccount, 2000, 12);
+            var balance = _ledgerAccountService.GetPeriodLedgerAccountBalance(testLedgerAccount.Id, 2000, 12);
             Assert.Equal(0, balance);
-            balance = _ledgerAccountService.GetPeriodLedgerAccountBalance(testLedgerAccount, 2017, 1);
+            balance = _ledgerAccountService.GetPeriodLedgerAccountBalance(testLedgerAccount.Id, 2017, 1);
             Assert.Equal(1000, balance);
-            balance = _ledgerAccountService.GetPeriodLedgerAccountBalance(testLedgerAccount, 2017, 2);
+            balance = _ledgerAccountService.GetPeriodLedgerAccountBalance(testLedgerAccount.Id, 2017, 2);
             Assert.Equal(2000, balance);
+        }
+
+        [Fact]
+        public void Can_get_ledgerAccount_balance()
+        {
+            var testLedgerAccount = this.GetTestLedgerAccount();
+            var date = DateTime.Now.Date;
+            var balance = _ledgerAccountService.GetLedgerAccountBalance(testLedgerAccount.Id, date);
+            Assert.Equal(-2000, balance);
         }
 
         [Fact]
