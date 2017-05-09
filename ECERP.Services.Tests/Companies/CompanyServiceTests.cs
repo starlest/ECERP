@@ -56,7 +56,11 @@
         [Fact]
         public void Can_insert_company()
         {
-            var testCompany = this.GetTestCompany();
+            var testCompany = new Company
+            {
+                Id = 4,
+                Name = "test123"
+            };
             _companyService.InsertCompany(testCompany);
             _mockRepo.Verify(x => x.Create(testCompany), Times.Once);
             _mockRepo.Verify(x => x.Save(), Times.Once);

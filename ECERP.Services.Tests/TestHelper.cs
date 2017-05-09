@@ -323,7 +323,21 @@
                     IsDefault = true,
                     IsHidden = true,
                     ChartOfAccountsId = 1
-                }
+                },
+                new LedgerAccount
+                {
+                    Id = 19,
+                    AccountNumber = 18,
+                    Name = "Retained Earnings",
+                    Description =
+                        "Retained Earnings",
+                    Type = LedgerAccountType.Equity,
+                    Group = LedgerAccountGroup.RetainedEarnings,
+                    IsActive = true,
+                    IsDefault = true,
+                    IsHidden = true,
+                    ChartOfAccountsId = 1
+                },
             };
         }
 

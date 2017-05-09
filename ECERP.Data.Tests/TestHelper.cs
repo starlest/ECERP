@@ -1,9 +1,11 @@
 ﻿namespace ECERP.Data.Tests
 {
     using System;
+    using Core.Domain.Cities;
     using Core.Domain.Companies;
     using Core.Domain.Configuration;
     using Core.Domain.FinancialAccounting;
+    using Core.Domain.Suppliers;
 
     public static class TestHelper
     {
@@ -24,6 +26,27 @@
                 Key = "TestSetting",
                 Value = "TestSettingValue",
                 CompanyId = test.GetTestCompany().Id
+            };
+        }
+
+        public static City GetTestCity(this PersistenceTest test)
+        {
+            return new City
+            {
+                Id = 1,
+                Name = "test"
+            };
+        }
+
+        public static Supplier GetTestSupplier(this PersistenceTest test)
+        {
+            return new Supplier
+            {
+                Id = 1,
+                Name = "test",
+                Address = "test",
+                ContactNumber = "test",
+                CityId = 1
             };
         }
 
@@ -66,7 +89,7 @@
                 Id = 1,
                 Documentation = "Test",
                 Description = "Test",
-                PostingDate = DateTime.Now
+                PostingDate = DateTime.Now.Date
             };
         }
 

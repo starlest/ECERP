@@ -76,6 +76,12 @@
         {
             if (!CommonHelper.GetFirstDigit((int) ledgerAccount.Group).Equals((int) ledgerAccount.Type))
                 throw new ArgumentException("Ledger account group is not compatible with type");
+
+            var coaLedgerAccounts =
+                _repository.Get<LedgerAccount>(la => la.ChartOfAccountsId.Equals(ledgerAccount.ChartOfAccountsId));
+            if (coaLedgerAccounts.Any(account => account.Name.ToLowerInvariant().Equals(ledgerAccount.Name.ToLowerInvariant())))
+                throw new ArgumentException("Ledger account name already exists.");
+            
             ledgerAccount.AccountNumber = GenerateNewAccountNumber(ledgerAccount.Group);
             _repository.Create(ledgerAccount);
             _repository.Save();

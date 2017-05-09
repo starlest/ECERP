@@ -42,7 +42,7 @@
         {
             var testCoa = this.GetTestChartOfAccounts(1);
             _chartOfAccountsService.CloseLedgerPeriod(testCoa.Id);
-            _mockRepo.Verify(x => x.Create(It.IsAny<LedgerAccountBalance>()), Times.Exactly(3));
+            _mockRepo.Verify(x => x.Create(It.IsAny<LedgerAccountBalance>()), Times.Exactly(4));
             _mockRepo.Verify(x => x.Save(), Times.Once);
         }
 

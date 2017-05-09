@@ -1,5 +1,6 @@
 ﻿namespace ECERP.Services.Companies
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Core.Domain.Companies;
@@ -58,6 +59,10 @@
         /// <param name="company">Company</param>
         public virtual void InsertCompany(Company company)
         {
+            var companies = GetAllCompanies();
+            if (companies.Any(c => c.Name.ToLowerInvariant().Equals(company.Name.ToLowerInvariant())))
+                throw new ArgumentException("Company name already exists.");
+            
             company.ChartOfAccounts.LedgerAccounts = GetDefaultLedgerAccountsForDistributionBusiness();
             _repository.Create(company);
             _repository.Save();
