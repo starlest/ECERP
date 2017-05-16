@@ -9,8 +9,8 @@ using ECERP.Core.Domain.FinancialAccounting;
 namespace ECERP.API.Migrations
 {
     [DbContext(typeof(ECERPDbContext))]
-    [Migration("20170415040058_fix")]
-    partial class fix
+    [Migration("20170515080027_Added IsActive to Supplier")]
+    partial class AddedIsActivetoSupplier
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -84,6 +84,31 @@ namespace ECERP.API.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ECERP.Core.Domain.Cities.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Cities");
+                });
+
             modelBuilder.Entity("ECERP.Core.Domain.Companies.Company", b =>
                 {
                     b.Property<int>("Id")
@@ -107,6 +132,33 @@ namespace ECERP.API.Migrations
                         .IsUnique();
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("ECERP.Core.Domain.Companies.CompanySupplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CompanyId");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("SupplierId");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("CompanyId", "SupplierId")
+                        .IsUnique();
+
+                    b.ToTable("CompanySuppliers");
                 });
 
             modelBuilder.Entity("ECERP.Core.Domain.Configuration.CompanySetting", b =>
@@ -255,6 +307,9 @@ namespace ECERP.API.Migrations
 
                     b.HasIndex("CustomerId");
 
+                    b.HasIndex("Name", "ChartOfAccountsId")
+                        .IsUnique();
+
                     b.ToTable("LedgerAccounts");
                 });
 
@@ -325,6 +380,10 @@ namespace ECERP.API.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<bool>("IsClosing");
+
+                    b.Property<bool>("IsEditable");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<DateTime>("PostingDate");
@@ -368,6 +427,146 @@ namespace ECERP.API.Migrations
                     b.HasIndex("LedgerTransactionId");
 
                     b.ToTable("LedgerTransactionLines");
+                });
+
+            modelBuilder.Entity("ECERP.Core.Domain.Products.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("PrimaryUnitName")
+                        .IsRequired()
+                        .HasMaxLength(10);
+
+                    b.Property<int>("ProductCategoryId");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<int>("QuantityPerPrimaryUnit");
+
+                    b.Property<int>("QuantityPerSecondaryUnit");
+
+                    b.Property<string>("SecondaryUnitName")
+                        .IsRequired()
+                        .HasMaxLength(10);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("ProductCategoryId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("ECERP.Core.Domain.Products.ProductCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("ECERP.Core.Domain.Products.ProductSupplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("ProductId");
+
+                    b.Property<decimal>("PurchasePrice");
+
+                    b.Property<int>("SupplierId");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("ProductId", "SupplierId")
+                        .IsUnique();
+
+                    b.ToTable("ProductSupplier");
+                });
+
+            modelBuilder.Entity("ECERP.Core.Domain.Suppliers.Supplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.Property<int>("CityId");
+
+                    b.Property<string>("ContactNumber")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
@@ -554,6 +753,19 @@ namespace ECERP.API.Migrations
                     b.ToTable("OpenIddictTokens");
                 });
 
+            modelBuilder.Entity("ECERP.Core.Domain.Companies.CompanySupplier", b =>
+                {
+                    b.HasOne("ECERP.Core.Domain.Companies.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ECERP.Core.Domain.Suppliers.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ECERP.Core.Domain.Configuration.CompanySetting", b =>
                 {
                     b.HasOne("ECERP.Core.Domain.Companies.Company", "Company")
@@ -607,6 +819,35 @@ namespace ECERP.API.Migrations
                     b.HasOne("ECERP.Core.Domain.FinancialAccounting.LedgerTransaction", "LedgerTransaction")
                         .WithMany("LedgerTransactionLines")
                         .HasForeignKey("LedgerTransactionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ECERP.Core.Domain.Products.Product", b =>
+                {
+                    b.HasOne("ECERP.Core.Domain.Products.ProductCategory", "ProductCategory")
+                        .WithMany()
+                        .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ECERP.Core.Domain.Products.ProductSupplier", b =>
+                {
+                    b.HasOne("ECERP.Core.Domain.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ECERP.Core.Domain.Suppliers.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ECERP.Core.Domain.Suppliers.Supplier", b =>
+                {
+                    b.HasOne("ECERP.Core.Domain.Cities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

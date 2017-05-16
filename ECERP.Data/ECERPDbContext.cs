@@ -30,6 +30,7 @@
             modelBuilder.Entity<City>().HasIndex(c => c.Name).IsUnique();
 
             modelBuilder.Entity<Company>().HasIndex(c => c.Name).IsUnique();
+            modelBuilder.Entity<CompanySupplier>().HasIndex("CompanyId", "SupplierId").IsUnique();
             modelBuilder.Entity<CompanySetting>().HasIndex(p => p.Key).IsUnique();
 
             modelBuilder.Entity<ChartOfAccounts>().ToTable("ChartsOfAccounts");
@@ -62,6 +63,8 @@
         #region Properties
         public DbSet<CompanySetting> Settings { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<CompanySupplier> CompanySuppliers { get; set; }
+
         public DbSet<City> Cities { get; set; }
 
         // Entities

@@ -1,10 +1,12 @@
 ﻿namespace ECERP.Data.Tests
 {
     using System;
+    using System.Collections.Generic;
     using Core.Domain.Cities;
     using Core.Domain.Companies;
     using Core.Domain.Configuration;
     using Core.Domain.FinancialAccounting;
+    using Core.Domain.Products;
     using Core.Domain.Suppliers;
 
     public static class TestHelper
@@ -28,6 +30,15 @@
                 CompanyId = test.GetTestCompany().Id
             };
         }
+        public static CompanySupplier GetTestCompanySupplier(this PersistenceTest test)
+        {
+            return new CompanySupplier
+            {
+                Id = 1,
+                CompanyId = 1,
+                SupplierId = 1
+            };
+        }
 
         public static City GetTestCity(this PersistenceTest test)
         {
@@ -47,6 +58,20 @@
                 Address = "test",
                 ContactNumber = "test",
                 CityId = 1
+            };
+        }
+
+        public static Product GetTestProduct(this PersistenceTest test)
+        {
+            return new Product
+            {
+                Id = 1,
+                ProductId = "test",
+                Name = "test",
+                PrimaryUnitName = "test",
+                SecondaryUnitName = "test",
+                QuantityPerPrimaryUnit = 1,
+                QuantityPerSecondaryUnit = 1
             };
         }
 

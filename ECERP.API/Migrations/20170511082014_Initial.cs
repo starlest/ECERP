@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ECERP.API.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -37,6 +37,22 @@ namespace ECERP.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,6 +89,22 @@ namespace ECERP.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -174,6 +206,31 @@ namespace ECERP.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Suppliers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Address = table.Column<string>(maxLength: 500, nullable: false),
+                    CityId = table.Column<int>(nullable: false),
+                    ContactNumber = table.Column<string>(maxLength: 50, nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Suppliers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Suppliers_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Settings",
                 columns: table => new
                 {
@@ -216,6 +273,35 @@ namespace ECERP.API.Migrations
                         name: "FK_ChartsOfAccounts_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    PrimaryUnitName = table.Column<string>(maxLength: 10, nullable: false),
+                    ProductCategoryId = table.Column<int>(nullable: false),
+                    ProductId = table.Column<string>(maxLength: 50, nullable: false),
+                    QuantityPerPrimaryUnit = table.Column<int>(nullable: false),
+                    QuantityPerSecondaryUnit = table.Column<int>(nullable: false),
+                    SecondaryUnitName = table.Column<string>(maxLength: 10, nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_ProductCategories_ProductCategoryId",
+                        column: x => x.ProductCategoryId,
+                        principalTable: "ProductCategories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -286,6 +372,35 @@ namespace ECERP.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CompanySuppliers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CompanyId = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    SupplierId = table.Column<int>(nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanySuppliers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompanySuppliers_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CompanySuppliers_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Suppliers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LedgerAccounts",
                 columns: table => new
                 {
@@ -332,6 +447,8 @@ namespace ECERP.API.Migrations
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(maxLength: 500, nullable: false),
                     Documentation = table.Column<string>(maxLength: 50, nullable: false),
+                    IsClosing = table.Column<bool>(nullable: false),
+                    IsEditable = table.Column<bool>(nullable: false),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
                     PostingDate = table.Column<DateTime>(nullable: false),
                     Version = table.Column<byte[]>(rowVersion: true, nullable: true)
@@ -343,6 +460,36 @@ namespace ECERP.API.Migrations
                         name: "FK_LedgerTransactions_ChartsOfAccounts_ChartOfAccountsId",
                         column: x => x.ChartOfAccountsId,
                         principalTable: "ChartsOfAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductSupplier",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    ProductId = table.Column<int>(nullable: false),
+                    PurchasePrice = table.Column<decimal>(nullable: false),
+                    SupplierId = table.Column<int>(nullable: false),
+                    Version = table.Column<byte[]>(rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductSupplier", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductSupplier_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductSupplier_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Suppliers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -453,9 +600,26 @@ namespace ECERP.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cities_Name",
+                table: "Cities",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Companies_Name",
                 table: "Companies",
                 column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanySuppliers_SupplierId",
+                table: "CompanySuppliers",
+                column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanySuppliers_CompanyId_SupplierId",
+                table: "CompanySuppliers",
+                columns: new[] { "CompanyId", "SupplierId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -504,6 +668,12 @@ namespace ECERP.API.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LedgerAccounts_Name_ChartOfAccountsId",
+                table: "LedgerAccounts",
+                columns: new[] { "Name", "ChartOfAccountsId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LedgerAccountBalances_LedgerAccountId",
                 table: "LedgerAccountBalances",
                 column: "LedgerAccountId");
@@ -522,6 +692,45 @@ namespace ECERP.API.Migrations
                 name: "IX_LedgerTransactionLines_LedgerTransactionId",
                 table: "LedgerTransactionLines",
                 column: "LedgerTransactionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_Name",
+                table: "Products",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_ProductCategoryId",
+                table: "Products",
+                column: "ProductCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductCategories_Name",
+                table: "ProductCategories",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductSupplier_SupplierId",
+                table: "ProductSupplier",
+                column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductSupplier_ProductId_SupplierId",
+                table: "ProductSupplier",
+                columns: new[] { "ProductId", "SupplierId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Suppliers_CityId",
+                table: "Suppliers",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Suppliers_Name",
+                table: "Suppliers",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -574,6 +783,9 @@ namespace ECERP.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CompanySuppliers");
+
+            migrationBuilder.DropTable(
                 name: "Settings");
 
             migrationBuilder.DropTable(
@@ -581,6 +793,9 @@ namespace ECERP.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "LedgerTransactionLines");
+
+            migrationBuilder.DropTable(
+                name: "ProductSupplier");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -610,6 +825,12 @@ namespace ECERP.API.Migrations
                 name: "LedgerTransactions");
 
             migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Suppliers");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -623,6 +844,12 @@ namespace ECERP.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "ChartsOfAccounts");
+
+            migrationBuilder.DropTable(
+                name: "ProductCategories");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictApplications");

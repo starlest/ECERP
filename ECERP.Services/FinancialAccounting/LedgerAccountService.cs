@@ -32,7 +32,7 @@
         /// <param name="sortOrder">Sort Order</param>
         /// <param name="pageIndex">Page Index</param>
         /// <param name="pageSize">Page Size</param>
-        /// <returns>Ledger accounts</returns>
+        /// <returns>Ledger Accounts</returns>
         public virtual IPagedList<LedgerAccount> GetLedgerAccounts(
             Expression<Func<LedgerAccount, bool>> filter = null,
             Func<IQueryable<LedgerAccount>, IOrderedQueryable<LedgerAccount>> sortOrder = null,
@@ -50,8 +50,8 @@
         /// <summary>
         /// Gets a ledger account
         /// </summary>
-        /// <param name="id">Ledger account identifier</param>
-        /// <returns>Ledger account</returns>
+        /// <param name="id">Ledger Account Identifier</param>
+        /// <returns>Ledger Account</returns>
         public virtual LedgerAccount GetLedgerAccountById(int id)
         {
             return _repository.GetById<LedgerAccount>(id, la => la.ChartOfAccounts.Company);
@@ -60,18 +60,18 @@
         /// <summary>
         /// Gets a ledger account
         /// </summary>
-        /// <param name="coaId">Chart of accounts identifier</param>
-        /// <param name="name">Ledger account name</param>
-        /// <returns>Ledger account</returns>
+        /// <param name="coaId">Chart of Accounts Identifier</param>
+        /// <param name="name">Name</param>
+        /// <returns>Ledger Account</returns>
         public virtual LedgerAccount GetLedgerAccountByName(int coaId, string name)
         {
             return _repository.GetOne<LedgerAccount>(x => x.Name.Equals(name) && x.ChartOfAccountsId.Equals(coaId));
         }
 
         /// <summary>
-        /// Insert a ledger account
+        /// Inserts a ledger account
         /// </summary>
-        /// <param name="ledgerAccount">Ledger account</param>
+        /// <param name="ledgerAccount">Ledger Account</param>
         public virtual void InsertLedgerAccount(LedgerAccount ledgerAccount)
         {
             if (!CommonHelper.GetFirstDigit((int) ledgerAccount.Group).Equals((int) ledgerAccount.Type))

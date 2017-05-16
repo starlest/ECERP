@@ -69,14 +69,5 @@
         /// Gets or sets related product category
         /// </summary>
         public virtual ProductCategory ProductCategory { get; set; }
-
-        /// <summary>
-        /// Gets or sets related product suppliers
-        /// </summary>
-        public virtual IList<ProductSupplier> ProductSuppliers
-        {
-            get { return _productSuppliers; }
-            set { _productSuppliers = value; }
-        }
     }
 }

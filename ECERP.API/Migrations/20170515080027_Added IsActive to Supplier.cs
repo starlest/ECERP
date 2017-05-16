@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ECERP.API.Migrations
 {
-    public partial class isclosingtoledgertransaction : Migration
+    public partial class AddedIsActivetoSupplier : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
-                name: "IsClosing",
-                table: "LedgerTransactions",
+                name: "IsActive",
+                table: "Suppliers",
                 nullable: false,
                 defaultValue: false);
         }
@@ -18,8 +18,8 @@ namespace ECERP.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsClosing",
-                table: "LedgerTransactions");
+                name: "IsActive",
+                table: "Suppliers");
         }
     }
 }

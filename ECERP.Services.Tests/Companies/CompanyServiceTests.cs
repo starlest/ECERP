@@ -4,6 +4,7 @@
     using System.Linq.Expressions;
     using Core;
     using Core.Domain.Companies;
+    using Core.Domain.Suppliers;
     using Data.Abstract;
     using Services.Companies;
     using Moq;
@@ -18,10 +19,11 @@
         public CompanyServiceTests()
         {
             _mockRepo = new Mock<IRepository>();
-            _mockRepo.Setup(x => x.GetAll(null, null, null, It.IsAny<Expression<Func<Company, object>>[]>())).Returns(this.GetTestCompanies);
+            _mockRepo.Setup(x => x.GetAll(null, null, null, It.IsAny<Expression<Func<Company, object>>[]>()))
+                .Returns(this.GetTestCompanies);
             _mockRepo.Setup(x => x.Get(It.IsAny<Expression<Func<Company, bool>>>(), null, null, null))
                 .Returns(this.GetTestCompanies);
-            _mockRepo.Setup(x => x.GetById<Company>(It.IsAny<object>())).Returns(this.GetTestCompany);
+            _mockRepo.Setup(x => x.GetById<Company>(1)).Returns(this.GetTestCompany);
             _mockRepo.Setup(x => x.GetOne(It.IsAny<Expression<Func<Company, bool>>>())).Returns(this.GetTestCompany);
 
             var mockLedgerAccountService = new Mock<ILedgerAccountService>();

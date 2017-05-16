@@ -5,6 +5,7 @@
     using System.Linq;
     using Core.Domain.Companies;
     using Core.Domain.FinancialAccounting;
+    using Core.Domain.Suppliers;
     using Data.Abstract;
     using FinancialAccounting;
 

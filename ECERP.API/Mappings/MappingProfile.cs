@@ -3,9 +3,9 @@
     using System.Linq;
     using AutoMapper;
     using Core;
-    using Core.Domain;
     using Core.Domain.Companies;
     using Core.Domain.FinancialAccounting;
+    using Core.Domain.Suppliers;
     using ViewModels;
 
     public class MappingProfile : Profile
@@ -17,6 +17,12 @@
             CreateMap<Company, CompanyViewModel>()
                 .ForMember(cm => cm.CreatedDate, conf => conf.MapFrom(c => c.CreatedDate.ToString("dd-MM-yyyy")))
                 .ForMember(cm => cm.ChartOfAccountsId, conf => conf.MapFrom(c => c.ChartOfAccounts.Id));
+
+            CreateMap<Supplier, SupplierViewModel>()
+                .ForMember(cvm => cvm.City, conf => conf.MapFrom(c => c.City.Name));
+
+            CreateMap<IPagedList<Supplier>, PagedListViewModel<SupplierViewModel>>()
+                .ForMember(svm => svm.Source, conf => conf.MapFrom(s => s.ToList()));
 
             CreateMap<LedgerAccount, LedgerAccountViewModel>()
                 .ForMember(lavm => lavm.CreatedDate, conf => conf.MapFrom(la => la.CreatedDate.ToString("dd-MM-yyyy")))

@@ -6,6 +6,7 @@
     using Core.Domain.Companies;
     using Core.Domain.Configuration;
     using Core.Domain.FinancialAccounting;
+    using Core.Domain.Suppliers;
 
     public static class TestHelper
     {
@@ -62,6 +63,42 @@
         public static CompanySetting GetTestCompanySetting(this ServiceTests tests)
         {
             return tests.GetTestCompanySettings().First();
+        }
+
+        public static IList<Supplier> GetTestSuppliers(this ServiceTests tests)
+        {
+            return new List<Supplier>
+            {
+                new Supplier
+                {
+                    Id = 1,
+                    Name = "Interbis",
+                    Address = "Palembang",
+                    CityId = 1,
+                    ContactNumber = "00001"
+                },
+                new Supplier
+                {
+                    Id = 2,
+                    Name = "Arta Boga",
+                    Address = "Palembang",
+                    CityId = 2,
+                    ContactNumber = "00002"
+                },
+                new Supplier
+                {
+                    Id = 3,
+                    Name = "ABC",
+                    Address = "Jakarta",
+                    CityId = 3,
+                    ContactNumber = "00003"
+                }
+            };
+        }
+
+        public static Supplier GetTestSupplier(this ServiceTests tests)
+        {
+            return GetTestSuppliers(tests).First();
         }
 
         public static ChartOfAccounts GetTestChartOfAccounts(this ServiceTests tests, int id)

@@ -17,9 +17,11 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
+    using Services.Cities;
     using Services.Companies;
     using Services.FinancialAccounting;
-    
+    using Services.Suppliers;
+
     public class Startup
     {
         public Startup(IHostingEnvironment env)
@@ -71,10 +73,12 @@
             services.AddScoped<IRepository, EntityFrameworkRepository<ECERPDbContext>>();
 
             // Add Services
+            services.AddScoped<ICitiesService, CitiesService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
             services.AddScoped<ILedgerAccountService, LedgerAccountService>();
             services.AddScoped<ILedgerTransactionService, LedgerTransactionService>();
+            services.AddScoped<ISuppliersService, SuppliersService>();
 
             // Register the OpenIddict services.
             services.AddOpenIddict()

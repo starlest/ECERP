@@ -83,7 +83,7 @@ namespace ECERP.API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ECERP.Core.Domain.City", b =>
+            modelBuilder.Entity("ECERP.Core.Domain.Cities.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -131,6 +131,33 @@ namespace ECERP.API.Migrations
                         .IsUnique();
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("ECERP.Core.Domain.Companies.CompanySupplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CompanyId");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("SupplierId");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("CompanyId", "SupplierId")
+                        .IsUnique();
+
+                    b.ToTable("CompanySuppliers");
                 });
 
             modelBuilder.Entity("ECERP.Core.Domain.Configuration.CompanySetting", b =>
@@ -519,6 +546,8 @@ namespace ECERP.API.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
+                    b.Property<bool>("IsActive");
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("Name")
@@ -723,6 +752,19 @@ namespace ECERP.API.Migrations
                     b.ToTable("OpenIddictTokens");
                 });
 
+            modelBuilder.Entity("ECERP.Core.Domain.Companies.CompanySupplier", b =>
+                {
+                    b.HasOne("ECERP.Core.Domain.Companies.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ECERP.Core.Domain.Suppliers.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ECERP.Core.Domain.Configuration.CompanySetting", b =>
                 {
                     b.HasOne("ECERP.Core.Domain.Companies.Company", "Company")
@@ -802,7 +844,7 @@ namespace ECERP.API.Migrations
 
             modelBuilder.Entity("ECERP.Core.Domain.Suppliers.Supplier", b =>
                 {
-                    b.HasOne("ECERP.Core.Domain.City", "City")
+                    b.HasOne("ECERP.Core.Domain.Cities.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade);

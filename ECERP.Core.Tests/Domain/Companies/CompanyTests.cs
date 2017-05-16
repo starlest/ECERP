@@ -3,6 +3,7 @@
     using System.Linq;
     using Core.Domain.Companies;
     using Core.Domain.Configuration;
+    using Core.Domain.Suppliers;
     using Xunit;
 
     public class CompanyTests
@@ -30,6 +31,19 @@
             company.CompanySettings.Add(companySetting);
             Assert.Equal(1, company.CompanySettings.Count);
             Assert.Equal(1, company.CompanySettings.First().Id);
+        }
+
+        [Fact]
+        public void Can_add_supplier_relationship()
+        {
+            var companySupplier = new CompanySupplier
+            {
+                Id = 1,
+                CompanyId = 1,
+                SupplierId = 1
+            };
+            Assert.Equal(1, companySupplier.CompanyId);
+            Assert.Equal(1, companySupplier.SupplierId);
         }
     }
 }

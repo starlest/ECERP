@@ -19,6 +19,7 @@
             Assert.Equal("test", supplier.Address);
             Assert.Equal("test", supplier.ContactNumber);
             Assert.Equal(1, supplier.CityId);
+            Assert.True(supplier.IsActive);
         }
     }
 }

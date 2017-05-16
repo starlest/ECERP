@@ -5,12 +5,22 @@
     public class CompanyPersistenceTest : PersistenceTest
     {
         [Fact]
-        public void Can_save_and_load_companySetting()
+        public void Can_save_and_load_company()
         {
-            var coa = this.GetTestChartOfAccounts();
-            var fromDb = SaveAndLoadEntity(this.GetTestChartOfAccounts());
-            Assert.NotNull(fromDb);
-            Assert.Equal(coa.Id, fromDb.Id);
+            var company = this.GetTestCompany();
+            var fromDb = SaveAndLoadEntity(this.GetTestCompany());
+            Assert.Equal(company.Id, fromDb.Id);
+            Assert.Equal(company.Name, fromDb.Name);
+        }
+
+        [Fact]
+        public void Can_save_and_load_companySupplier()
+        {
+            var companySupplier = this.GetTestCompanySupplier();
+            var fromDb = SaveAndLoadEntity(this.GetTestCompanySupplier());
+            Assert.Equal(companySupplier.Id, fromDb.Id);
+            Assert.Equal(companySupplier.CompanyId, fromDb.CompanyId);
+            Assert.Equal(companySupplier.SupplierId, fromDb.SupplierId);
         }
     }
 }

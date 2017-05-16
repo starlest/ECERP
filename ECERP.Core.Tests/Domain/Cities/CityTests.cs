@@ -10,8 +10,10 @@
         {
             var city = new City
             {
+                Id = 1,
                 Name = "test"
             };
+            Assert.Equal(1, city.Id);
             Assert.Equal("test", city.Name);
         }
     }

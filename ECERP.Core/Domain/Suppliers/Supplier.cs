@@ -9,6 +9,11 @@
     /// </summary>
     public class Supplier : Entity<int>
     {
+        public Supplier()
+        {
+            IsActive = true;
+        }
+
         /// <summary>
         /// Gets or sets name
         /// </summary>
@@ -32,6 +37,12 @@
         /// </summary>
         [Required, MaxLength(50)]
         public string ContactNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets is active
+        /// </summary>
+        [Required]
+        public bool IsActive { get; set; }
 
         /// <summary>
         /// Gets or sets related city
