@@ -12,6 +12,13 @@
         IList<City> GetAllCities();
 
         /// <summary>
+        /// Gets a city by identifier
+        /// </summary>
+        /// <param name="id">City Identifier</param>
+        /// <returns>City</returns>
+        City GetCityById(int id);
+
+        /// <summary>
         /// Gets a city by name
         /// </summary>
         /// <param name="name">City Name</param>

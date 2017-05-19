@@ -25,14 +25,24 @@
         /// <returns>Cities</returns>
         public virtual IList<City> GetAllCities()
         {
-            return _repository.GetAll<City>(x => x.OrderBy(c => c.Name)).ToList();
+            return _repository.GetAll<City>().ToList();
+        }
+
+        /// <summary>
+        /// Gets a city by identifier
+        /// </summary>
+        /// <param name="id">City Identifier</param>
+        /// <returns>City</returns>
+        public virtual City GetCityById(int id)
+        {
+            return _repository.GetById<City>(id);
         }
 
         /// <summary>
         /// Gets a city by name
         /// </summary>
         /// <param name="name">City Name</param>
-        /// <returns>A City</returns>
+        /// <returns>City</returns>
         public virtual City GetCityByName(string name)
         {
             return _repository.GetOne<City>(c => c.Name.Equals(name));

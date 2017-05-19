@@ -4,7 +4,6 @@
     using System.Linq.Expressions;
     using Core;
     using Core.Domain.Companies;
-    using Core.Domain.Suppliers;
     using Data.Abstract;
     using Services.Companies;
     using Moq;

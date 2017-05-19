@@ -4,62 +4,62 @@
     using System.Collections.Generic;
     using AutoMapper;
     using Core.Domain;
-    using Core.Domain.Companies;
+    using Core.Domain.Cities;
     using Data;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Companies;
+    using Services.Cities;
     using ViewModels;
 
-    public class CompaniesController : BaseController
+    public class CitiesController : BaseController
     {
         #region Fields
-        private readonly ICompanyService _companyService;
+        private readonly ICitiesService _citiesService;
         #endregion
 
         #region Constructor
-        public CompaniesController(ECERPDbContext dbContext,
+        public CitiesController(ECERPDbContext dbContext,
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            ICompanyService companyService) : base(dbContext, signInManager, userManager)
+            ICitiesService citiesService) : base(dbContext, signInManager, userManager)
         {
-            _companyService = companyService;
+            _citiesService = citiesService;
         }
         #endregion
 
         #region RESTful Conventions
         /// <summary>
-        /// GET: companies
+        /// GET: cities
         /// </summary>
-        /// <returns>An array of all Json-serialized companies.</returns>
+        /// <returns>An array of all Json-serialized cities.</returns>
         [HttpGet]
         public IActionResult Get()
         {
-            var companies = _companyService.GetAllCompanies();
-            return new JsonResult(Mapper.Map<IList<Company>, IList<CompanyViewModel>>(companies), DefaultJsonSettings);
+            var cities = _citiesService.GetAllCities();
+            return new JsonResult(Mapper.Map<IList<City>, IList<CityViewModel>>(cities), DefaultJsonSettings);
         }
 
         /// <summary>
-        /// POST: companies
+        /// POST: cities
         /// </summary>
-        /// <returns>Creates a new Company and return it accordingly.</returns>
+        /// <returns>Creates a new City and return it accordingly.</returns>
         [HttpPost]
-        public IActionResult Add([FromBody] CompanyViewModel cvm)
+        public IActionResult Add([FromBody] CityViewModel cvm)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try
             {
-                // create a new company with the client-sent json data
-                var company = new Company
+                // create a new city with the client-sent json data
+                var city = new City
                 {
                     Name = cvm.Name
                 };
 
-                _companyService.InsertCompany(company);
+                _citiesService.InsertCity(city);
 
                 // return the newly-created company to the client.
-                return new JsonResult(Mapper.Map<Company, CompanyViewModel>(company), DefaultJsonSettings);
+                return new JsonResult(Mapper.Map<City, CityViewModel>(city), DefaultJsonSettings);
             }
             catch (Exception)
             {

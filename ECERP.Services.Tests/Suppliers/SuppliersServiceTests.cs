@@ -24,7 +24,7 @@
                             It.IsAny<Expression<Func<Supplier, object>>[]>()))
                 .Returns(this.GetTestSuppliers);
             _mockRepo.Setup(x => x.GetById<Company>(1)).Returns(this.GetTestCompany);
-            _mockRepo.Setup(x => x.GetById<Supplier>(1)).Returns(this.GetTestSupplier);
+            _mockRepo.Setup(x => x.GetById<Supplier>(1, s => s.City)).Returns(this.GetTestSupplier);
             _suppliersService = new SuppliersService(_mockRepo.Object);
         }
 

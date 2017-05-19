@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Core.Domain.Cities;
     using Core.Domain.Companies;
     using Core.Domain.Configuration;
     using Core.Domain.FinancialAccounting;
@@ -10,6 +11,21 @@
 
     public static class TestHelper
     {
+        public static IList<City> GetTestCities(this ServiceTests tests)
+        {
+            return new List<City>
+            {
+                new City { Name = "city1", Id = 1 },
+                new City { Name = "city2", Id = 2 },
+                new City { Name = "city3", Id = 3 },
+            };
+        }
+
+        public static City GetTestCity(this ServiceTests tests)
+        {
+            return tests.GetTestCities().First();
+        }
+
         public static IList<Company> GetTestCompanies(this ServiceTests tests)
         {
             return new List<Company>
