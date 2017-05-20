@@ -84,7 +84,8 @@
                     Name = svm.Name,
                     Address = svm.Address,
                     ContactNumber = svm.ContactNumber,
-                    CityId = svm.City.Id
+                    CityId = svm.City.Id,
+                    TaxId = svm.TaxId
                 };
 
                 _suppliersService.InsertSupplier(supplier);
@@ -97,6 +98,31 @@
                 // return the error.
                 return BadRequest(new { Error = "Check that all the fields are valid." });
             }
+        }
+
+        /// <summary>
+        /// PUT: suppliers/{id}
+        /// </summary>
+        /// <returns>Updates an existing supplier and return it accordingly.</returns>
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] SupplierViewModel svm)
+        {
+            if (svm == null) return NotFound(new { Error = "Supplier could not be found" });
+
+            var supplier = _suppliersService.GetSupplierById(id);
+
+            if (supplier == null) return NotFound(new { Error = "Supplier could not be found" });
+
+            // handle the update (on per-property basis)
+            supplier.Name = svm.Name;
+            supplier.Address = svm.Address;
+            supplier.CityId = svm.City.Id;
+            supplier.ContactNumber = svm.ContactNumber;
+            supplier.IsActive = svm.IsActive;
+
+            _suppliersService.UpdateSupplier(supplier);
+            
+            return new JsonResult(Mapper.Map<Supplier, SupplierViewModel>(supplier), DefaultJsonSettings);
         }
         #endregion
 

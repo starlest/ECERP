@@ -7,6 +7,7 @@
         public CityViewModel City { get; set; }
         public string Address { get; set; }
         public string ContactNumber { get; set; }
+        public string TaxId { get; set; }
         public bool IsActive { get; set; }
     }
 }

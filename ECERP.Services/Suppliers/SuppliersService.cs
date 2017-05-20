@@ -63,12 +63,22 @@
         }
 
         /// <summary>
-        /// Insert a supplier
+        /// Inserts a supplier
         /// </summary>
         /// <param name="supplier">Supplier</param>
         public void InsertSupplier(Supplier supplier)
         {
             _repository.Create(supplier);
+            _repository.Save();
+        }
+
+        /// <summary>
+        /// Updates a supplier
+        /// </summary>
+        /// <param name="supplier">Supplier</param>
+        public void UpdateSupplier(Supplier supplier)
+        {
+            _repository.Update(supplier);
             _repository.Save();
         }
 

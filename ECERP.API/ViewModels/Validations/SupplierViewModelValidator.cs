@@ -12,6 +12,8 @@
             RuleFor(supplier => supplier.Address).Must(x => x.Length <= 500).WithMessage("Length of address must be less than 500.");
             RuleFor(supplier => supplier.ContactNumber).NotEmpty().WithMessage("Contact number cannot be empty");
             RuleFor(supplier => supplier.ContactNumber).Must(x => x.Length <= 50).WithMessage("Length of contact number must be less than 50.");
+            RuleFor(supplier => supplier.TaxId).NotEmpty().WithMessage("Tax identification cannot be empty");
+            RuleFor(supplier => supplier.TaxId).Must(x => x.Length <= 50).WithMessage("Length of tax identification must be less than 50.");
             RuleFor(supplier => supplier.City).NotNull().WithMessage("City cannot be null.");
         }
     }

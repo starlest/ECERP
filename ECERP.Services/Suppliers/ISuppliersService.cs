@@ -37,10 +37,16 @@
         Supplier GetSupplierByName(string name);
 
         /// <summary>
-        /// Insert a supplier
+        /// Inserts a supplier
         /// </summary>
         /// <param name="supplier">Supplier</param>
         void InsertSupplier(Supplier supplier);
+
+        /// <summary>
+        /// Updates a supplier
+        /// </summary>
+        /// <param name="supplier">Supplier</param>
+        void UpdateSupplier(Supplier supplier);
 
         /// <summary>
         /// Registers a supplier with the company

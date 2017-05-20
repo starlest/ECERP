@@ -45,6 +45,14 @@
             _mockRepo.Verify(x => x.Save(), Times.Once);
         }
 
+        [Fact]
+        public void Can_update_supplier()
+        {
+            var testSupplier = this.GetTestSupplier();
+            _suppliersService.UpdateSupplier(testSupplier);
+            _mockRepo.Verify(x => x.Update(testSupplier), Times.Once);
+            _mockRepo.Verify(x => x.Save(), Times.Once);
+        }
 
         [Fact]
         public void Can_register_supplier_to_company()

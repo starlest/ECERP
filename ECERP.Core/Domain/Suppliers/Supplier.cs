@@ -39,6 +39,12 @@
         public string ContactNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets tax identification
+        /// </summary>
+        [Required, MaxLength(50)]
+        public string TaxId { get; set; }
+
+        /// <summary>
         /// Gets or sets is active
         /// </summary>
         [Required]
