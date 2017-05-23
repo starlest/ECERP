@@ -118,10 +118,13 @@
             supplier.Address = svm.Address;
             supplier.CityId = svm.City.Id;
             supplier.ContactNumber = svm.ContactNumber;
+            supplier.TaxId = svm.TaxId;
             supplier.IsActive = svm.IsActive;
 
             _suppliersService.UpdateSupplier(supplier);
-            
+
+            supplier = _suppliersService.GetSupplierById(id);
+
             return new JsonResult(Mapper.Map<Supplier, SupplierViewModel>(supplier), DefaultJsonSettings);
         }
         #endregion
