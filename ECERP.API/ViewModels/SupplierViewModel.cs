@@ -1,5 +1,8 @@
 ﻿namespace ECERP.API.ViewModels
 {
+    using System.Collections.Generic;
+    using Core.Domain.Companies;
+
     public class SupplierViewModel
     {
         public int Id { get; set; }
@@ -9,5 +12,6 @@
         public string ContactNumber { get; set; }
         public string TaxId { get; set; }
         public bool IsActive { get; set; }
+        public IList<string> Companies { get; set; }
     }
 }

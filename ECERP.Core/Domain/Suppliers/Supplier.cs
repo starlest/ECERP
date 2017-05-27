@@ -1,17 +1,22 @@
 ﻿namespace ECERP.Core.Domain.Suppliers
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using Cities;
+    using Companies;
 
     /// <summary>
     /// Represents a supplier
     /// </summary>
     public class Supplier : Entity<int>
     {
+        private IList<CompanySupplier> _companySuppliers;
+
         public Supplier()
         {
             IsActive = true;
+            _companySuppliers = new List<CompanySupplier>();
         }
 
         /// <summary>
@@ -54,5 +59,14 @@
         /// Gets or sets related city
         /// </summary>
         public virtual City City { get; set; }
+
+        /// <summary>
+        /// Gets or sets related companies
+        /// </summary>
+        public virtual IList<CompanySupplier> CompanySuppliers
+        {
+            get { return _companySuppliers; }
+            set { _companySuppliers = value; }
+        }
     }
 }

@@ -1,7 +1,5 @@
 ﻿namespace ECERP.API.ViewModels
 {
-    using System;
-
     public class CompanyViewModel
     {
         public string Id { get; set; }

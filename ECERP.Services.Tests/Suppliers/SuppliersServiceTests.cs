@@ -12,7 +12,7 @@
 
     public class SuppliersServiceTests : ServiceTests
     {
-        private readonly ISuppliersService _suppliersService;
+        private readonly ISupplierService _suppliersService;
         private readonly Mock<IRepository> _mockRepo;
 
         public SuppliersServiceTests()
@@ -25,7 +25,7 @@
                 .Returns(this.GetTestSuppliers);
             _mockRepo.Setup(x => x.GetById<Company>(1)).Returns(this.GetTestCompany);
             _mockRepo.Setup(x => x.GetById<Supplier>(1, s => s.City)).Returns(this.GetTestSupplier);
-            _suppliersService = new SuppliersService(_mockRepo.Object);
+            _suppliersService = new SupplierService(_mockRepo.Object);
         }
 
         [Fact]
@@ -51,16 +51,6 @@
             var testSupplier = this.GetTestSupplier();
             _suppliersService.UpdateSupplier(testSupplier);
             _mockRepo.Verify(x => x.Update(testSupplier), Times.Once);
-            _mockRepo.Verify(x => x.Save(), Times.Once);
-        }
-
-        [Fact]
-        public void Can_register_supplier_to_company()
-        {
-            Assert.Throws<ArgumentException>(() => _suppliersService.RegisterSupplierToCompany(0, 1));
-            Assert.Throws<ArgumentException>(() => _suppliersService.RegisterSupplierToCompany(1, 0));
-            _suppliersService.RegisterSupplierToCompany(1, 1);
-            _mockRepo.Verify(x => x.Create(It.IsAny<CompanySupplier>()), Times.Once);
             _mockRepo.Verify(x => x.Save(), Times.Once);
         }
     }

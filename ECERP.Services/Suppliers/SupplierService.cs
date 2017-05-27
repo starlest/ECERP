@@ -8,14 +8,14 @@
     using Core.Domain.Suppliers;
     using Data.Abstract;
 
-    public class SuppliersService : ISuppliersService
+    public class SupplierService : ISupplierService
     {
         #region Fields
         private readonly IRepository _repository;
         #endregion
 
         #region Constructor
-        public SuppliersService(IRepository repository)
+        public SupplierService(IRepository repository)
         {
             _repository = repository;
         }
@@ -79,31 +79,6 @@
         public void UpdateSupplier(Supplier supplier)
         {
             _repository.Update(supplier);
-            _repository.Save();
-        }
-
-        /// <summary>
-        /// Registers a supplier with the company
-        /// </summary>
-        /// <param name="supplierId">Supplier Identifier</param>
-        /// <param name="companyId">Company Identifier</param>
-        public void RegisterSupplierToCompany(int supplierId, int companyId)
-        {
-            var company = _repository.GetById<Company>(companyId);
-            if (company == null)
-                throw new ArgumentException("Company does not exist.");
-
-            var supplier = GetSupplierById(supplierId);
-            if (supplier == null)
-                throw new ArgumentException("Supplier does not exist.");
-
-            var companySupplier = new CompanySupplier
-            {
-                CompanyId = companyId,
-                SupplierId = supplierId
-            };
-
-            _repository.Create(companySupplier);
             _repository.Save();
         }
         #endregion

@@ -32,13 +32,33 @@
             {
                 new Company { Name = "test1", Id = 1 },
                 new Company { Name = "test2", Id = 2 },
-                new Company { Name = "test3", Id = 3 },
+                new Company { Name = "test3", Id = 3 }
             };
         }
 
         public static Company GetTestCompany(this ServiceTests tests)
         {
             return tests.GetTestCompanies().First();
+        }
+
+        public static IList<CompanySupplier> GetTestCompanySuppliers(this ServiceTests tests)
+        {
+            return new List<CompanySupplier>
+            {
+                new CompanySupplier
+                {
+                    Id = 1,
+                    CompanyId = 1,
+                    SupplierId = 1,
+                    Supplier = tests.GetTestSupplier(),
+                    Company = tests.GetTestCompany()
+                }
+            };
+        }
+
+        public static CompanySupplier GetTestCompanySupplier(this ServiceTests tests)
+        {
+            return tests.GetTestCompanySuppliers().First();
         }
 
         public static IList<CompanySetting> GetTestCompanySettings(this ServiceTests tests)

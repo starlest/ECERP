@@ -26,7 +26,7 @@
         private readonly ECERPDbContext _dbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ISuppliersService _suppliersService;
+        private readonly ISupplierService _suppliersService;
         private readonly ICitiesService _citiesService;
         private readonly ICompanyService _companyService;
         private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
@@ -37,7 +37,7 @@
         public DbSeeder(ECERPDbContext dbContext,
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
-            ISuppliersService suppliersService,
+            ISupplierService suppliersService,
             ICitiesService citiesService,
             ICompanyService companyService,
             OpenIddictApplicationManager<OpenIddictApplication> applicationManager,

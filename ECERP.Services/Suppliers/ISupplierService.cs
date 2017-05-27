@@ -6,7 +6,7 @@
     using Core;
     using Core.Domain.Suppliers;
 
-    public interface ISuppliersService
+    public interface ISupplierService
     {
         /// <summary>
         /// Gets suppliers
@@ -47,12 +47,5 @@
         /// </summary>
         /// <param name="supplier">Supplier</param>
         void UpdateSupplier(Supplier supplier);
-
-        /// <summary>
-        /// Registers a supplier with the company
-        /// </summary>
-        /// <param name="supplierId">Supplier Identifier</param>
-        /// <param name="companyId">Company Identifier</param>
-        void RegisterSupplierToCompany(int supplierId, int companyId);
     }
 }
