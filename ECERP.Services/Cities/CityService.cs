@@ -5,14 +5,14 @@
     using Core.Domain.Cities;
     using Data.Abstract;
 
-    public class CitiesService : ICitiesService
+    public class CityService : ICityService
     {
         #region Fields
         private readonly IRepository _repository;
         #endregion
 
         #region Constructor
-        public CitiesService(IRepository repository)
+        public CityService(IRepository repository)
         {
             _repository = repository;
         }

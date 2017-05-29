@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Core.Domain.Cities;
 
-    public interface ICitiesService
+    public interface ICityService
     {
         /// <summary>
         /// Gets all cities

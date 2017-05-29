@@ -21,6 +21,7 @@
     using Services.Companies;
     using Services.CompanySuppliers;
     using Services.FinancialAccounting;
+    using Services.ProductCategories;
     using Services.Suppliers;
 
     public class Startup
@@ -74,14 +75,15 @@
             services.AddScoped<IRepository, EntityFrameworkRepository<ECERPDbContext>>();
 
             // Add Services
-            services.AddScoped<ICitiesService, CitiesService>();
+            services.AddScoped<ICityService, CityService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<ICompanySupplierService, CompanySupplierService>();
             services.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
             services.AddScoped<ILedgerAccountService, LedgerAccountService>();
             services.AddScoped<ILedgerTransactionService, LedgerTransactionService>();
+            services.AddScoped<IProductCategoryService, ProductCategoryService>();
             services.AddScoped<ISupplierService, SupplierService>();
-
+          
             // Register the OpenIddict services.
             services.AddOpenIddict()
                 // Register the Entity Framework stores.

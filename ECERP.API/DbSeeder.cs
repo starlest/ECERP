@@ -27,7 +27,7 @@
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ISupplierService _suppliersService;
-        private readonly ICitiesService _citiesService;
+        private readonly ICityService _citiesService;
         private readonly ICompanyService _companyService;
         private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
         private readonly IConfiguration _configuration;
@@ -38,7 +38,7 @@
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
             ISupplierService suppliersService,
-            ICitiesService citiesService,
+            ICityService citiesService,
             ICompanyService companyService,
             OpenIddictApplicationManager<OpenIddictApplication> applicationManager,
             IConfiguration configuration)

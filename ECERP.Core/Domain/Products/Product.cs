@@ -1,6 +1,5 @@
 ﻿namespace ECERP.Core.Domain.Products
 {
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,11 +8,8 @@
     /// </summary>
     public class Product : Entity<int>
     {
-        private IList<ProductSupplier> _productSuppliers;
-
         public Product()
         {
-            _productSuppliers = new List<ProductSupplier>();
             IsActive = true;
         }
 
@@ -36,7 +32,7 @@
         public int ProductCategoryId { get; set; }
 
         /// <summary>
-        /// Gets or sets unit name
+        /// Gets or sets primary unit name
         /// </summary>
         [Required, MaxLength(10)]
         public string PrimaryUnitName { get; set; }
@@ -58,6 +54,18 @@
         /// </summary>
         [Required]
         public int QuantityPerSecondaryUnit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sales price
+        /// </summary>
+        [Required]
+        public decimal SalesPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets purchase price
+        /// </summary>
+        [Required]
+        public decimal PurchasePrice { get; set; }
 
         /// <summary>
         /// Gets or sets active

@@ -9,12 +9,12 @@
     using Services.Cities;
     using Xunit;
 
-    public class CitiesServiceTests : ServiceTests
+    public class CityServiceTests : ServiceTests
     {
-        private readonly ICitiesService _citiesService;
+        private readonly ICityService _citiesService;
         private readonly Mock<IRepository> _mockRepo;
 
-        public CitiesServiceTests()
+        public CityServiceTests()
         {
             _mockRepo = new Mock<IRepository>();
             _mockRepo.Setup(
@@ -22,7 +22,7 @@
                 .Returns(this.GetTestCities());
             _mockRepo.Setup(x => x.GetById<City>(1)).Returns(this.GetTestCity);
             _mockRepo.Setup(x => x.GetOne(It.IsAny<Expression<Func<City, bool>>>())).Returns(this.GetTestCity);
-            _citiesService = new CitiesService(_mockRepo.Object);
+            _citiesService = new CityService(_mockRepo.Object);
         }
 
         [Fact]

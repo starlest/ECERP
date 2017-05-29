@@ -1,6 +1,5 @@
 ﻿namespace ECERP.Data.Tests.Products
 {
-    using System.Linq;
     using Xunit;
 
  
@@ -18,6 +17,9 @@
             Assert.Equal(product.SecondaryUnitName, fromDb.SecondaryUnitName);
             Assert.Equal(product.QuantityPerPrimaryUnit, fromDb.QuantityPerPrimaryUnit);
             Assert.Equal(product.QuantityPerSecondaryUnit, fromDb.QuantityPerSecondaryUnit);
+            Assert.Equal(product.SalesPrice, fromDb.SalesPrice);
+            Assert.Equal(product.ProductCategoryId, fromDb.ProductCategoryId);
+            Assert.Equal(product.IsActive, fromDb.IsActive);
         }
     }
 }

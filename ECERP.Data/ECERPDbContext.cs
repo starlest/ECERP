@@ -51,6 +51,7 @@
             modelBuilder.Entity<Supplier>().HasIndex(s => s.Name).IsUnique();
 
             modelBuilder.Entity<Product>().HasIndex(p => p.Name).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(p => p.ProductId).IsUnique();
             modelBuilder.Entity<ProductCategory>().HasIndex(p => p.Name).IsUnique();
             modelBuilder.Entity<ProductSupplier>().HasIndex("ProductId", "SupplierId").IsUnique();
 
@@ -81,6 +82,7 @@
         // Inventory
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<ProductSupplier> ProductSuppliers { get; set; }
         #endregion
     }
 }

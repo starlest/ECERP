@@ -15,11 +15,6 @@
         public int SupplierId { get; set; }
 
         /// <summary>
-        /// Gets or sets purchase price
-        /// </summary>
-        public decimal PurchasePrice { get; set; }
-
-        /// <summary>
         /// Gets or sets related product
         /// </summary>
         public virtual Product Product { get; set; }

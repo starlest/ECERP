@@ -14,14 +14,14 @@
     public class CitiesController : BaseController
     {
         #region Fields
-        private readonly ICitiesService _citiesService;
+        private readonly ICityService _citiesService;
         #endregion
 
         #region Constructor
         public CitiesController(ECERPDbContext dbContext,
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            ICitiesService citiesService) : base(dbContext, signInManager, userManager)
+            ICityService citiesService) : base(dbContext, signInManager, userManager)
         {
             _citiesService = citiesService;
         }

@@ -71,7 +71,17 @@
                 PrimaryUnitName = "test",
                 SecondaryUnitName = "test",
                 QuantityPerPrimaryUnit = 1,
-                QuantityPerSecondaryUnit = 1
+                QuantityPerSecondaryUnit = 1,
+                ProductCategoryId = 2
+            };
+        }
+
+        public static ProductCategory GetTestProductCategory(this PersistenceTest test)
+        {
+            return new ProductCategory
+            {
+                Id = 1,
+                Name = "test"
             };
         }
 

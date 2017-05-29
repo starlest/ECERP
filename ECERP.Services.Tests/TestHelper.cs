@@ -7,6 +7,7 @@
     using Core.Domain.Companies;
     using Core.Domain.Configuration;
     using Core.Domain.FinancialAccounting;
+    using Core.Domain.Products;
     using Core.Domain.Suppliers;
 
     public static class TestHelper
@@ -616,6 +617,21 @@
                 LedgerTransactionLines = transactionLines,
                 ChartOfAccountsId = 1
             };
+        }
+
+        public static IList<ProductCategory> GetTestProductCategories(this ServiceTests tests)
+        {
+            return new List<ProductCategory>
+            {
+                new ProductCategory { Name = "test1", Id = 1 },
+                new ProductCategory { Name = "test2", Id = 2 },
+                new ProductCategory { Name = "test3", Id = 3 },
+            };
+        }
+
+        public static ProductCategory GetTestProductCategory(this ServiceTests tests)
+        {
+            return tests.GetTestProductCategories().First();
         }
     }
 }
