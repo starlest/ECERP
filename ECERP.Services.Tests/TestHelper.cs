@@ -633,5 +633,41 @@
         {
             return tests.GetTestProductCategories().First();
         }
+
+        public static IList<Product> GetTestProducts(this ServiceTests tests)
+        {
+            return new List<Product>
+            {
+                new Product
+                {
+                    Id = 1,
+                    Name = "Sambal ABC",
+                    PrimaryUnitName = "BTL",
+                    SecondaryUnitName = "",
+                    QuantityPerPrimaryUnit = 12,
+                    QuantityPerSecondaryUnit = 0,
+                    SalesPrice = 5000,
+                    PurchasePrice = 4000,
+                    ProductCategoryId = 1
+                },
+                new Product
+                {
+                    Id = 2,
+                    Name = "Teh Gelas 48",
+                    PrimaryUnitName = "BTL",
+                    SecondaryUnitName = "",
+                    QuantityPerPrimaryUnit = 48,
+                    QuantityPerSecondaryUnit = 0,
+                    SalesPrice = 6000,
+                    PurchasePrice = 4000,
+                    ProductCategoryId = 2
+                }
+            };
+        }
+
+        public static Product GetTestProduct(this ServiceTests tests)
+        {
+            return tests.GetTestProducts().First();
+        }
     }
 }

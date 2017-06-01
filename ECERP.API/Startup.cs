@@ -21,7 +21,7 @@
     using Services.Companies;
     using Services.CompanySuppliers;
     using Services.FinancialAccounting;
-    using Services.ProductCategories;
+    using Services.Products;
     using Services.Suppliers;
 
     public class Startup
@@ -81,6 +81,7 @@
             services.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
             services.AddScoped<ILedgerAccountService, LedgerAccountService>();
             services.AddScoped<ILedgerTransactionService, LedgerTransactionService>();
+            services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductCategoryService, ProductCategoryService>();
             services.AddScoped<ISupplierService, SupplierService>();
           

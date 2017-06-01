@@ -6,7 +6,7 @@
     using Core.Domain.Products;
     using Data.Abstract;
     using Moq;
-    using ProductCategories;
+    using Services.Products;
     using Xunit;
 
     public class ProductCategoryServiceTests : ServiceTests

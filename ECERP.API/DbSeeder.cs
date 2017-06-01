@@ -8,6 +8,7 @@
     using Core.Domain;
     using Core.Domain.Cities;
     using Core.Domain.Companies;
+    using Core.Domain.Products;
     using Core.Domain.Suppliers;
     using Data;
     using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,7 @@
     using OpenIddict.Models;
     using Services.Cities;
     using Services.Companies;
+    using Services.Products;
     using Services.Suppliers;
 
     public class DbSeeder
@@ -29,6 +31,7 @@
         private readonly ISupplierService _suppliersService;
         private readonly ICityService _citiesService;
         private readonly ICompanyService _companyService;
+        private readonly IProductCategoryService _productCategoryService;
         private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
         private readonly IConfiguration _configuration;
         #endregion
@@ -40,6 +43,7 @@
             ISupplierService suppliersService,
             ICityService citiesService,
             ICompanyService companyService,
+            IProductCategoryService productCategoryService,
             OpenIddictApplicationManager<OpenIddictApplication> applicationManager,
             IConfiguration configuration)
         {
@@ -49,6 +53,7 @@
             _suppliersService = suppliersService;
             _citiesService = citiesService;
             _companyService = companyService;
+            _productCategoryService = productCategoryService;
             _applicationManager = applicationManager;
             _configuration = configuration;
         }
@@ -74,6 +79,9 @@
 
             // Create default Suppliers
             if (!_dbContext.Suppliers.Any()) CreateSuppliers();
+
+            // Create default Product Categories
+            if (!_dbContext.ProductCategories.Any()) CreateProductCategories();
 #endif
         }
         #endregion
@@ -187,6 +195,26 @@
             foreach (var supplier in suppliers)
             {
                 _suppliersService.InsertSupplier(supplier);
+            }
+        }
+
+        private void CreateProductCategories()
+        {
+            var productCategories = new List<ProductCategory>
+            {
+                new ProductCategory
+                {
+                    Name = "Beverages"
+                },
+                new ProductCategory
+                {
+                    Name = "Sauces"
+                }
+            };
+
+            foreach (var productCategory in productCategories)
+            {
+                _productCategoryService.InsertProductCategory(productCategory);
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace ECERP.Services.ProductCategories
+﻿namespace ECERP.Services.Products
 {
     using System.Collections.Generic;
     using Core.Domain.Products;
@@ -14,7 +14,7 @@
         /// <summary>
         /// Get product category by identifier
         /// </summary>
-        /// <param name="id">Product Identifier</param>
+        /// <param name="id">Product Category Identifier</param>
         /// <returns></returns>
         ProductCategory GetProductCategoryById(int id);
 
