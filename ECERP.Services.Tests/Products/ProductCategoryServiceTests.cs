@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Linq.Expressions;
     using Core;
     using Core.Domain.Products;
     using Data.Abstract;
@@ -20,6 +21,8 @@
             _mockRepo.Setup(
                     x => x.GetAll(It.IsAny<Func<IQueryable<ProductCategory>, IOrderedQueryable<ProductCategory>>>(), null, null))
                 .Returns(this.GetTestProductCategories);
+            _mockRepo.Setup(x => x.GetOne(It.IsAny<Expression<Func<ProductCategory, bool>>>()))
+                .Returns(this.GetTestProductCategory);
             _mockRepo.Setup(x => x.GetById<ProductCategory>(1)).Returns(this.GetTestProductCategory);
             _productCategoryService = new ProductCategoryService(_mockRepo.Object);
         }
@@ -37,6 +40,14 @@
         {
             var testProductCategory = this.GetTestProductCategory();
             var result = _productCategoryService.GetProductCategoryById(testProductCategory.Id);
+            Assert.Equal(testProductCategory, result);
+        }
+
+        [Fact]
+        public void Can_get_productCategory_by_name()
+        {
+            var testProductCategory = this.GetTestProductCategory();
+            var result = _productCategoryService.GetProductCategoryByName(testProductCategory.Name);
             Assert.Equal(testProductCategory, result);
         }
 

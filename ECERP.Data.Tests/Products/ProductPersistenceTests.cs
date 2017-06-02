@@ -12,6 +12,7 @@
             var fromDb = SaveAndLoadEntity(this.GetTestProduct());
             Assert.NotNull(fromDb);
             Assert.Equal(product.Id, fromDb.Id);
+            Assert.Equal(product.ProductId, fromDb.ProductId);
             Assert.Equal(product.Name, fromDb.Name);
             Assert.Equal(product.PrimaryUnitName, fromDb.PrimaryUnitName);
             Assert.Equal(product.SecondaryUnitName, fromDb.SecondaryUnitName);

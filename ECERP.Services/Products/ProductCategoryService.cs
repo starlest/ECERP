@@ -32,10 +32,20 @@
         /// Get product category by identifier
         /// </summary>
         /// <param name="id">Product Category Identifier</param>
-        /// <returns></returns>
+        /// <returns>Product Category</returns>
         public virtual ProductCategory GetProductCategoryById(int id)
         {
             return _repository.GetById<ProductCategory>(id);
+        }
+
+        /// <summary>
+        /// Get product category by name
+        /// </summary>
+        /// <param name="name">Product Category Name</param>
+        /// <returns>Product Category</returns>
+        public virtual ProductCategory GetProductCategoryByName(string name)
+        {
+            return _repository.GetOne<ProductCategory>(pc => pc.Name.Equals(name));
         }
 
         /// <summary>

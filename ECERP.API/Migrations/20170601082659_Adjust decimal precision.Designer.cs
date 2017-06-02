@@ -9,9 +9,10 @@ using ECERP.Core.Domain.FinancialAccounting;
 namespace ECERP.API.Migrations
 {
     [DbContext(typeof(ECERPDbContext))]
-    partial class ECERPDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170601082659_Adjust decimal precision")]
+    partial class Adjustdecimalprecision
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -318,43 +319,43 @@ namespace ECERP.API.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<decimal>("Balance1")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance10")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance11")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance12")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance2")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance3")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance4")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance5")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance6")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance7")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance8")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("Balance9")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<decimal>("BeginningBalance")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<DateTime>("CreatedDate");
 
@@ -417,7 +418,7 @@ namespace ECERP.API.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<DateTime>("CreatedDate");
 
@@ -468,14 +469,14 @@ namespace ECERP.API.Migrations
                         .HasMaxLength(50);
 
                     b.Property<decimal>("PurchasePrice")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<int>("QuantityPerPrimaryUnit");
 
                     b.Property<int>("QuantityPerSecondaryUnit");
 
                     b.Property<decimal>("SalesPrice")
-                        .HasColumnType("decimal(38, 20)");
+                        .HasColumnType("decimal(38, 28)");
 
                     b.Property<string>("SecondaryUnitName")
                         .IsRequired()

@@ -33,7 +33,7 @@
                 .ForMember(lavm => lavm.Company, conf => conf.MapFrom(la => la.ChartOfAccounts.Company.Name));
             CreateMap<IPagedList<LedgerAccount>, PagedListViewModel<LedgerAccountViewModel>>()
                 .ForMember(lvm => lvm.Source, conf => conf.MapFrom(l => l.ToList()));
-            
+
             CreateMap<LedgerTransactionLine, LedgerTransactionLineViewModel>();
 
             CreateMap<LedgerTransaction, LedgerTransactionViewModel>()
@@ -43,7 +43,10 @@
                 .ForMember(lvm => lvm.Source, conf => conf.MapFrom(l => l.ToList()));
 
             CreateMap<Product, ProductViewModel>()
-                .ForMember(pvm => pvm.ProductCategory, conf => conf.MapFrom(p => p.ProductCategory.Name));
+                .ForMember(pvm => pvm.ProductCategory, conf => conf.MapFrom(p => p.ProductCategory.Name))
+                .ForMember(pvm => pvm.SalesPrice, conf => conf.MapFrom(p => p.SalesPrice * p.QuantityPerPrimaryUnit))
+                .ForMember(pvm => pvm.PurchasePrice,
+                    conf => conf.MapFrom(p => p.PurchasePrice * p.QuantityPerPrimaryUnit));
             CreateMap<IPagedList<Product>, PagedListViewModel<ProductViewModel>>()
                 .ForMember(lvm => lvm.Source, conf => conf.MapFrom(l => l.ToList()));
 

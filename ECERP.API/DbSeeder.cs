@@ -31,6 +31,7 @@
         private readonly ISupplierService _suppliersService;
         private readonly ICityService _citiesService;
         private readonly ICompanyService _companyService;
+        private readonly IProductService _productService;
         private readonly IProductCategoryService _productCategoryService;
         private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
         private readonly IConfiguration _configuration;
@@ -43,6 +44,7 @@
             ISupplierService suppliersService,
             ICityService citiesService,
             ICompanyService companyService,
+            IProductService productService,
             IProductCategoryService productCategoryService,
             OpenIddictApplicationManager<OpenIddictApplication> applicationManager,
             IConfiguration configuration)
@@ -53,6 +55,7 @@
             _suppliersService = suppliersService;
             _citiesService = citiesService;
             _companyService = companyService;
+            _productService = productService;
             _productCategoryService = productCategoryService;
             _applicationManager = applicationManager;
             _configuration = configuration;
@@ -82,6 +85,9 @@
 
             // Create default Product Categories
             if (!_dbContext.ProductCategories.Any()) CreateProductCategories();
+
+            // Create default Products
+            if (!_dbContext.Products.Any()) CreateProducts();
 #endif
         }
         #endregion
@@ -215,6 +221,45 @@
             foreach (var productCategory in productCategories)
             {
                 _productCategoryService.InsertProductCategory(productCategory);
+            }
+        }
+
+        private void CreateProducts()
+        {
+            var productCategory_Sauces = _productCategoryService.GetProductCategoryByName("Sauces");
+            var productCategory_Beverages = _productCategoryService.GetProductCategoryByName("Beverages");
+
+            var products = new List<Product>
+            {
+                new Product
+                {
+                    Name = "Sambal ABC",
+                    ProductId = "ABC001",
+                    PrimaryUnitName = "BOX",
+                    SecondaryUnitName = "",
+                    QuantityPerPrimaryUnit = 12,
+                    QuantityPerSecondaryUnit = 0,
+                    SalesPrice = 5000,
+                    PurchasePrice = 4000,
+                    ProductCategoryId = productCategory_Sauces.Id
+                },
+                new Product
+                {
+                    Name = "Teh Gelas 48",
+                    ProductId = "ARTA001",
+                    PrimaryUnitName = "BOX",
+                    SecondaryUnitName = "",
+                    QuantityPerPrimaryUnit = 48,
+                    QuantityPerSecondaryUnit = 0,
+                    SalesPrice = 6000,
+                    PurchasePrice = 4000,
+                    ProductCategoryId = productCategory_Beverages.Id
+                }
+            };
+
+            foreach (var product in products)
+            {
+                _productService.InsertProduct(product);
             }
         }
     }

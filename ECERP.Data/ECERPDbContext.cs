@@ -1,5 +1,6 @@
 ﻿namespace ECERP.Data
 {
+    using System.Linq;
     using Core.Domain;
     using Core.Domain.Cities;
     using Core.Domain.Companies;
@@ -58,6 +59,13 @@
             modelBuilder.Entity<Customer>().HasIndex(c => c.CustomerId).IsUnique();
             modelBuilder.Entity<Customer>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<Customer>().HasMany(c => c.LedgerAccounts).WithOne();
+
+            foreach (var property in modelBuilder.Model.GetEntityTypes()
+                .SelectMany(t => t.GetProperties())
+                .Where(p => p.ClrType == typeof(decimal)))
+            {
+                property.Relational().ColumnType = "decimal(38, 20)";
+            }
         }
         #endregion
 

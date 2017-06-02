@@ -15,8 +15,15 @@
         /// Get product category by identifier
         /// </summary>
         /// <param name="id">Product Category Identifier</param>
-        /// <returns></returns>
+        /// <returns>Product Category</returns>
         ProductCategory GetProductCategoryById(int id);
+
+        /// <summary>
+        /// Get product category by name
+        /// </summary>
+        /// <param name="name">Product Category Name</param>
+        /// <returns>Product Category</returns>
+        ProductCategory GetProductCategoryByName(string name);
 
         /// <summary>
         /// Insert a product category

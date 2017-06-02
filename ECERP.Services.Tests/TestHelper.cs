@@ -641,6 +641,7 @@
                 new Product
                 {
                     Id = 1,
+                    ProductId = "ABC0001",
                     Name = "Sambal ABC",
                     PrimaryUnitName = "BTL",
                     SecondaryUnitName = "",
@@ -653,6 +654,7 @@
                 new Product
                 {
                     Id = 2,
+                    ProductId = "ARTA0001",
                     Name = "Teh Gelas 48",
                     PrimaryUnitName = "BTL",
                     SecondaryUnitName = "",
