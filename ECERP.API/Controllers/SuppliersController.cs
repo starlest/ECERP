@@ -7,11 +7,11 @@
     using AutoMapper;
     using Core;
     using Core.Domain;
-    using Core.Domain.Companies;
     using Core.Domain.Suppliers;
     using Data;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Services.Cities;
     using Services.Companies;
     using Services.CompanySuppliers;
     using Services.Suppliers;
@@ -20,6 +20,7 @@
     public class SuppliersController : BaseController
     {
         #region Fields
+        private readonly ICityService _cityService;
         private readonly ICompanyService _companyService;
         private readonly ICompanySupplierService _companySupplierService;
         private readonly ISupplierService _supplierService;
@@ -29,10 +30,12 @@
         public SuppliersController(ECERPDbContext dbContext,
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
+            ICityService cityService,
             ICompanyService companyService,
             ICompanySupplierService companySupplierService,
             ISupplierService supplierService) : base(dbContext, signInManager, userManager)
         {
+            _cityService = cityService;
             _companyService = companyService;
             _companySupplierService = companySupplierService;
             _supplierService = supplierService;
@@ -93,12 +96,16 @@
 
             try
             {
+                var city = _cityService.GetCityByName(svm.City);
+                if (city == null)
+                    return NotFound(new { Error = "City could not be found." });
+
                 var supplier = new Supplier
                 {
                     Name = svm.Name,
                     Address = svm.Address,
                     ContactNumber = svm.ContactNumber,
-                    CityId = svm.City.Id,
+                    CityId = city.Id,
                     TaxId = svm.TaxId
                 };
 
@@ -130,13 +137,16 @@
 
             if (supplier == null) return NotFound(new { Error = "Supplier could not be found" });
 
+            var city = _cityService.GetCityByName(svm.City);
+            if (city == null)
+                return NotFound(new { Error = "City could not be found." });
+
             // handle the update (on per-property basis)
             supplier.Name = svm.Name;
             supplier.Address = svm.Address;
-            supplier.CityId = svm.City.Id;
+            supplier.CityId = city.Id;
             supplier.ContactNumber = svm.ContactNumber;
             supplier.TaxId = svm.TaxId;
-            supplier.IsActive = svm.IsActive;
 
             _supplierService.UpdateSupplier(supplier);
 
@@ -163,7 +173,7 @@
 
             var companySupplier = _companySupplierService.GetCompanySupplier(companyId, id);
             if (companySupplier != null)
-                return BadRequest(new { Error = "Company is already registered to supplier." });
+                return BadRequest(new { Error = "Supplier is already registered to company." });
 
             _companySupplierService.Register(companyId, id);
 
@@ -183,15 +193,14 @@
         public IActionResult DeregisterCompany(int id, [FromQuery] int companyId)
         {
             var companySupplier = _companySupplierService.GetCompanySupplier(companyId, id);
-            if (companySupplier == null) return BadRequest(new { Error = "Company is not registered to supplier." });
+            if (companySupplier == null) return BadRequest(new { Error = "Supplier is not registered to company." });
 
             _companySupplierService.Deregister(companyId, id);
 
             var supplier = _supplierService.GetSupplierById(id);
 
             var supplierVM = Mapper.Map<Supplier, SupplierViewModel>(supplier);
-            supplierVM.Companies =
-                _companySupplierService.GetSupplierCompanies(supplierVM.Id).Select(c => c.Name).ToList();
+            supplierVM.Companies = GetSupplierCompanyNames(supplierVM.Id);
 
             return new JsonResult(supplierVM, DefaultJsonSettings);
         }

@@ -22,7 +22,8 @@
                         x.Get(It.IsAny<Expression<Func<Product, bool>>>(), null, 0, int.MaxValue,
                             It.IsAny<Expression<Func<Product, object>>[]>()))
                 .Returns(this.GetTestProducts);
-            _mockRepo.Setup(x => x.GetById<Product>(this.GetTestProduct().Id))
+            _mockRepo.Setup(
+                    x => x.GetById<Product>(this.GetTestProduct().Id, It.IsAny<Expression<Func<Product, object>>[]>()))
                 .Returns(this.GetTestProduct);
             _productService = new ProductService(_mockRepo.Object);
         }
@@ -50,7 +51,15 @@
             _productService.InsertProduct(testProduct);
             _mockRepo.Verify(x => x.Create(testProduct), Times.Once);
             _mockRepo.Verify(x => x.Save(), Times.Once);
+        }
 
+        [Fact]
+        public void Can_update_product()
+        {
+            var testProduct = this.GetTestProduct();
+            _productService.UpdateProduct(testProduct);
+            _mockRepo.Verify(x => x.Update(testProduct), Times.Once);
+            _mockRepo.Verify(x => x.Save(), Times.Once);
         }
     }
 }

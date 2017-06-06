@@ -42,6 +42,7 @@
             CommonHelper.ListsEqual(testCompanySuppliers, results);
         }
 
+        // TODO: Need better test case
         [Fact]
         public void Can_get_supplier_companies()
         {

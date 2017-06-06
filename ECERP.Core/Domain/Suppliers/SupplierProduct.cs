@@ -1,8 +1,8 @@
-﻿namespace ECERP.Core.Domain.Products
+﻿namespace ECERP.Core.Domain.Suppliers
 {
-    using Suppliers;
+    using Products;
 
-    public class ProductSupplier : Entity<int>
+    public class SupplierProduct : Entity<int>
     {
         /// <summary>
         /// Gets or sets product identifier

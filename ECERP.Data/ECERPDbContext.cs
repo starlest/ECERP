@@ -50,11 +50,11 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Supplier>().HasIndex(s => s.Name).IsUnique();
+            modelBuilder.Entity<SupplierProduct>().HasIndex("ProductId", "SupplierId").IsUnique();
 
             modelBuilder.Entity<Product>().HasIndex(p => p.Name).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => p.ProductId).IsUnique();
             modelBuilder.Entity<ProductCategory>().HasIndex(p => p.Name).IsUnique();
-            modelBuilder.Entity<ProductSupplier>().HasIndex("ProductId", "SupplierId").IsUnique();
 
             modelBuilder.Entity<Customer>().HasIndex(c => c.CustomerId).IsUnique();
             modelBuilder.Entity<Customer>().HasIndex(c => c.Name).IsUnique();
@@ -90,7 +90,7 @@
         // Inventory
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
-        public DbSet<ProductSupplier> ProductSuppliers { get; set; }
+        public DbSet<SupplierProduct> SupplierProducts { get; set; }
         #endregion
     }
 }

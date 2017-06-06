@@ -84,7 +84,8 @@
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductCategoryService, ProductCategoryService>();
             services.AddScoped<ISupplierService, SupplierService>();
-          
+            services.AddScoped<ISupplierProductService, SupplierProductService>();
+
             // Register the OpenIddict services.
             services.AddOpenIddict()
                 // Register the Entity Framework stores.

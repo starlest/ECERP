@@ -62,6 +62,26 @@
             return tests.GetTestCompanySuppliers().First();
         }
 
+        public static IList<SupplierProduct> GetTestSupplierProducts(this ServiceTests tests)
+        {
+            return new List<SupplierProduct>
+            {
+                new SupplierProduct
+                {
+                    Id = 1,
+                    SupplierId = 1,
+                    ProductId = 1,
+                    Supplier = tests.GetTestSupplier(),
+                    Product = tests.GetTestProduct()
+                }
+            };
+        }
+
+        public static SupplierProduct GetTestSupplierProduct(this ServiceTests tests)
+        {
+            return tests.GetTestSupplierProducts().First();
+        }
+
         public static IList<CompanySetting> GetTestCompanySettings(this ServiceTests tests)
         {
             return new List<CompanySetting>

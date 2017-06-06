@@ -48,7 +48,7 @@
         /// <returns></returns>
         public virtual Product GetProductById(int id)
         {
-            return _repository.GetById<Product>(id);
+            return _repository.GetById<Product>(id, p => p.ProductCategory);
         }
 
         /// <summary>
@@ -58,6 +58,16 @@
         public virtual void InsertProduct(Product product)
         {
             _repository.Create(product);
+            _repository.Save();
+        }
+
+        /// <summary>
+        /// Update a product
+        /// </summary>
+        /// <param name="product">Product</param>
+        public virtual void UpdateProduct(Product product)
+        {
+            _repository.Update(product);
             _repository.Save();
         }
         #endregion

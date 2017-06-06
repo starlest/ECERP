@@ -1,16 +1,19 @@
 ﻿namespace ECERP.API.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using AutoMapper;
     using Core;
     using Core.Domain;
     using Core.Domain.Products;
+    using Core.Domain.Suppliers;
     using Data;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Services.Products;
+    using Services.Suppliers;
     using ViewModels;
 
     public class ProductsController : BaseController
@@ -18,6 +21,8 @@
         #region Fields
         private readonly IProductService _productService;
         private readonly IProductCategoryService _productCategoryService;
+        private readonly ISupplierService _supplierService;
+        private readonly ISupplierProductService _supplierProductService;
         #endregion
 
         #region Constructor
@@ -25,10 +30,14 @@
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IProductService productService,
-            IProductCategoryService productCategoryService) : base(dbContext, signInManager, userManager)
+            IProductCategoryService productCategoryService,
+            ISupplierService supplierService,
+            ISupplierProductService supplierProductService) : base(dbContext, signInManager, userManager)
         {
             _productService = productService;
             _productCategoryService = productCategoryService;
+            _supplierService = supplierService;
+            _supplierProductService = supplierProductService;
         }
         #endregion
 
@@ -58,6 +67,19 @@
         }
 
         /// <summary>
+        ///     GET: products/{id}
+        /// </summary>
+        /// <param name="id">Product identifier</param>
+        /// <returns>A Json-serialized object representing a single product.</returns>
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var product = _productService.GetProductById(id);
+            if (product == null) return NotFound(new { Error = "Product not found." });
+            return new JsonResult(Mapper.Map<Product, ProductViewModel>(product), DefaultJsonSettings);
+        }
+
+        /// <summary>
         /// POST: products
         /// </summary>
         /// <returns>Creates a new Product and return it accordingly.</returns>
@@ -77,12 +99,12 @@
 
                 var productCategory = _productCategoryService.GetProductCategoryByName(pvm.ProductCategory);
 
-                if (productCategory == null) 
-                    return NotFound("Product category does not exists.");
+                if (productCategory == null)
+                    return NotFound(new { Error = "Product category not found." });
 
                 var product = new Product
                 {
-                    ProductId = pvm.Name,
+                    ProductId = pvm.ProductId,
                     Name = pvm.Name,
                     PrimaryUnitName = pvm.PrimaryUnitName,
                     SecondaryUnitName = pvm.SecondaryUnitName,
@@ -104,6 +126,87 @@
                 // return the error.
                 return BadRequest(new { Error = "Check that all the fields are valid." });
             }
+        }
+
+        /// <summary>
+        /// PUT: products/{id}
+        /// </summary>
+        /// <returns>Updates an existing product and return it accordingly.</returns>
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] ProductViewModel pvm)
+        {
+            if (pvm == null) return NotFound(new { Error = "Product could not be found" });
+
+            var product = _productService.GetProductById(id);
+
+            if (product == null) return NotFound(new { Error = "Product could not be found" });
+
+            var productCategory = _productCategoryService.GetProductCategoryByName(pvm.ProductCategory);
+
+            if (productCategory == null)
+                return NotFound(new { Error = "Product category could not be found." });
+
+            // handle the update (on per-property basis)
+            product.ProductId = pvm.ProductId;
+            product.Name = pvm.Name;
+            product.PrimaryUnitName = pvm.PrimaryUnitName;
+            product.SecondaryUnitName = pvm.SecondaryUnitName;
+            product.SalesPrice = pvm.SalesPrice / pvm.QuantityPerPrimaryUnit;
+            product.PurchasePrice = pvm.PurchasePrice / pvm.QuantityPerPrimaryUnit;
+            product.ProductCategoryId = productCategory.Id;
+
+            _productService.UpdateProduct(product);
+
+            product = _productService.GetProductById(id);
+
+            var productVM = Mapper.Map<Product, ProductViewModel>(product);
+
+            return new JsonResult(productVM, DefaultJsonSettings);
+        }
+
+        /// <summary>
+        /// POST: suppliers/{id}/registersupplier
+        /// </summary>
+        /// <returns>Registers a product to a supplier and return it accordingly.</returns>
+        [HttpPost("{id}/registersupplier")]
+        public IActionResult RegisterSupplier(int id, [FromQuery] int supplierId)
+        {
+            var product = _productService.GetProductById(id);
+            if (product == null) return NotFound(new { Error = "Product could not be found" });
+
+            var supplier = _supplierService.GetSupplierById(supplierId);
+            if (supplier == null) return NotFound(new { Error = "Supplier could not be found" });
+
+            var supplierProduct = _supplierProductService.GetSupplierProduct(supplierId, id);
+            if (supplierProduct != null)
+                return BadRequest(new { Error = "Product is already registered to supplier." });
+
+            _supplierProductService.Register(supplierId, id);
+
+            product = _productService.GetProductById(id);
+
+            var productVM = Mapper.Map<Product, ProductViewModel>(product);
+
+            return new JsonResult(productVM, DefaultJsonSettings);
+        }
+
+        /// <summary>
+        /// POST: products/{id}/deregistersupplier
+        /// </summary>
+        /// <returns>Deregisters a product from a supplier and return it accordingly.</returns>
+        [HttpPost("{id}/deregistersupplier")]
+        public IActionResult DeregisterSupplier(int id, [FromQuery] int supplierId)
+        {
+            var supplierProduct = _supplierProductService.GetSupplierProduct(supplierId, id);
+            if (supplierProduct == null) return BadRequest(new { Error = "Product is not registered to supplier." });
+
+            _supplierProductService.Deregister(supplierId, id);
+
+            var product = _productService.GetProductById(id);
+
+            var productVM = Mapper.Map<Product, ProductViewModel>(product);
+
+            return new JsonResult(productVM, DefaultJsonSettings);
         }
         #endregion
 
@@ -159,6 +262,11 @@
                 default:
                     return null;
             }
+        }
+
+        private IList<string> GetProductSupplierNames(int productId)
+        {
+            return _supplierProductService.GetProductSuppliers(productId).Select(c => c.Name).ToList();
         }
         #endregion
     }

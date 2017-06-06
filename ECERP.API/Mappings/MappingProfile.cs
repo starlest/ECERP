@@ -23,7 +23,7 @@
                 .ForMember(cm => cm.ChartOfAccountsId, conf => conf.MapFrom(c => c.ChartOfAccounts.Id));
 
             CreateMap<Supplier, SupplierViewModel>()
-                .ForMember(svm => svm.City, conf => conf.MapFrom(s => s.City));
+                .ForMember(svm => svm.City, conf => conf.MapFrom(s => s.City.Name));
 
             CreateMap<IPagedList<Supplier>, PagedListViewModel<SupplierViewModel>>()
                 .ForMember(svm => svm.Source, conf => conf.MapFrom(s => s.ToList()));

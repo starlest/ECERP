@@ -34,5 +34,11 @@
         /// </summary>
         /// <param name="product">Product</param>
         void InsertProduct(Product product);
+
+        /// <summary>
+        /// Update a product
+        /// </summary>
+        /// <param name="product">Product</param>
+        void UpdateProduct(Product product);
     }
 }

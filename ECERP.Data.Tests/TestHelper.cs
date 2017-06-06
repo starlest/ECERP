@@ -61,6 +61,16 @@
             };
         }
 
+        public static SupplierProduct GetTestSupplierProduct(this PersistenceTest test)
+        {
+            return new SupplierProduct
+            {
+                Id = 1,
+                ProductId = 1,
+                SupplierId = 1
+            };
+        }
+
         public static Product GetTestProduct(this PersistenceTest test)
         {
             return new Product
