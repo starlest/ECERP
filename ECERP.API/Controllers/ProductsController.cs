@@ -59,11 +59,13 @@
             pageSize = pageSize == 0 ? int.MaxValue : pageSize;
             var filter = GenerateFilter(productIdFilter, nameFilter, productCategoryFilter, isActiveFilter);
             var orderBy = GenerateSortOrder(sortOrder);
-            var ledgerAccounts = _productService.GetProducts(filter, orderBy, pageIndex, pageSize);
-            return
-                new JsonResult(
-                    Mapper.Map<IPagedList<Product>, PagedListViewModel<ProductViewModel>>(ledgerAccounts),
-                    DefaultJsonSettings);
+            var products = _productService.GetProducts(filter, orderBy, pageIndex, pageSize);
+            var productsVM = Mapper.Map<IPagedList<Product>, PagedListViewModel<ProductViewModel>>(products);
+            foreach (var productVM in productsVM.Source)
+            {
+                productVM.Suppliers = GetProductSupplierNames(productVM.Id);
+            }
+            return new JsonResult(productsVM,DefaultJsonSettings);
         }
 
         /// <summary>
@@ -76,7 +78,9 @@
         {
             var product = _productService.GetProductById(id);
             if (product == null) return NotFound(new { Error = "Product not found." });
-            return new JsonResult(Mapper.Map<Product, ProductViewModel>(product), DefaultJsonSettings);
+            var productVM = Mapper.Map<Product, ProductViewModel>(product);
+            productVM.Suppliers = GetProductSupplierNames(productVM.Id);
+            return new JsonResult(productVM, DefaultJsonSettings);
         }
 
         /// <summary>
@@ -117,9 +121,11 @@
 
                 _productService.InsertProduct(product);
 
+                var productVM = Mapper.Map<Product, ProductViewModel>(product);
+                productVM.Suppliers = GetProductSupplierNames(productVM.Id);
+
                 // return the newly-created ledger account to the client.
-                return new JsonResult(Mapper.Map<Product, ProductViewModel>(product),
-                    DefaultJsonSettings);
+                return new JsonResult(productVM, DefaultJsonSettings);
             }
             catch (Exception)
             {
@@ -160,6 +166,7 @@
             product = _productService.GetProductById(id);
 
             var productVM = Mapper.Map<Product, ProductViewModel>(product);
+            productVM.Suppliers = GetProductSupplierNames(productVM.Id);
 
             return new JsonResult(productVM, DefaultJsonSettings);
         }
@@ -186,6 +193,7 @@
             product = _productService.GetProductById(id);
 
             var productVM = Mapper.Map<Product, ProductViewModel>(product);
+            productVM.Suppliers = GetProductSupplierNames(productVM.Id);
 
             return new JsonResult(productVM, DefaultJsonSettings);
         }
@@ -205,6 +213,7 @@
             var product = _productService.GetProductById(id);
 
             var productVM = Mapper.Map<Product, ProductViewModel>(product);
+            productVM.Suppliers = GetProductSupplierNames(productVM.Id);
 
             return new JsonResult(productVM, DefaultJsonSettings);
         }
