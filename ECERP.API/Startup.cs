@@ -19,10 +19,10 @@
     using Microsoft.IdentityModel.Tokens;
     using Services.Cities;
     using Services.Companies;
-    using Services.CompanySuppliers;
     using Services.FinancialAccounting;
     using Services.Products;
     using Services.Suppliers;
+    using Services.SupplierSubscriptions;
 
     public class Startup
     {
@@ -77,14 +77,14 @@
             // Add Services
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<ICompanyService, CompanyService>();
-            services.AddScoped<ICompanySupplierService, CompanySupplierService>();
+            services.AddScoped<ISupplierSubscriptionService, SupplierSubscriptionService>();
             services.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
             services.AddScoped<ILedgerAccountService, LedgerAccountService>();
             services.AddScoped<ILedgerTransactionService, LedgerTransactionService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductCategoryService, ProductCategoryService>();
             services.AddScoped<ISupplierService, SupplierService>();
-            services.AddScoped<ISupplierProductService, SupplierProductService>();
+//            services.AddScoped<ISupplierProductService, SupplierProductService>();
 
             // Register the OpenIddict services.
             services.AddOpenIddict()

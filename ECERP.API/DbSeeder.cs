@@ -180,21 +180,24 @@
                     Name = "Interbis",
                     Address = "Palembang",
                     CityId = city_Palembang.Id,
-                    ContactNumber = "00001"
+                    ContactNumber = "00001",
+                    TaxId = "002324"
                 },
                 new Supplier
                 {
                     Name = "Arta Boga",
                     Address = "Palembang",
                     CityId = city_Palembang.Id,
-                    ContactNumber = "00002"
+                    ContactNumber = "00002",
+                    TaxId = "002324"
                 },
                 new Supplier
                 {
                     Name = "ABC",
                     Address = "Jakarta",
                     CityId = city_Jakarta.Id,
-                    ContactNumber = "00003"
+                    ContactNumber = "00003",
+                    TaxId = "002324"
                 }
             };
 

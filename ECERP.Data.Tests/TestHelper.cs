@@ -30,13 +30,14 @@
                 CompanyId = test.GetTestCompany().Id
             };
         }
-        public static CompanySupplier GetTestCompanySupplier(this PersistenceTest test)
+        public static SupplierSubscription GetTestSupplierSubscription(this PersistenceTest test)
         {
-            return new CompanySupplier
+            return new SupplierSubscription
             {
                 Id = 1,
                 CompanyId = 1,
-                SupplierId = 1
+                SupplierId = 1,
+                LedgerAccountId = 1
             };
         }
 
@@ -61,13 +62,13 @@
             };
         }
 
-        public static SupplierProduct GetTestSupplierProduct(this PersistenceTest test)
+        public static ProductSubscription GetTestProductSubscription(this PersistenceTest test)
         {
-            return new SupplierProduct
+            return new ProductSubscription
             {
                 Id = 1,
                 ProductId = 1,
-                SupplierId = 1
+                SupplierSubscriptionId = 1
             };
         }
 

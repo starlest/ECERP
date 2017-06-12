@@ -13,8 +13,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Services.Cities;
     using Services.Companies;
-    using Services.CompanySuppliers;
     using Services.Suppliers;
+    using Services.SupplierSubscriptions;
     using ViewModels;
 
     public class SuppliersController : BaseController
@@ -22,7 +22,7 @@
         #region Fields
         private readonly ICityService _cityService;
         private readonly ICompanyService _companyService;
-        private readonly ICompanySupplierService _companySupplierService;
+        private readonly ISupplierSubscriptionService _supplierSubscriptionService;
         private readonly ISupplierService _supplierService;
         #endregion
 
@@ -32,12 +32,12 @@
             UserManager<ApplicationUser> userManager,
             ICityService cityService,
             ICompanyService companyService,
-            ICompanySupplierService companySupplierService,
+            ISupplierSubscriptionService supplierSubscriptionService,
             ISupplierService supplierService) : base(dbContext, signInManager, userManager)
         {
             _cityService = cityService;
             _companyService = companyService;
-            _companySupplierService = companySupplierService;
+            _supplierSubscriptionService = supplierSubscriptionService;
             _supplierService = supplierService;
         }
         #endregion
@@ -159,11 +159,11 @@
         }
 
         /// <summary>
-        /// POST: suppliers/{id}/registercompany
+        /// POST: suppliers/{id}/subscribe
         /// </summary>
-        /// <returns>Registers a supplier to a company and return it accordingly.</returns>
-        [HttpPost("{id}/registercompany")]
-        public IActionResult RegisterCompany(int id, [FromQuery] int companyId)
+        /// <returns>Subscribe a supplier to a company and return it accordingly.</returns>
+        [HttpPost("{id}/subscribe")]
+        public IActionResult Subscribe(int id, [FromQuery] int companyId)
         {
             var supplier = _supplierService.GetSupplierById(id);
             if (supplier == null) return NotFound(new { Error = "Supplier could not be found" });
@@ -171,11 +171,11 @@
             var company = _companyService.GetCompanyById(companyId);
             if (company == null) return NotFound(new { Error = "Company could not be found" });
 
-            var companySupplier = _companySupplierService.GetCompanySupplier(companyId, id);
-            if (companySupplier != null)
-                return BadRequest(new { Error = "Supplier is already registered to company." });
+            var supplierSubscription = _supplierSubscriptionService.GetSupplierSubscription(id, companyId);
+            if (supplierSubscription != null && supplierSubscription.IsActive)
+                return BadRequest(new { Error = "Supplier is already subscribed to company." });
 
-            _companySupplierService.Register(companyId, id);
+            _supplierSubscriptionService.Subscribe(id, companyId);
 
             supplier = _supplierService.GetSupplierById(id);
 
@@ -186,16 +186,16 @@
         }
 
         /// <summary>
-        /// POST: suppliers/{id}/deregistercompany
+        /// POST: suppliers/{id}/unsubscribe
         /// </summary>
-        /// <returns>Deregisters a supplier from a company and return it accordingly.</returns>
-        [HttpPost("{id}/deregistercompany")]
-        public IActionResult DeregisterCompany(int id, [FromQuery] int companyId)
+        /// <returns>Unsubscribe a supplier from a company and return it accordingly.</returns>
+        [HttpPost("{id}/unsubscribe")]
+        public IActionResult Unsubscribe(int id, [FromQuery] int companyId)
         {
-            var companySupplier = _companySupplierService.GetCompanySupplier(companyId, id);
-            if (companySupplier == null) return BadRequest(new { Error = "Supplier is not registered to company." });
+            var supplierSubscription = _supplierSubscriptionService.GetSupplierSubscription(id, companyId);
+            if (supplierSubscription == null) return BadRequest(new { Error = "Supplier is not subscribed to company." });
 
-            _companySupplierService.Deregister(companyId, id);
+            _supplierSubscriptionService.Unsubscribe(id, companyId);
 
             var supplier = _supplierService.GetSupplierById(id);
 
@@ -268,7 +268,7 @@
 
         private IList<string> GetSupplierCompanyNames(int supplierId)
         {
-            return _companySupplierService.GetSupplierCompanies(supplierId).Select(c => c.Name).ToList();
+            return _supplierSubscriptionService.GetSupplierCompanies(supplierId).Select(c => c.Name).ToList();
         }
         #endregion
     }

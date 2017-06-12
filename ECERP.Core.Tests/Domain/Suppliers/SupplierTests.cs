@@ -21,18 +21,5 @@
             Assert.Equal(1, supplier.CityId);
             Assert.True(supplier.IsActive);
         }
-
-        [Fact]
-        public void Can_add_product_relationship()
-        {
-            var supplierProduct = new SupplierProduct
-            {
-                Id = 1,
-                ProductId = 1,
-                SupplierId = 1
-            };
-            Assert.Equal(1, supplierProduct.ProductId);
-            Assert.Equal(1, supplierProduct.SupplierId);
-        }
     }
 }

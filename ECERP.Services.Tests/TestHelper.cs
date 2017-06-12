@@ -42,45 +42,46 @@
             return tests.GetTestCompanies().First();
         }
 
-        public static IList<CompanySupplier> GetTestCompanySuppliers(this ServiceTests tests)
+        public static IList<SupplierSubscription> GetTestSupplierSubscriptions(this ServiceTests tests)
         {
-            return new List<CompanySupplier>
+            return new List<SupplierSubscription>
             {
-                new CompanySupplier
+                new SupplierSubscription
                 {
                     Id = 1,
                     CompanyId = 1,
                     SupplierId = 1,
+                    LedgerAccountId = 1,
                     Supplier = tests.GetTestSupplier(),
                     Company = tests.GetTestCompany()
                 }
             };
         }
 
-        public static CompanySupplier GetTestCompanySupplier(this ServiceTests tests)
+        public static SupplierSubscription GetTestSupplierSubscription(this ServiceTests tests)
         {
-            return tests.GetTestCompanySuppliers().First();
+            return tests.GetTestSupplierSubscriptions().First();
         }
 
-        public static IList<SupplierProduct> GetTestSupplierProducts(this ServiceTests tests)
-        {
-            return new List<SupplierProduct>
-            {
-                new SupplierProduct
-                {
-                    Id = 1,
-                    SupplierId = 1,
-                    ProductId = 1,
-                    Supplier = tests.GetTestSupplier(),
-                    Product = tests.GetTestProduct()
-                }
-            };
-        }
+//        public static IList<SupplierProduct> GetTestSupplierProducts(this ServiceTests tests)
+//        {
+//            return new List<SupplierProduct>
+//            {
+//                new SupplierProduct
+//                {
+//                    Id = 1,
+//                    SupplierId = 1,
+//                    ProductId = 1,
+//                    Supplier = tests.GetTestSupplier(),
+//                    Product = tests.GetTestProduct()
+//                }
+//            };
+//        }
 
-        public static SupplierProduct GetTestSupplierProduct(this ServiceTests tests)
-        {
-            return tests.GetTestSupplierProducts().First();
-        }
+//        public static SupplierProduct GetTestSupplierProduct(this ServiceTests tests)
+//        {
+//            return tests.GetTestSupplierProducts().First();
+//        }
 
         public static IList<CompanySetting> GetTestCompanySettings(this ServiceTests tests)
         {

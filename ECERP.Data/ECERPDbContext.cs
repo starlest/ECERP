@@ -8,7 +8,9 @@
     using Core.Domain.Customers;
     using Core.Domain.FinancialAccounting;
     using Core.Domain.Products;
+    using Core.Domain.Stocks;
     using Core.Domain.Suppliers;
+    using Core.Domain.Warehouses;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata;
@@ -31,7 +33,12 @@
             modelBuilder.Entity<City>().HasIndex(c => c.Name).IsUnique();
 
             modelBuilder.Entity<Company>().HasIndex(c => c.Name).IsUnique();
-            modelBuilder.Entity<CompanySupplier>().HasIndex("CompanyId", "SupplierId").IsUnique();
+            modelBuilder.Entity<SupplierSubscription>().HasIndex("CompanyId", "SupplierId").IsUnique();
+            modelBuilder.Entity<SupplierSubscription>()
+                .HasOne(cs => cs.LedgerAccount)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<CompanySetting>().HasIndex(p => p.Key).IsUnique();
 
             modelBuilder.Entity<ChartOfAccounts>().ToTable("ChartsOfAccounts");
@@ -50,15 +57,19 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Supplier>().HasIndex(s => s.Name).IsUnique();
-            modelBuilder.Entity<SupplierProduct>().HasIndex("ProductId", "SupplierId").IsUnique();
+            modelBuilder.Entity<ProductSubscription>().HasIndex("ProductId", "SupplierSubscriptionId").IsUnique();
+
+            modelBuilder.Entity<Customer>().HasIndex(c => c.CustomerId).IsUnique();
+            modelBuilder.Entity<Customer>().HasIndex(c => c.Name).IsUnique();
+            modelBuilder.Entity<Customer>().HasMany(c => c.LedgerAccounts).WithOne();
 
             modelBuilder.Entity<Product>().HasIndex(p => p.Name).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => p.ProductId).IsUnique();
             modelBuilder.Entity<ProductCategory>().HasIndex(p => p.Name).IsUnique();
 
-            modelBuilder.Entity<Customer>().HasIndex(c => c.CustomerId).IsUnique();
-            modelBuilder.Entity<Customer>().HasIndex(c => c.Name).IsUnique();
-            modelBuilder.Entity<Customer>().HasMany(c => c.LedgerAccounts).WithOne();
+            modelBuilder.Entity<Warehouse>().HasIndex(p => p.Name).IsUnique();
+
+            modelBuilder.Entity<Stock>().HasIndex("ProductId", "WarehouseId").IsUnique();
 
             foreach (var property in modelBuilder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetProperties())
@@ -72,7 +83,6 @@
         #region Properties
         public DbSet<CompanySetting> Settings { get; set; }
         public DbSet<Company> Companies { get; set; }
-        public DbSet<CompanySupplier> CompanySuppliers { get; set; }
 
         public DbSet<City> Cities { get; set; }
 
@@ -90,7 +100,12 @@
         // Inventory
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
-        public DbSet<SupplierProduct> SupplierProducts { get; set; }
+        public DbSet<Stock> Stocks { get; set; }
+        public DbSet<Warehouse> Warehouses { get; set; }
+
+        // Subscriptions
+        public DbSet<SupplierSubscription> SupplierSubscriptions { get; set; }
+        public DbSet<ProductSubscription> ProductSubscriptions { get; set; }
         #endregion
     }
 }

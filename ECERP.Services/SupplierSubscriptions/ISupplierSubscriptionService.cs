@@ -1,17 +1,17 @@
-﻿namespace ECERP.Services.CompanySuppliers
+﻿namespace ECERP.Services.SupplierSubscriptions
 {
     using System.Collections.Generic;
     using Core.Domain.Companies;
     using Core.Domain.Suppliers;
 
-    public interface ICompanySupplierService
+    public interface ISupplierSubscriptionService
     {
         /// <summary>
-        /// Gets a companySupplier by relating identifiers
+        /// Gets a supplier subscription by relating identifiers
         /// </summary>
-        /// <param name="companyId">Company Identifier</param>
         /// <param name="supplierId">Supplier Identifier</param>
-        CompanySupplier GetCompanySupplier(int companyId, int supplierId);
+        /// <param name="companyId">Company Identifier</param>
+        SupplierSubscription GetSupplierSubscription(int supplierId, int companyId);
 
         /// <summary>
         /// Gets a company's suppliers
@@ -28,17 +28,17 @@
         IList<Company> GetSupplierCompanies(int supplierId);
 
         /// <summary>
-        /// Registers a supplier with a company
+        /// Subscribe supplier with a company
         /// </summary>
-        /// <param name="companyId">Company Identifier</param>
         /// <param name="supplierId">Supplier Identifier</param>
-        void Register(int companyId, int supplierId);
+        /// <param name="companyId">Company Identifier</param>
+        void Subscribe(int supplierId, int companyId);
 
         /// <summary>
-        /// Deregisters a supplier with a company
+        /// Unsubscribe a supplier from a company
         /// </summary>
-        /// <param name="companyId">Company Identifier</param>
         /// <param name="supplierId">Supplier Identifier</param>
-        void Deregister(int companyId, int supplierId);
+        /// <param name="companyId">Company Identifier</param>
+        void Unsubscribe(int supplierId, int companyId);
     }
 }

@@ -9,9 +9,10 @@ using ECERP.Core.Domain.FinancialAccounting;
 namespace ECERP.API.Migrations
 {
     [DbContext(typeof(ECERPDbContext))]
-    partial class ECERPDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170610081932_add ledgeraccount to companysupplier")]
+    partial class addledgeraccounttocompanysupplier
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -131,6 +132,37 @@ namespace ECERP.API.Migrations
                         .IsUnique();
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("ECERP.Core.Domain.Companies.CompanySupplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CompanyId");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<int>("LedgerAccountId");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("SupplierId");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LedgerAccountId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("CompanyId", "SupplierId")
+                        .IsUnique();
+
+                    b.ToTable("CompanySuppliers");
                 });
 
             modelBuilder.Entity("ECERP.Core.Domain.Configuration.CompanySetting", b =>
@@ -496,33 +528,6 @@ namespace ECERP.API.Migrations
                     b.ToTable("ProductCategories");
                 });
 
-            modelBuilder.Entity("ECERP.Core.Domain.Products.ProductSubscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<int>("ProductId");
-
-                    b.Property<int>("SupplierSubscriptionId");
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SupplierSubscriptionId");
-
-                    b.HasIndex("ProductId", "SupplierSubscriptionId")
-                        .IsUnique();
-
-                    b.ToTable("ProductSubscriptions");
-                });
-
             modelBuilder.Entity("ECERP.Core.Domain.Stocks.Stock", b =>
                 {
                     b.Property<int>("Id")
@@ -595,20 +600,16 @@ namespace ECERP.API.Migrations
                     b.ToTable("Suppliers");
                 });
 
-            modelBuilder.Entity("ECERP.Core.Domain.Suppliers.SupplierSubscription", b =>
+            modelBuilder.Entity("ECERP.Core.Domain.Suppliers.SupplierProduct", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CompanyId");
-
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<bool>("IsActive");
-
-                    b.Property<int>("LedgerAccountId");
-
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<int>("ProductId");
 
                     b.Property<int>("SupplierId");
 
@@ -618,14 +619,12 @@ namespace ECERP.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LedgerAccountId");
-
                     b.HasIndex("SupplierId");
 
-                    b.HasIndex("CompanyId", "SupplierId")
+                    b.HasIndex("ProductId", "SupplierId")
                         .IsUnique();
 
-                    b.ToTable("SupplierSubscriptions");
+                    b.ToTable("SupplierProducts");
                 });
 
             modelBuilder.Entity("ECERP.Core.Domain.Warehouses.Warehouse", b =>
@@ -837,6 +836,23 @@ namespace ECERP.API.Migrations
                     b.ToTable("OpenIddictTokens");
                 });
 
+            modelBuilder.Entity("ECERP.Core.Domain.Companies.CompanySupplier", b =>
+                {
+                    b.HasOne("ECERP.Core.Domain.Companies.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ECERP.Core.Domain.FinancialAccounting.LedgerAccount", "LedgerAccount")
+                        .WithMany()
+                        .HasForeignKey("LedgerAccountId");
+
+                    b.HasOne("ECERP.Core.Domain.Suppliers.Supplier", "Supplier")
+                        .WithMany("CompanySuppliers")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ECERP.Core.Domain.Configuration.CompanySetting", b =>
                 {
                     b.HasOne("ECERP.Core.Domain.Companies.Company", "Company")
@@ -901,19 +917,6 @@ namespace ECERP.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ECERP.Core.Domain.Products.ProductSubscription", b =>
-                {
-                    b.HasOne("ECERP.Core.Domain.Products.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ECERP.Core.Domain.Suppliers.SupplierSubscription", "SupplierSubscription")
-                        .WithMany()
-                        .HasForeignKey("SupplierSubscriptionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("ECERP.Core.Domain.Stocks.Stock", b =>
                 {
                     b.HasOne("ECERP.Core.Domain.Products.Product", "Product")
@@ -935,19 +938,15 @@ namespace ECERP.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ECERP.Core.Domain.Suppliers.SupplierSubscription", b =>
+            modelBuilder.Entity("ECERP.Core.Domain.Suppliers.SupplierProduct", b =>
                 {
-                    b.HasOne("ECERP.Core.Domain.Companies.Company", "Company")
+                    b.HasOne("ECERP.Core.Domain.Products.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("CompanyId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ECERP.Core.Domain.FinancialAccounting.LedgerAccount", "LedgerAccount")
-                        .WithMany()
-                        .HasForeignKey("LedgerAccountId");
-
                     b.HasOne("ECERP.Core.Domain.Suppliers.Supplier", "Supplier")
-                        .WithMany("CompanySuppliers")
+                        .WithMany()
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

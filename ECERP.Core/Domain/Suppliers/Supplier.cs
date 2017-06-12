@@ -11,12 +11,12 @@
     /// </summary>
     public class Supplier : Entity<int>
     {
-        private IList<CompanySupplier> _companySuppliers;
+        private IList<SupplierSubscription> _companySuppliers;
 
         public Supplier()
         {
             IsActive = true;
-            _companySuppliers = new List<CompanySupplier>();
+            _companySuppliers = new List<SupplierSubscription>();
         }
 
         /// <summary>
@@ -63,7 +63,7 @@
         /// <summary>
         /// Gets or sets related companies
         /// </summary>
-        public virtual IList<CompanySupplier> CompanySuppliers
+        public virtual IList<SupplierSubscription> CompanySuppliers
         {
             get { return _companySuppliers; }
             set { _companySuppliers = value; }
